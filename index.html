@@ -1,0 +1,2793 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MEP Field Companion — دليل مهندس الميكانيكا أوفلاين (V1.3)</title>
+<meta name="theme-color" content="#0f766e">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="MEP Guide">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<style>
+  :root {
+    --bg: #f4f6f9;
+    --surface: #ffffff;
+    --surface-2: #eef2f7;
+    --text: #0f172a;
+    --text-muted: #475569;
+    --border: #dce3ec;
+    --primary: #0f766e;
+    --primary-hover: #0d5f59;
+    --primary-soft: #e6f4f2;
+    --accent: #d97706;
+    --accent-soft: #fef3c7;
+    --danger: #dc2626;
+    --danger-soft: #fee2e2;
+    --success: #15803d;
+    --success-soft: #dcfce7;
+    --info: #1d4ed8;
+    --info-soft: #dbeafe;
+    --shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    --radius: 14px;
+    --radius-sm: 10px;
+    --nav-h: 66px;
+    --top-h: 58px;
+  }
+
+  [data-theme="dark"] {
+    --bg: #0b1120;
+    --surface: #131c31;
+    --surface-2: #1c2842;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --border: #263554;
+    --primary: #14b8a6;
+    --primary-hover: #2dd4bf;
+    --primary-soft: rgba(20, 184, 166, 0.14);
+    --accent: #f59e0b;
+    --accent-soft: rgba(245, 158, 11, 0.16);
+    --danger: #f87171;
+    --danger-soft: rgba(248, 113, 113, 0.16);
+    --success: #4ade80;
+    --success-soft: rgba(74, 222, 128, 0.14);
+    --info: #60a5fa;
+    --info-soft: rgba(96, 165, 250, 0.15);
+    --shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding-top: var(--top-h);
+    padding-bottom: calc(var(--nav-h) + 22px);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  .ltr { direction: ltr; unicode-bidi: isolate; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .en-inline { direction: ltr; unicode-bidi: isolate; display: inline-block; font-weight: 700; }
+
+  /* Top Bar */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: var(--top-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 14px;
+    z-index: 100;
+    box-shadow: var(--shadow);
+  }
+  .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .brand-logo {
+    width: 34px; height: 34px; border-radius: 10px;
+    background: var(--primary); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 13px; letter-spacing: 0.5px; flex-shrink: 0;
+  }
+  .brand-title { font-size: 14.5px; font-weight: 800; line-height: 1.2; white-space: nowrap; }
+  .brand-sub { font-size: 11px; color: var(--primary); font-weight: 600; }
+
+  .top-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+  .icon-btn {
+    position: relative;
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    display: inline-flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    transition: transform 0.12s ease, background 0.15s ease, color 0.15s ease;
+  }
+  .icon-btn svg { width: 19px; height: 19px; stroke-width: 2; }
+  .icon-btn:active { transform: scale(0.94); }
+  .icon-btn.active { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); }
+  .icon-btn.privacy-on { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .dot-alert {
+    position: absolute; top: 5px; right: 5px;
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--surface);
+    display: none;
+  }
+  .dot-alert.show { display: block; }
+
+  /* Global Running Timer Banner */
+  .global-timer-bar {
+    display: none;
+    background: var(--primary);
+    color: #fff;
+    padding: 7px 14px;
+    font-size: 12.5px;
+    font-weight: 800;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    cursor: pointer;
+    position: sticky;
+    top: var(--top-h);
+    z-index: 95;
+    box-shadow: var(--shadow);
+  }
+  .global-timer-bar.show { display: flex; }
+
+  /* Main Container */
+  .container { max-width: 820px; margin: 0 auto; padding: 14px; }
+  .tab-panel { display: none; animation: fadeIn 0.16s ease; }
+  .tab-panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* Bottom Navigation */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    z-index: 100;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.06);
+  }
+  .nav-item {
+    border: none; background: transparent; color: var(--text-muted);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 3px; cursor: pointer; font-family: inherit;
+    font-size: 10.5px; font-weight: 700;
+    transition: color 0.15s;
+  }
+  .nav-item svg { width: 20px; height: 20px; stroke-width: 2; }
+  .nav-item.active { color: var(--primary); }
+  .nav-pill { padding: 3px 11px; border-radius: 99px; display: flex; align-items: center; justify-content: center; }
+  .nav-item.active .nav-pill { background: var(--primary-soft); }
+
+  /* Cards & Sections */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px;
+    margin-bottom: 12px;
+    box-shadow: var(--shadow);
+  }
+  .card-title {
+    font-size: 15px; font-weight: 800; margin-bottom: 6px;
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    flex-wrap: wrap;
+  }
+  .section-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 12px 0 8px; font-size: 13px; font-weight: 800; color: var(--text-muted);
+  }
+
+  /* Breadcrumb */
+  .breadcrumb {
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+    margin-bottom: 10px; font-size: 13px; font-weight: 700;
+  }
+  .crumb-btn {
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--primary); padding: 5px 10px; border-radius: 8px;
+    font-family: inherit; font-size: 12.5px; font-weight: 800; cursor: pointer;
+  }
+
+  /* Folder Grid */
+  .folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .folder-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+    text-align: right;
+    cursor: pointer;
+    font-family: inherit;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    display: flex; flex-direction: column; gap: 8px;
+    transition: border-color 0.15s, transform 0.1s;
+  }
+  .folder-card:hover { border-color: var(--primary); }
+  .folder-card:active { transform: scale(0.98); }
+  .folder-top { display: flex; align-items: center; justify-content: space-between; }
+  .folder-ico {
+    width: 40px; height: 40px; border-radius: 11px;
+    display: flex; align-items: center; justify-content: center; font-size: 20px;
+  }
+  .folder-name { font-size: 14px; font-weight: 800; line-height: 1.3; }
+  .folder-sub { font-size: 11.5px; color: var(--text-muted); font-weight: 600; }
+
+  /* Search */
+  .search-box { position: relative; margin-bottom: 12px; }
+  .search-box input {
+    width: 100%;
+    padding: 11px 40px 11px 36px;
+    border-radius: var(--radius);
+    border: 1.5px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 13.5px; font-family: inherit; outline: none;
+  }
+  .search-box input:focus { border-color: var(--primary); }
+  .search-icon {
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--text-muted); pointer-events: none; font-size: 15px;
+  }
+  .search-clear {
+    position: absolute; left: 9px; top: 50%; transform: translateY(-50%);
+    background: var(--surface-2); border: none; color: var(--text-muted);
+    width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+    display: none; align-items: center; justify-content: center; font-size: 12px;
+  }
+  .search-clear.show { display: inline-flex; }
+
+  /* Segmented & Pills */
+  .seg-control {
+    display: flex; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 12px;
+    padding: 4px; gap: 4px; margin-bottom: 12px;
+  }
+  .seg-btn {
+    flex: 1; border: none; background: transparent; color: var(--text-muted);
+    padding: 9px 8px; border-radius: 9px; font-family: inherit;
+    font-size: 12.5px; font-weight: 700; cursor: pointer; transition: all 0.15s;
+  }
+  .seg-btn.active { background: var(--surface); color: var(--primary); box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+
+  .pills-row {
+    display: flex; gap: 6px; overflow-x: auto;
+    padding-bottom: 6px; margin-bottom: 8px; scrollbar-width: none;
+  }
+  .pills-row::-webkit-scrollbar { display: none; }
+  .pill {
+    flex-shrink: 0; padding: 6px 12px; border-radius: 99px;
+    border: 1px solid var(--border); background: var(--surface);
+    color: var(--text-muted); font-size: 12px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .pill.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+  /* Badges */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 99px; font-size: 11px; font-weight: 700;
+  }
+  .badge-primary { background: var(--primary-soft); color: var(--primary); }
+  .badge-accent { background: var(--accent-soft); color: var(--accent); }
+  .badge-success { background: var(--success-soft); color: var(--success); }
+  .badge-danger { background: var(--danger-soft); color: var(--danger); }
+  .badge-info { background: var(--info-soft); color: var(--info); }
+  .badge-muted { background: var(--surface-2); color: var(--text-muted); }
+
+  /* Buttons */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+    padding: 9px 13px; border-radius: var(--radius-sm);
+    border: 1px solid transparent; font-family: inherit;
+    font-size: 12.5px; font-weight: 700; cursor: pointer;
+    transition: opacity 0.15s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--primary); color: #fff; }
+  .btn-soft { background: var(--primary-soft); color: var(--primary); }
+  .btn-outline { background: var(--surface); color: var(--text); border-color: var(--border); }
+  .btn-accent { background: var(--accent-soft); color: var(--accent); }
+  .btn-danger { background: var(--danger-soft); color: var(--danger); }
+  .btn-sm { padding: 6px 10px; font-size: 12px; }
+  .btn-row { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 10px; }
+
+  /* Quick Access Grid */
+  .quick-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 12px; }
+  .quick-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 12px; text-align: right;
+    cursor: pointer; font-family: inherit; color: var(--text);
+    display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow);
+  }
+  .quick-ico {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0;
+  }
+  .quick-label { font-size: 13px; font-weight: 800; display: block; }
+  .quick-sub { font-size: 11px; color: var(--text-muted); display: block; }
+
+  /* List Item Cards */
+  .item-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 13px; margin-bottom: 10px;
+    cursor: pointer; box-shadow: var(--shadow); transition: border-color 0.15s;
+  }
+  .item-card:hover { border-color: var(--primary); }
+  .item-card.pinned { border-right: 4px solid var(--accent); }
+  .item-meta { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 6px; align-items: center; }
+  .item-title { font-size: 14.5px; font-weight: 800; margin-bottom: 4px; line-height: 1.4; }
+  .item-snippet { font-size: 12.5px; color: var(--text-muted); }
+
+  /* Detail Boxes */
+  .layer-box { background: var(--surface-2); border-radius: 12px; padding: 12px; margin-top: 10px; }
+  .kv-list { list-style: none; display: flex; flex-direction: column; gap: 7px; }
+  .kv-list li {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 9px; padding: 8px 10px; font-size: 13px;
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 10px;
+  }
+  .kv-val { font-weight: 800; color: var(--primary); flex-shrink: 0; text-align: left; }
+
+  .warn-box {
+    background: var(--danger-soft); border: 1px solid rgba(220,38,38,0.25);
+    border-radius: 10px; padding: 10px 12px; margin-top: 10px; font-size: 12.5px;
+  }
+  .warn-box strong { color: var(--danger); display: block; margin-bottom: 4px; }
+
+  .exp-link-box {
+    background: var(--accent-soft); border: 1px solid rgba(217,119,6,0.35);
+    border-radius: 12px; padding: 12px; margin-top: 12px;
+  }
+  .exp-link-head { font-size: 13px; font-weight: 800; color: var(--accent); margin-bottom: 6px; }
+
+  .svg-wrap {
+    position: relative;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px; margin-top: 10px;
+    text-align: center; cursor: zoom-in;
+  }
+  .svg-wrap svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+  .zoom-hint { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+
+  /* Checklist Items */
+  .chk-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 11px; padding: 10px 12px; margin-bottom: 8px;
+  }
+  .chk-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .chk-text { font-size: 13px; font-weight: 600; flex: 1; line-height: 1.5; }
+  .chk-btns { display: flex; gap: 4px; flex-shrink: 0; align-items: center; }
+  .chk-state {
+    border: 1px solid var(--border); background: var(--surface-2); color: var(--text-muted);
+    padding: 5px 8px; border-radius: 8px; font-size: 11.5px; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+  }
+  .chk-state.pass { background: var(--success-soft); border-color: var(--success); color: var(--success); }
+  .chk-state.fail { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); }
+  .snag-input {
+    width: 100%; margin-top: 7px; padding: 7px 10px; border-radius: 8px;
+    border: 1px solid var(--danger); background: var(--bg); color: var(--text);
+    font-family: inherit; font-size: 12.5px;
+  }
+
+  .prog-track { height: 8px; background: var(--surface-2); border-radius: 99px; overflow: hidden; margin: 8px 0; }
+  .prog-fill { height: 100%; background: var(--primary); transition: width 0.25s ease; }
+
+  /* Timer */
+  .timer-display {
+    font-size: 36px; font-weight: 900; text-align: center;
+    color: var(--primary); margin: 8px 0; letter-spacing: 2px;
+  }
+
+  /* Calculator */
+  .calc-result {
+    background: var(--primary-soft); border: 1.5px solid var(--primary);
+    border-radius: var(--radius); padding: 14px; margin-top: 12px;
+  }
+  .calc-main-val { font-size: 25px; font-weight: 900; color: var(--primary); line-height: 1.25; }
+  .calc-sub-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
+  .calc-mini {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 9px; padding: 8px 10px; font-size: 12px;
+  }
+  .calc-mini span { display: block; color: var(--text-muted); font-size: 11px; }
+  .calc-mini strong { font-size: 13.5px; color: var(--text); }
+
+  /* Forms */
+  .form-group { margin-bottom: 10px; }
+  .form-group label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 4px; color: var(--text-muted); }
+  .form-control {
+    width: 100%; padding: 10px 12px; border-radius: 10px;
+    border: 1px solid var(--border); background: var(--bg); color: var(--text);
+    font-family: inherit; font-size: 13.5px; outline: none;
+  }
+  .form-control:focus { border-color: var(--primary); }
+  textarea.form-control { min-height: 85px; resize: vertical; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  @media (max-width: 480px) { .grid-2 { grid-template-columns: 1fr; } }
+
+  .kv-editor-row { display: flex; gap: 6px; margin-bottom: 6px; align-items: center; }
+  .kv-editor-row input { flex: 1; padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-family: inherit; font-size: 12.5px; }
+
+  /* Photos & Lightbox */
+  .photo-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .photo-thumb {
+    position: relative; width: 92px; height: 92px;
+    border-radius: 10px; overflow: hidden; border: 1px solid var(--border);
+  }
+  .photo-thumb img { width: 100%; height: 100%; object-fit: cover; cursor: zoom-in; }
+  .photo-del {
+    position: absolute; top: 3px; left: 3px; width: 22px; height: 22px;
+    border-radius: 50%; border: none; background: rgba(220,38,38,0.9); color: #fff;
+    font-size: 12px; cursor: pointer;
+  }
+
+  /* Modal & Lightbox */
+  .modal-backdrop {
+    position: fixed; inset: 0; background: rgba(15, 23, 42, 0.65);
+    display: none; align-items: flex-end; justify-content: center; z-index: 200;
+  }
+  .modal-backdrop.open { display: flex; }
+  @media (min-width: 640px) { .modal-backdrop { align-items: center; } }
+  .modal {
+    background: var(--surface); width: 100%; max-width: 640px; max-height: 90vh;
+    border-radius: 18px 18px 0 0; overflow-y: auto; padding: 16px;
+    box-shadow: 0 -4px 24px rgba(0,0,0,0.28);
+  }
+  @media (min-width: 640px) { .modal { border-radius: 18px; } }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding-bottom: 10px; margin-bottom: 12px; border-bottom: 1px solid var(--border);
+  }
+  .modal-head h3 { font-size: 15.5px; font-weight: 800; flex: 1; line-height: 1.4; }
+
+  .lightbox {
+    position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9);
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 350; padding: 16px;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox-inner {
+    max-width: 96vw; max-height: 82vh; overflow: auto;
+    background: var(--surface); border-radius: 12px; padding: 10px;
+  }
+  .lightbox-inner img { max-width: 100%; max-height: 76vh; display: block; border-radius: 8px; }
+  .lightbox-inner svg { width: min(92vw, 760px); height: auto; display: block; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: calc(var(--nav-h) + 14px); left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #0f172a; color: #fff; padding: 10px 16px; border-radius: 99px;
+    font-size: 13px; font-weight: 700; opacity: 0; pointer-events: none;
+    transition: all 0.22s ease; z-index: 400; max-width: 90vw; text-align: center;
+  }
+  [data-theme="dark"] .toast { background: #f1f5f9; color: #0f172a; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .empty-state { text-align: center; padding: 26px 14px; color: var(--text-muted); font-size: 13.5px; }
+  .journal-collapse {
+    background: var(--surface-2); border-radius: 10px; padding: 10px; margin-top: 8px;
+    font-size: 13px; white-space: pre-wrap;
+  }
+  .disclaimer {
+    font-size: 11.5px; color: var(--text-muted); text-align: center;
+    margin-top: 10px; padding: 6px; background: var(--surface-2); border-radius: 8px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-logo">MEP</div>
+    <div>
+      <div class="brand-title">MEP Field Companion</div>
+      <div class="brand-sub">أوفلاين 100% · V1.3 PWA</div>
+    </div>
+  </div>
+  <div class="top-actions">
+    <button class="icon-btn" id="btnPrivacy" title="إخفاء/إظهار ملاحظاتي الخاصة قدام الاستشاري"></button>
+    <button class="icon-btn" id="btnTheme" title="تبديل وضع النهار / الليل">🌙</button>
+    <button class="icon-btn" id="btnSettings" title="الإعدادات والنسخ الاحتياطي">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><circle cx="12" cy="12" r="3"/></svg>
+      <span class="dot-alert" id="backupDot"></span>
+    </button>
+  </div>
+</header>
+
+<div class="global-timer-bar" id="globalTimerBar">
+  <span id="globalTimerText">⏱️ مؤقت اختبار قيد التشغيل</span>
+  <span class="ltr" id="globalTimerClock" style="background:rgba(255,255,255,0.2);padding:2px 8px;border-radius:99px;">00:00</span>
+</div>
+
+<main class="container">
+
+  <!-- ================= TAB 1: HOME ================= -->
+  <section class="tab-panel active" id="tab-home">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="globalSearch" placeholder="ابحث في كل التطبيق (شطاف، بولي، حريق، دكت، شوب درونج، Revit...)">
+      <button class="search-clear" id="btnClearSearch">✕</button>
+    </div>
+
+    <div id="searchResultsWrap" style="display:none;"></div>
+
+    <div id="homeDefaultWrap">
+      <div id="continueWrap"></div>
+
+      <div class="section-head"><span>وصول سريع في الموقع</span></div>
+      <div class="quick-grid">
+        <button class="quick-card" id="qaQuickDraft">
+          <div class="quick-ico" style="background:var(--accent-soft);color:var(--accent);">⚡</div>
+          <div><span class="quick-label">+ مسودة خبرة</span><span class="quick-sub">سجل موقف في 10 ثواني</span></div>
+        </button>
+        <button class="quick-card" id="qaPlumbing">
+          <div class="quick-ico" style="background:var(--info-soft);color:var(--info);">🚿</div>
+          <div><span class="quick-label">مناسيب السباكة</span><span class="quick-sub">أرقام + رسم الحائط</span></div>
+        </button>
+        <button class="quick-card" id="qaPprTest">
+          <div class="quick-ico" style="background:var(--primary-soft);color:var(--primary);">⏱️</div>
+          <div><span class="quick-label">اختبار البولي</span><span class="quick-sub">DIN 1988 + مؤقت</span></div>
+        </button>
+        <button class="quick-card" id="qaDuctCalc">
+          <div class="quick-ico" style="background:var(--success-soft);color:var(--success);">📐</div>
+          <div><span class="quick-label">مقاس الدكت</span><span class="quick-sub">SMACNA + رسم تحاميل</span></div>
+        </button>
+      </div>
+
+      <div class="card" id="tipCard">
+        <div class="card-title">
+          <span>💡 معلومة اليوم</span>
+          <div style="display:flex;gap:6px;">
+            <button class="btn btn-soft btn-sm" id="btnOpenTipSource">فتح الأصل ←</button>
+            <button class="btn btn-outline btn-sm" id="btnNextTip">تغيير ↻</button>
+          </div>
+        </div>
+        <div id="tipContent"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title"><span>ملخص مكتبتك الشخصية</span></div>
+        <div class="calc-sub-grid" id="homeStats"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 2: LIBRARY & EXPERIENCE ================= -->
+  <section class="tab-panel" id="tab-library">
+    <div class="seg-control">
+      <button class="seg-btn active" data-libsub="encyclopedia">📚 الموسوعة والكود</button>
+      <button class="seg-btn" data-libsub="experience" id="btnExpSubTab">🧠 أرشيف خبراتي</button>
+    </div>
+
+    <div id="lib-encyclopedia"></div>
+
+    <div id="lib-experience" style="display:none;">
+      <div class="btn-row" style="margin-top:0;margin-bottom:10px;">
+        <button class="btn btn-accent" style="flex:1;" id="btnExpDraft">⚡ مسودة سريعة (10 ثواني)</button>
+        <button class="btn btn-primary" style="flex:1;" id="btnExpFull">📝 موقف + Journal كامل</button>
+      </div>
+      <div class="pills-row" id="expFilters"></div>
+      <div id="expList"></div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 3: CHECKLISTS & TESTS ================= -->
+  <section class="tab-panel" id="tab-qa">
+    <div id="qaRootView"></div>
+  </section>
+
+  <!-- ================= TAB 4: CALCULATORS ================= -->
+  <section class="tab-panel" id="tab-calc">
+    <div class="pills-row" id="calcFilterPills">
+      <button class="pill active" data-cfilter="all">الكل</button>
+      <button class="pill" data-cfilter="fav">★ المفضلة</button>
+      <button class="pill" data-cfilter="hvac">تكييف</button>
+      <button class="pill" data-cfilter="general">عام</button>
+    </div>
+
+    <div class="pills-row" id="calcTabs"></div>
+
+    <!-- Calc 1: Unit Converter -->
+    <div class="card calc-pane" id="calc-units">
+      <div class="card-title">
+        <span>🔄 محول الوحدات الهندسية <span class="en-inline">(MEP)</span></span>
+        <button class="icon-btn" data-favcalc="units" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="form-group">
+        <label>الفئة</label>
+        <select id="unitCat" class="form-control">
+          <option value="airflow">تدفق الهواء (Airflow)</option>
+          <option value="cooling">التبريد (Cooling)</option>
+          <option value="pressure">الضغط (Pressure)</option>
+          <option value="length">الأبعاد (Length)</option>
+        </select>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>القيمة</label>
+          <input type="number" id="unitVal" class="form-control ltr" value="1000" step="any">
+        </div>
+        <div class="form-group">
+          <label>من وحدة</label>
+          <select id="unitFrom" class="form-control ltr"></select>
+        </div>
+      </div>
+      <div class="calc-result" id="unitOutput"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyUnit">📋 نسخ</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveUnit">💾 حفظ في مشروع</button>
+      </div>
+    </div>
+
+    <!-- Calc 2: Duct Sizer -->
+    <div class="card calc-pane" id="calc-duct" style="display:none;">
+      <div class="card-title">
+        <span>📐 مقاس الدكت وتحاميل <span class="en-inline">SMACNA</span></span>
+        <button class="icon-btn" data-favcalc="duct" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="seg-control" style="margin-bottom:10px;">
+        <button class="seg-btn active" data-ductshape="rect">مستطيل (Rectangular)</button>
+        <button class="seg-btn" data-ductshape="round">دائري (Round / Spiral)</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>التدفق</label>
+          <div style="display:flex;gap:6px;">
+            <input type="number" id="ductFlow" class="form-control ltr" value="2500" min="1" step="any">
+            <select id="ductFlowUnit" class="form-control ltr" style="width:95px;flex-shrink:0;">
+              <option value="cfm">CFM</option>
+              <option value="ls">L/s</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>السرعة المستهدفة <span class="en-inline">(m/s)</span></label>
+          <input type="number" id="ductVel" class="form-control ltr" value="5" min="1" max="15" step="0.5">
+        </div>
+      </div>
+      <div class="form-group" id="ductHGroup">
+        <label>ارتفاع الدكت المختار <span class="en-inline">H (mm)</span> — للتحويل لمستطيل</label>
+        <input type="number" id="ductH" class="form-control ltr" value="350" min="100" max="1500" step="50">
+      </div>
+      <div id="ductOutputWrap"></div>
+      <div class="svg-wrap" id="ductSvgWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyDuct">📋 نسخ المقاس</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveDuct">💾 حفظ في مشروع</button>
+      </div>
+      <div class="disclaimer">القطر المكافئ بمعادلة Huebscher — للتقدير الميداني وراجع جدول SMACNA واللوحات المعتمدة.</div>
+    </div>
+
+    <!-- Calc 3: Cooling Load -->
+    <div class="card calc-pane" id="calc-load" style="display:none;">
+      <div class="card-title">
+        <span>❄️ تقدير الحمل الحراري السريع</span>
+        <button class="icon-btn" data-favcalc="load" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>المساحة (م²)</label>
+          <input type="number" id="loadArea" class="form-control ltr" value="48" min="1" step="1">
+        </div>
+        <div class="form-group">
+          <label>نوع الفراغ</label>
+          <select id="loadType" class="form-control">
+            <option value="16">مكتب إداري (16 م² / طن)</option>
+            <option value="18">غرفة سكنية / نوم (18 م² / طن)</option>
+            <option value="14">معيشة / استقبال (14 م² / طن)</option>
+            <option value="12">قاعة اجتماعات (12 م² / طن)</option>
+            <option value="11">جيم / صالة رياضية (11 م² / طن)</option>
+            <option value="10">مطعم / كافيه (10 م² / طن)</option>
+          </select>
+        </div>
+      </div>
+      <div id="loadOutputWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyLoad">📋 نسخ النتيجة</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveLoad">💾 حفظ في مشروع</button>
+      </div>
+      <div class="disclaimer">تقدير استرشادي سريع فقط (Rule of Thumb) — التصميم النهائي يتم عبر HAP / CLTD.</div>
+    </div>
+  </section>
+
+  <!-- ================= TAB 5: MY PROJECTS ================= -->
+  <section class="tab-panel" id="tab-projects">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <h2 style="font-size:16px;font-weight:800;">📁 مشاريعي</h2>
+      <button class="btn btn-primary btn-sm" id="btnNewProject">+ مشروع جديد</button>
+    </div>
+    <div id="projectsList"></div>
+    <div id="projectDetail" style="display:none;"></div>
+  </section>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="bottom-nav">
+  <button class="nav-item active" data-tab="home">
+    <span class="nav-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1h-5v-6H9v6H4a1 1 0 01-1-1v-9.5z"/></svg></span>
+    <span>الرئيسية</span>
+  </button>
+  <button class="nav-item" data-tab="library">
+    <span class="nav-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg></span>
+    <span>الموسوعة</span>
+  </button>
+  <button class="nav-item" data-tab="qa">
+    <span class="nav-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></span>
+    <span>قوائم واختبارات</span>
+  </button>
+  <button class="nav-item" data-tab="calc">
+    <span class="nav-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m-6 4h6m-6 4h2m4 0h.01M6 3h12a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V5a2 2 0 012-2z"/></svg></span>
+    <span>الحاسبات</span>
+  </button>
+  <button class="nav-item" data-tab="projects">
+    <span class="nav-pill"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"/></svg></span>
+    <span>مشاريعي</span>
+  </button>
+</nav>
+
+<!-- MODAL WITH BACK-STACK -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modalBox">
+    <div class="modal-head">
+      <button class="btn btn-soft btn-sm" id="btnModalBack" style="display:none;">← رجوع</button>
+      <h3 id="modalTitle">عنوان</h3>
+      <button class="icon-btn" id="btnCloseModal" style="width:32px;height:32px;">✕</button>
+    </div>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div style="width:100%;max-width:760px;display:flex;justify-content:flex-end;margin-bottom:10px;">
+    <button class="btn btn-outline btn-sm" id="btnCloseLightbox" style="background:#fff;color:#0f172a;">✕ إغلاق التكبير</button>
+  </div>
+  <div class="lightbox-inner" id="lightboxInner"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  const KB_FOLDERS = [
+    { id: 'تكييف', name: 'تكييف', en: 'HVAC', icon: '❄️', bg: 'var(--info-soft)', color: 'var(--info)' },
+    { id: 'سباكة', name: 'سباكة وصحي', en: 'Plumbing', icon: '💧', bg: 'var(--primary-soft)', color: 'var(--primary)' },
+    { id: 'حريق', name: 'مكافحة حريق', en: 'Fire Fighting', icon: '🔥', bg: 'var(--danger-soft)', color: 'var(--danger)' },
+    { id: 'BIM & Revit', name: 'BIM & Revit', en: 'Modeling', icon: '💻', bg: 'var(--accent-soft)', color: 'var(--accent)' },
+    { id: 'مكتب فني وعام', name: 'مكتب فني وعام', en: 'Tech Office', icon: '📐', bg: 'var(--success-soft)', color: 'var(--success)' }
+  ];
+
+  const QA_FOLDERS = [
+    { id: 'تكييف', name: 'تكييف', en: 'HVAC', icon: '❄️', bg: 'var(--info-soft)', color: 'var(--info)' },
+    { id: 'سباكة', name: 'سباكة وصحي', en: 'Plumbing', icon: '💧', bg: 'var(--primary-soft)', color: 'var(--primary)' },
+    { id: 'حريق', name: 'مكافحة حريق', en: 'Fire Fighting', icon: '🔥', bg: 'var(--danger-soft)', color: 'var(--danger)' },
+    { id: 'مكتب فني وتصميم', name: 'مكتب فني وتصميم', en: 'Tech Office', icon: '📐', bg: 'var(--accent-soft)', color: 'var(--accent)' }
+  ];
+
+  const SVG_EYE = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/><circle cx="12" cy="12" r="3"/></svg>`;
+  const SVG_EYE_OFF = `<svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88L6.59 6.59m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>`;
+
+  const SEED_STATE = {
+    version: 3,
+    theme: 'light',
+    privacyMode: false,
+    lastBackupAt: null,
+    lastVisited: null,
+    timerState: { testId: null, presetMin: 30, remainingMs: 30 * 60 * 1000, endTs: null },
+    favCalcs: ['units', 'duct'],
+    knowledgeCards: [
+      {
+        id: 'kb-plumbing-heights',
+        title: 'مناسيب السباكة القياسية للتشطيبات (السوق المصري)',
+        discipline: 'سباكة',
+        context: 'تنفيذ وموقع',
+        pinned: true,
+        linkedQaId: 'chk-plumbing',
+        keywords: 'شطاف حوض وش مطبخ سخان قاعدة معلقة شاور فانيتي شرب تشطيب صرف تغذية geberit grohe vanity ffl',
+        quickPoints: [
+          { label: 'مرجع التأسيس على الطوب', value: 'الشرب +1.00m − (5–10 سم تشطيب)' },
+          { label: 'حوض الوش (سطح الحوض)', value: '80 – 85 سم' },
+          { label: 'تغذية / صرف حوض الوش (عادي)', value: '50 سم / 45 سم' },
+          { label: 'تغذية / صرف حوض بوحدة Vanity', value: '55–60 سم / 50–55 سم' },
+          { label: 'خلاط الحوض الدفن', value: '100 سم (فوق الحوض 15–20 سم)' },
+          { label: 'حوض المطبخ (تغذية وصرف)', value: 'الحوض 90 سم | مخارج 50–60 سم' },
+          { label: 'القاعدة المعلقة (وش السيراميك)', value: '41 – 42 سم (مسامير الشاسيه 32–35)' },
+          { label: 'خلاط الشطاف', value: '60 سم' },
+          { label: 'خلاط الشاور / الهاند شاور', value: '100–110 سم / 130 سم' },
+          { label: 'الرين شاور (سقف ≥ 240 سم)', value: '210 – 220 سم' },
+          { label: 'سخان المياه (بارد وساخن)', value: '140–150 سم (بينهم 10–15 سم)' }
+        ],
+        warnings: [
+          'لا تقيس من الخرسانة مباشرة — استخدم الشرب المعماري (+1.00m FFL) دائماً.',
+          'في أحواض الفانيتي بأدراج، راجع كتالوج الوحدة قبل التأسيس لتفادي تعارض الصرف مع الدرج السفلي.',
+          'رقم 41–42 سم للقاعدة المعلقة هو وش السيراميك النهائي وليس ارتفاع مسامير الشاسيه (32–35 سم).',
+          'اترك 40–50 سم خلوص فوق جسم السخان للسقف لأعمال الصيانة.'
+        ],
+        details: 'المرجع الأول في التنفيذ والاستلام مع الاستشاري هو لوحات الـ Shop Drawing المعتمدة وكتالوجات الأجهزة الصحية (Submittals).\n\n• في حوض المطبخ يُفضل إزاحة التغذية عن منتصف الصرف بـ 10–15 سم لتسهيل تركيب كوع الصرف وفلتر المياه.\n• مسطرة الدش المنزلقة (Slide Bar) تُثبت غالباً بين 110 و180 سم.\n• شاسيه القاعدة المعلقة (Geberit / Grohe) يُضبط بعلامة المتر المحفورة على الشاسيه مع الشرب المعماري.',
+        svgType: 'plumbing_wall',
+        photos: []
+      },
+      {
+        id: 'kb-ppr-test',
+        title: 'اختبار ضغط مواسير البولي (PPR — DIN 1988-2)',
+        discipline: 'سباكة',
+        context: 'أكواد ومعايير',
+        pinned: false,
+        linkedQaId: 'test-ppr',
+        keywords: 'بولي كبس ضغط اختبار تسريب ppr hydrostatic din 1988 bar',
+        quickPoints: [
+          { label: 'ضغط الاختبار القياسي', value: '1.5 × ضغط التشغيل المسموح' },
+          { label: 'المرحلة التمهيدية (تمدد البولي)', value: '30 دقيقة (تعويض عند 10 و20 د)' },
+          { label: 'سماحية الهبوط بعد 30 دقيقة التالية', value: '≤ 0.6 bar (صفر تسريب)' },
+          { label: 'الاختبار الرئيسي (Main Test)', value: '120 دقيقة — هبوط ≤ 0.2 bar' },
+          { label: 'دقة عداد الضغط ومكانه', value: '0.1 bar في أوطى نقطة بالشبكة' }
+        ],
+        warnings: [
+          'ممنوع تماماً اختبار البولي بالهواء المضغوط في الاختبار النهائي (خطر انفجار).',
+          'لا تختصر الاختبار في 15 دقيقة؛ تمدد البولي المرن يخفي التسريبات البطيئة.',
+          'ممنوع الردم أو التقفيل بالمحارة قبل اعتماد محضر الكبس.'
+        ],
+        details: 'خطوات التنفيذ حسب DIN 1988-2:\n1. الانتظار بعد آخر لحام حراري وتفريغ الهواء بالكامل من أعلى نقطة أثناء الملء بالمياه النظيفة.\n2. رفع الضغط تدريجياً إلى 1.5 × ضغط التشغيل.\n3. خلال أول 30 دقيقة يُعاد تعويض الضغط مرتين (عند 10 و20 دقيقة) للسماح بتمدد خامة الـ PPR.\n4. مراقبة 30 دقيقة بدون ضخ: الهبوط المسموح ≤ 0.6 bar.\n5. استكمال 120 دقيقة متواصلة بدون ضخ: الهبوط المسموح ≤ 0.2 bar مع فحص بصري لكل اللحامات.',
+        svgType: null,
+        photos: []
+      },
+      {
+        id: 'kb-duct-smacna',
+        title: 'مسافات تحاميل دكت التكييف (SMACNA Supports)',
+        discipline: 'تكييف',
+        context: 'تنفيذ وموقع',
+        pinned: true,
+        linkedQaId: 'chk-hvac',
+        keywords: 'دكت تحاميل تعليق صاج تيش زاوية سمكنا فلكسبل hvac duct hanger smacna',
+        quickPoints: [
+          { label: 'المسافة القياسية للدكت الصاج المستطيل', value: '2.4 m (8 ft) أو 3.0 m (10 ft)' },
+          { label: 'الدكت الكبير (مساحة > 10 ft²)', value: 'كل 1.2 m (4 ft) أو حسب الجدول' },
+          { label: 'مسافة التحميل عند الأكواع (Elbows)', value: 'خلال 0.61 m (2 ft) من الكوع' },
+          { label: 'عند التفرعات (Intersections)', value: 'خلال 1.2 m (4 ft)' },
+          { label: 'الدكت المرن (Flexible Duct)', value: 'أقصى مسافة 1.5 m (5 ft) | ترخيم ≤ 0.5"/ft' }
+        ],
+        warnings: [
+          'استخدم زاوية وشريحة تحميل مناسبة لنصف المحيط (P/2) حسب جدول SMACNA Table 4-1M.',
+          'اربط الفلكسبل بسير عريض (Wide Saddle) وليس سلك رفيع يخنق مسار الهواء.',
+          'افصل الدكت المعزول عن التحميلة أو اعزلها لمنع التكثيف (Thermal Bridge).'
+        ],
+        details: 'ملاحظات استلام تعليق الدكت:\n• الدكت الصاج يُحسب له نصف المحيط P/2 = (W + H) لتحديد قطر التيش (Threaded Rod) ومقاس الزاوية.\n• راجع استقامة المسار بالليزر، وجودة السيلانت على الوصلات، وتغطية كامل الصاج بالعزل وحاجز البخار (Vapor Barrier) بدون فواصل مفتوحة.',
+        svgType: 'duct_support',
+        photos: []
+      },
+      {
+        id: 'kb-fire-hydro',
+        title: 'الاختبار الهيدروستاتيكي لشبكة الحريق (NFPA 13)',
+        discipline: 'حريق',
+        context: 'أكواد ومعايير',
+        pinned: false,
+        linkedQaId: 'test-fire-hydro',
+        keywords: 'حريق رشاشات هيدروستاتيك ضغط فاير nfpa 13 hydrostatic bar psi',
+        quickPoints: [
+          { label: 'ضغط الاختبار القياسي (NFPA 13)', value: '200 psi (13.8 bar) لمدة ساعتين' },
+          { label: 'لو ضغط التشغيل > 150 psi', value: 'ضغط التشغيل + 50 psi لمدة ساعتين' },
+          { label: 'السماحية المسموحة للهبوط/التسريب', value: 'صفر تسريب مرئي أو هبوط ضغط' }
+        ],
+        warnings: [
+          'تأكد من إزالة أو عزل أي معدات غير مصممة لتحمل ضغط الاختبار قبل الكبس.',
+          'افحص كل اللحامات والـ Grooved Couplings والـ Threaded Joints بصرياً أثناء الاختبار.'
+        ],
+        details: 'حسب NFPA 13، تُختبر جميع مواسير شبكة الرشاشات هيدروستاتيكياً عند ضغط لا يقل عن 200 psi (13.8 bar) لمدة ساعتين متواصلتين بدون أي تسريب ظاهر، وقبل تقفيل الأسقف المعلقة.',
+        svgType: null,
+        photos: []
+      },
+      {
+        id: 'kb-bim-coord',
+        title: 'قواعد ضبط موديل Revit قبل الـ Coordination',
+        discipline: 'BIM & Revit',
+        context: 'تصميم ومكتب فني',
+        pinned: false,
+        linkedQaId: 'chk-shop',
+        keywords: 'ريفيت بيم موديل كلاش navisworks revit bim coordination worksets levels',
+        quickPoints: [
+          { label: 'توحيد الإحداثيات والمناسيب', value: 'Copy/Monitor للـ Grids والـ Levels من المعماري' },
+          { label: 'التحقق من السقف الساقط (RCP)', value: 'مطابقة منسوب الجبس بورد قبل مد الدكت' },
+          { label: 'تجهيز Clash Detection', value: 'تصدير NWC منفصل لكل نظام (HVAC / FF / PL)' }
+        ],
+        warnings: [
+          'لا تبدأ الرسم في Revit قبل التأكد إن ملفات المعماري والإنشائي هي آخر Revision معتمد.',
+          'اترك خلوص الصيانة (Clearance Zone) للـ FCU والـ VAV في الموديل قبل فحص الكلاشات.'
+        ],
+        details: 'خطوات سريعة لتقليل إعادة الشغل في الـ BIM:\n1. افصل الأنظمة بـ System Types وألوان واضحة.\n2. فعّل Slope على مواسير الصرف من البداية عشان يبان أي تعارض حقيقي مع الكمرات الساقطة.\n3. راجع قائمة "ما قبل الـ Shop Drawing" قبل تصدير اللوحات.',
+        svgType: null,
+        photos: []
+      },
+      {
+        id: 'kb-coord-rules',
+        title: 'أولوية المسارات وحل التعارضات (MEP Coordination)',
+        discipline: 'مكتب فني وعام',
+        context: 'تصميم ومكتب فني',
+        pinned: false,
+        linkedQaId: 'chk-shop',
+        keywords: 'تعارض كلاش تنسيق مسارات شوب درونج clash coordination routing rfi',
+        quickPoints: [
+          { label: 'الأولوية 1 (الأعلى — غير قابل للتحريك)', value: 'مواسير الصرف بالميول (Gravity Drainage)' },
+          { label: 'الأولوية 2', value: 'مجاري الهواء الكبيرة (Main HVAC Ducts)' },
+          { label: 'الأولوية 3', value: 'مواسير التبريد والحريق الرئيسية (CHW / FF)' },
+          { label: 'الأولوية 4', value: 'حوامل الكابلات والباص واي (Cable Trays)' },
+          { label: 'الأولوية 5 (الأسهل في التحويل)', value: 'مواسير التغذية المضغوطة ومواسير الكهرباء' }
+        ],
+        warnings: [
+          'ممنوع مرور مواسير مياه أو صرف فوق غرف الكهرباء أو اللوحات الرئيسية.',
+          'تأكد من خلوص الصيانة (Access Doors) للـ FCU والـ VAV والـ Fire Dampers قبل اعتماد الكوردنيشن.'
+        ],
+        details: 'قبل إصدار لوحات الـ Shop Drawing، طبّق قائمة الـ 11 خطوة لتحديد هل التعارض يُحل بالتنسيق الداخلي (Coordination) أم يتطلب رفع استفسار رسمي للاستشاري (RFI).',
+        svgType: null,
+        photos: []
+      }
+    ],
+    experienceLogs: [
+      {
+        id: 'exp-sample-1',
+        title: 'تعارض درج وحدة حوض Vanity مع مخرج الصرف',
+        discipline: 'سباكة',
+        tag: 'خبرة تنفيذية',
+        projectContext: 'مشروع تشطيب سكني',
+        date: '2026-11-18',
+        isDraft: false,
+        lesson: 'في أي حمام فيه وحدة حوض بأدراج، ارفع الصرف لـ 50–55 سم والتغذية لـ 55–60 سم بعد مراجعة كتالوج الوحدة قبل التأسيس.',
+        journal: 'بعد ما السيراميك ركب وبدأنا نركب وحدات الحوض الجاهزة، اكتشفنا إن الدرج السفلي بيخبط في كوع الصرف لأن التأسيس كان معمول على 45 سم القياسي. اضطرينا نعدل في ظهر الدرج بالنجار عشان نعدي الموقف. من يومها بقيت بطلب كتالوج الوحدات من المعماري قبل استلام تأسيس السباكة.',
+        linkedKbId: 'kb-plumbing-heights',
+        promotedIds: [],
+        photos: []
+      }
+    ],
+    checklists: [
+      {
+        id: 'chk-hvac',
+        title: 'استلام دكت التكييف',
+        enTag: 'HVAC IR',
+        folder: 'تكييف',
+        linkedKbId: 'kb-duct-smacna',
+        items: [
+          { id: 'h1', text: 'مطابقة تخانة الصاج (Gauge) والماتريال مع الـ Material Submittal المعتمد', status: null, note: '' },
+          { id: 'h2', text: 'التأكد من مسافات التحاميل (Supports) وأقطار التيش والزوايا حسب SMACNA', status: null, note: '' },
+          { id: 'h3', text: 'إحكام الفلنجات والوصلات وتطبيق السيلانت (Duct Sealant) بالكامل', status: null, note: '' },
+          { id: 'h4', text: 'نجاح اختبار التسريب / الضوء / الدخان قبل تركيب العزل', status: null, note: '' },
+          { id: 'h5', text: 'تغطية العزل بالكامل وسلامة حاجز البخار (Vapor Barrier) وشريط الألومنيوم', status: null, note: '' }
+        ]
+      },
+      {
+        id: 'chk-plumbing',
+        title: 'استلام تأسيس السباكة',
+        enTag: 'Plumbing IR',
+        folder: 'سباكة',
+        linkedKbId: 'kb-plumbing-heights',
+        items: [
+          { id: 'p1', text: 'مراجعة جميع المناسيب من الشرب المعماري (+1.00m FFL) وليس من الخرسانة', status: null, note: '' },
+          { id: 'p2', text: 'مراجعة مناسيب الصرف والتغذية مع كتالوج وحدات الفانيتي والأجهزة الصحية', status: null, note: '' },
+          { id: 'p3', text: 'التأكد من استقامة وضبط شاسيه القاعدة المعلقة على علامة المتر (مسامير 32–35 سم)', status: null, note: '' },
+          { id: 'p4', text: 'مراجعة ميول مواسير الصرف واختبار سريان المياه والغمر', status: null, note: '' },
+          { id: 'p5', text: 'إتمام اختبار ضغط البولي (DIN 1988-2) واعتماد القراءات قبل التقفيل', status: null, note: '' }
+        ]
+      },
+      {
+        id: 'chk-fire',
+        title: 'استلام شبكة مكافحة الحريق',
+        enTag: 'Fire Fighting IR',
+        folder: 'حريق',
+        linkedKbId: 'kb-fire-hydro',
+        items: [
+          { id: 'f1', text: 'مطابقة أقطار المواسير (SCH 40 / Seamless) واعتماد الخامات والمحابس (UL/FM)', status: null, note: '' },
+          { id: 'f2', text: 'مراجعة جودة اللحامات أو وصلات الـ Grooved Couplings وعدم وجود تسريب', status: null, note: '' },
+          { id: 'f3', text: 'مراجعة مسافات التحاميل (Hangers) والـ Sway Bracing حسب NFPA 13', status: null, note: '' },
+          { id: 'f4', text: 'مراجعة توزيع ومناسيب الرشاشات (Sprinklers) وتنسيقها مع السقف المعلق (RCP)', status: null, note: '' },
+          { id: 'f5', text: 'إتمام الاختبار الهيدروستاتيكي (200 psi لمدة ساعتين) قبل الطلاء أو التقفيل', status: null, note: '' }
+        ]
+      },
+      {
+        id: 'chk-shop',
+        title: 'ما قبل الـ Shop Drawing (الـ 11 خطوة)',
+        enTag: 'Pre-Shop',
+        folder: 'مكتب فني وتصميم',
+        isShopMode: true,
+        linkedKbId: 'kb-coord-rules',
+        items: [
+          { id: 's1', text: '1. آخر إصدار لوحات IFC Drawings المعتمدة', status: null, note: '' },
+          { id: 's2', text: '2. مراجعة المواصفات الفنية (Specifications)', status: null, note: '' },
+          { id: 's3', text: '3. مطابقة اللوحات المعمارية (Architectural Drawings & RCP)', status: null, note: '' },
+          { id: 's4', text: '4. مطابقة اللوحات الإنشائية (Structural Beams & Slabs)', status: null, note: '' },
+          { id: 's5', text: '5. التنسيق مع باقي تخصصات MEP (Coordination)', status: null, note: '' },
+          { id: 's6', text: '6. مراجعة جداول المعدات والأجهزة (Equipment & Fixture Schedules)', status: null, note: '' },
+          { id: 's7', text: '7. التحقق من لوحات الـ Approved Shop Drawings السابقة', status: null, note: '' },
+          { id: 's8', text: '8. مطابقة اعتمادات الخامات (Material Submittals)', status: null, note: '' },
+          { id: 's9', text: '9. مراجعة النوت الحسابية (Calculations)', status: null, note: '' },
+          { id: 's10', text: '10. حصر ملاحظات الاستشاري والـ RFIs السابقة', status: null, note: '' },
+          { id: 's11', text: '11. مطابقة الوضع القائم على الطبيعة (Site Condition)', status: null, note: '' }
+        ]
+      }
+    ],
+    tests: [
+      {
+        id: 'test-ppr',
+        title: 'اختبار ضغط مواسير البولي',
+        enTag: 'PPR · DIN 1988-2',
+        folder: 'سباكة',
+        hasTimer: true,
+        timerPresets: [
+          { label: '10 د (تعويض)', min: 10 },
+          { label: '30 د (تمهيدي)', min: 30 },
+          { label: '120 د (رئيسي)', min: 120 }
+        ],
+        linkedKbId: 'kb-ppr-test',
+        mode: 'ppr',
+        summary: '1.5× ضغط التشغيل · هبوط ≤ 0.6 bar (تمهيدي) و ≤ 0.2 bar (رئيسي)'
+      },
+      {
+        id: 'test-duct-smoke',
+        title: 'اختبار دخان وإضاءة الدكت',
+        enTag: 'HVAC Smoke/Light',
+        folder: 'تكييف',
+        hasTimer: true,
+        timerPresets: [
+          { label: '15 د (فحص قطاع)', min: 15 },
+          { label: '30 د (خط رئيسي)', min: 30 }
+        ],
+        linkedKbId: 'kb-duct-smacna',
+        mode: 'duct_smoke',
+        summary: 'فحص إحكام الوصلات والفلنجات بالسيلانت قبل تركيب العزل'
+      },
+      {
+        id: 'test-fire-hydro',
+        title: 'الاختبار الهيدروستاتيكي للحريق',
+        enTag: 'NFPA 13 Hydrostatic',
+        folder: 'حريق',
+        hasTimer: true,
+        timerPresets: [
+          { label: '30 د (فحص مبدئي)', min: 30 },
+          { label: '120 د (ساعتان NFPA)', min: 120 }
+        ],
+        linkedKbId: 'kb-fire-hydro',
+        mode: 'fire_hydro',
+        summary: '200 psi (13.8 bar) لمدة ساعتين بدون أي هبوط أو تسريب'
+      }
+    ],
+    projects: [
+      {
+        id: 'proj-demo',
+        name: 'مشروع تجريبي — مبنى إداري',
+        createdAt: '2026-11-20',
+        savedCalcs: [],
+        savedTests: [],
+        notes: [
+          { id: 'pn1', date: '2026-11-20', text: 'تأكد من مراجعة منسوب السقف الساقط في الدور الأول قبل تصنيع دكت الممر الرئيسي.' }
+        ]
+      }
+    ]
+  };
+
+  /* ==================== STORAGE ENGINE ==================== */
+  const DB_NAME = 'mep_field_companion_db_v11';
+  const STORE_NAME = 'app_state';
+  let state = JSON.parse(JSON.stringify(SEED_STATE));
+  let dbInstance = null;
+
+  function openDB() {
+    return new Promise((resolve) => {
+      try {
+        if (!window.indexedDB) return resolve(null);
+        const req = indexedDB.open(DB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) db.createObjectStore(STORE_NAME);
+        };
+        req.onsuccess = (e) => { dbInstance = e.target.result; resolve(dbInstance); };
+        req.onerror = () => resolve(null);
+      } catch (err) { resolve(null); }
+    });
+  }
+
+  function migrateState(parsed) {
+    const base = JSON.parse(JSON.stringify(SEED_STATE));
+    const merged = Object.assign(base, parsed);
+    if (Array.isArray(merged.knowledgeCards)) {
+      merged.knowledgeCards = merged.knowledgeCards.map(k => ({
+        ...k,
+        context: k.context || (k.type === 'أكواد' ? 'أكواد ومعايير' : (k.type === 'مذكرات' ? 'تصميم ومكتب فني' : 'تنفيذ وموقع')),
+        discipline: k.discipline === 'عام' ? 'مكتب فني وعام' : (k.discipline || 'مكتب فني وعام'),
+        pinned: !!k.pinned
+      }));
+    }
+    if (Array.isArray(merged.experienceLogs)) {
+      merged.experienceLogs = merged.experienceLogs.map(e => ({
+        ...e,
+        promotedIds: Array.isArray(e.promotedIds) ? e.promotedIds : (e.promotedTo ? ['chk-hvac'] : [])
+      }));
+    }
+    if (!Array.isArray(merged.tests) || !merged.tests.length) merged.tests = JSON.parse(JSON.stringify(SEED_STATE.tests));
+    if (Array.isArray(merged.checklists)) {
+      merged.checklists = merged.checklists.map(c => ({ ...c, folder: c.folder || c.discipline || 'تكييف' }));
+      if (!merged.checklists.some(c => c.id === 'chk-shop')) {
+        merged.checklists.push(JSON.parse(JSON.stringify(SEED_STATE.checklists.find(c => c.id === 'chk-shop'))));
+      }
+    }
+    if (!merged.timerState) merged.timerState = { testId: null, presetMin: 30, remainingMs: 30 * 60 * 1000, endTs: null };
+    return merged;
+  }
+
+  async function loadState() {
+    const db = await openDB();
+    if (db) {
+      try {
+        const saved = await new Promise((resolve) => {
+          const tx = db.transaction(STORE_NAME, 'readonly');
+          const req = tx.objectStore(STORE_NAME).get('main');
+          req.onsuccess = () => resolve(req.result);
+          req.onerror = () => resolve(null);
+        });
+        if (saved && saved.version) { state = migrateState(saved); return; }
+      } catch (e) {}
+    }
+    try {
+      const ls = localStorage.getItem(DB_NAME);
+      if (ls) {
+        const parsed = JSON.parse(ls);
+        if (parsed && parsed.version) state = migrateState(parsed);
+      }
+    } catch (e) {}
+  }
+
+  function saveState() {
+    if (dbInstance) {
+      try { dbInstance.transaction(STORE_NAME, 'readwrite').objectStore(STORE_NAME).put(state, 'main'); } catch (e) {}
+    }
+    try { localStorage.setItem(DB_NAME, JSON.stringify(state)); } catch (e) {}
+    updateBackupIndicator();
+  }
+
+  /* ==================== HELPERS, AUDIO, ICS, MODAL STACK, LIGHTBOX ==================== */
+  let toastTimer = null;
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
+  }
+
+  function copyText(text, msg) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(() => showToast(msg || 'تم النسخ ✅')).catch(() => fallbackCopy(text, msg));
+    } else fallbackCopy(text, msg);
+  }
+  function fallbackCopy(text, msg) {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast(msg || 'تم النسخ ✅'); }
+    catch (e) { showToast('تعذر النسخ تلقائياً'); }
+    document.body.removeChild(ta);
+  }
+
+  function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const maxW = 1100;
+          let w = img.width, h = img.height;
+          if (w > maxW) { h = Math.round((h * maxW) / w); w = maxW; }
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL('image/jpeg', 0.72));
+        };
+        img.onerror = reject;
+        img.src = e.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function esc(str) {
+    return String(str || '').replace(/[&<>"']/g, (m) => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[m]));
+  }
+
+  function playAlarmBeep() {
+    try {
+      if (navigator.vibrate) navigator.vibrate([300, 150, 300, 150, 400]);
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      [0, 0.35, 0.7].forEach(offset => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime + offset);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime + offset);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + offset + 0.25);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(ctx.currentTime + offset);
+        osc.stop(ctx.currentTime + offset + 0.26);
+      });
+    } catch (e) {}
+  }
+
+  function downloadIcsReminder(title, minutesFromNow, description) {
+    const start = new Date(Date.now() + Math.max(1, minutesFromNow) * 60 * 1000);
+    const end = new Date(start.getTime() + 10 * 60 * 1000);
+    const fmt = (d) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+    const ics = [
+      'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//MEP Field Companion//AR',
+      'BEGIN:VEVENT', 'UID:mep-' + Date.now() + '@fieldcompanion',
+      'DTSTAMP:' + fmt(new Date()), 'DTSTART:' + fmt(start), 'DTEND:' + fmt(end),
+      'SUMMARY:⏱️ انتهاء ' + title,
+      'DESCRIPTION:' + (description || 'مراجعة قراءة عداد الاختبار في الموقع'),
+      'BEGIN:VALARM', 'TRIGGER:-PT0M', 'ACTION:DISPLAY', 'DESCRIPTION:انتهاء زمن الاختبار', 'END:VALARM',
+      'END:VEVENT', 'END:VCALENDAR'
+    ].join('\r\n');
+    const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'MEP_Test_Reminder.ics'; a.click();
+    URL.revokeObjectURL(url);
+    showToast('تم إنشاء ملف التذكير (.ics) — افتحه لحفظ المنبه بالتقويم 🔔');
+  }
+
+  let modalStack = [];
+  let currentModalMeta = null;
+
+  function openModal(title, html, meta) {
+    const wasOpen = document.getElementById('modalBackdrop').classList.contains('open');
+    if (meta && meta.pushFromCurrent && currentModalMeta) {
+      modalStack.push(currentModalMeta);
+      try { history.pushState({ mepModal: true }, ''); } catch (e) {}
+    } else if (!meta || !meta.isRestore) {
+      modalStack = [];
+      if (!wasOpen) { try { history.pushState({ mepModal: true }, ''); } catch (e) {} }
+    }
+    currentModalMeta = meta && meta.reopen ? meta : null;
+    document.getElementById('modalTitle').textContent = title;
+    document.getElementById('modalContent').innerHTML = html;
+    document.getElementById('btnModalBack').style.display = modalStack.length ? 'inline-flex' : 'none';
+    document.getElementById('modalBackdrop').classList.add('open');
+  }
+
+  function popModalOrClose() {
+    if (modalStack.length) { modalStack.pop().reopen(true); }
+    else closeAllModals();
+  }
+  function closeAllModals() {
+    modalStack = []; currentModalMeta = null;
+    document.getElementById('modalBackdrop').classList.remove('open');
+  }
+
+  window.addEventListener('popstate', () => {
+    if (document.getElementById('lightbox').classList.contains('open')) {
+      document.getElementById('lightbox').classList.remove('open');
+      return;
+    }
+    if (document.getElementById('modalBackdrop').classList.contains('open')) popModalOrClose();
+  });
+
+  document.getElementById('btnModalBack').addEventListener('click', popModalOrClose);
+  document.getElementById('btnCloseModal').addEventListener('click', closeAllModals);
+  document.getElementById('modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeAllModals(); });
+
+  function confirmAction(message, onConfirm) {
+    openModal('تأكيد العملية', `
+      <p style="font-size:14px;margin-bottom:14px;">${esc(message)}</p>
+      <div class="btn-row">
+        <button class="btn btn-danger" id="btnConfYes" style="flex:1;">نعم، تأكيد</button>
+        <button class="btn btn-outline" id="btnConfNo" style="flex:1;">إلغاء</button>
+      </div>
+    `, { pushFromCurrent: !!currentModalMeta });
+    document.getElementById('btnConfYes').addEventListener('click', onConfirm);
+    document.getElementById('btnConfNo').addEventListener('click', popModalOrClose);
+  }
+
+  function openLightboxHtml(innerHtml) {
+    document.getElementById('lightboxInner').innerHTML = innerHtml;
+    document.getElementById('lightbox').classList.add('open');
+    try { history.pushState({ mepLight: true }, ''); } catch (e) {}
+  }
+  document.getElementById('btnCloseLightbox').addEventListener('click', () => document.getElementById('lightbox').classList.remove('open'));
+  document.getElementById('lightbox').addEventListener('click', (e) => { if (e.target.id === 'lightbox') document.getElementById('lightbox').classList.remove('open'); });
+
+  function updateBackupIndicator() {
+    const dot = document.getElementById('backupDot');
+    const needsBackup = !state.lastBackupAt || (Date.now() - state.lastBackupAt > 7 * 24 * 60 * 60 * 1000);
+    dot.classList.toggle('show', needsBackup);
+  }
+  function getApproxSizeKB() {
+    try { return (new Blob([JSON.stringify(state)]).size / 1024).toFixed(1); }
+    catch (e) { return (JSON.stringify(state).length / 1024).toFixed(1); }
+  }
+
+  /* ==================== SVG DIAGRAMS ==================== */
+  function getPlumbingWallSvg() {
+    return `<svg viewBox="0 0 560 290" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="رسم مناسيب السباكة القياسية">
+      <rect x="0" y="0" width="560" height="290" rx="10" fill="var(--surface-2)"/>
+      <line x1="16" y1="252" x2="544" y2="252" stroke="var(--text)" stroke-width="2.5"/>
+      <text x="538" y="272" text-anchor="end" font-size="12" font-weight="800" fill="var(--text)">وش التشطيب ±0.00 FFL</text>
+      <line x1="16" y1="158" x2="544" y2="158" stroke="var(--accent)" stroke-width="1.6" stroke-dasharray="6,4"/>
+      <text x="22" y="150" font-size="11.5" font-weight="800" fill="var(--accent)">الشرب المعماري +1.00m</text>
+      <rect x="34" y="20" width="124" height="232" fill="none" stroke="var(--border)" stroke-dasharray="3,3"/>
+      <line x1="96" y1="44" x2="96" y2="57" stroke="var(--primary)" stroke-width="3"/>
+      <ellipse cx="96" cy="60" rx="19" ry="5" fill="var(--primary)"/>
+      <text x="96" y="36" text-anchor="middle" font-size="11.5" font-weight="800" fill="var(--primary)">رين شاور 210–220</text>
+      <circle cx="88" cy="150" r="5.5" fill="var(--danger)"/>
+      <circle cx="104" cy="150" r="5.5" fill="var(--info)"/>
+      <text x="96" y="137" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text)">شاور 100–110</text>
+      <rect x="192" y="188" width="74" height="27" rx="8" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+      <circle cx="216" cy="216" r="4" fill="var(--accent)"/>
+      <circle cx="242" cy="216" r="4" fill="var(--accent)"/>
+      <text x="229" y="180" text-anchor="middle" font-size="11.5" font-weight="800" fill="var(--text)">قاعدة 41–42</text>
+      <text x="229" y="236" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--accent)">مسامير 32–35</text>
+      <circle cx="294" cy="194" r="5.5" fill="var(--primary)"/>
+      <text x="294" y="180" text-anchor="middle" font-size="11" font-weight="800" fill="var(--primary)">شطاف 60</text>
+      <path d="M342 172 h72 v12 q0 14 -36 14 q-36 0 -36 -14 z" fill="var(--surface)" stroke="var(--text)" stroke-width="2"/>
+      <circle cx="368" cy="201" r="4.5" fill="var(--danger)"/>
+      <circle cx="388" cy="201" r="4.5" fill="var(--info)"/>
+      <circle cx="378" cy="212" r="5" fill="var(--text-muted)"/>
+      <text x="378" y="164" text-anchor="middle" font-size="11.5" font-weight="800" fill="var(--text)">حوض 80</text>
+      <text x="378" y="230" text-anchor="middle" font-size="10" font-weight="700" fill="var(--text-muted)">تغذية 50 / صرف 45</text>
+      <text x="378" y="244" text-anchor="middle" font-size="10" font-weight="800" fill="var(--danger)">Vanity: 55–60 / 50–55</text>
+      <rect x="456" y="54" width="60" height="72" rx="12" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
+      <text x="486" y="94" text-anchor="middle" font-size="12" font-weight="800" fill="var(--primary)">سخان</text>
+      <circle cx="476" cy="136" r="4.5" fill="var(--danger)"/>
+      <circle cx="496" cy="136" r="4.5" fill="var(--info)"/>
+      <text x="486" y="152" text-anchor="middle" font-size="10.5" font-weight="800" fill="var(--text)">140–150 سم</text>
+      <text x="486" y="44" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--danger)">خلوص ≥ 40–50</text>
+    </svg>`;
+  }
+
+  function getDuctSupportSvg(wMm, hMm, spacingM, rodMm) {
+    const w = wMm || 800, h = hMm || 350, sp = spacingM || '2.4', rod = rodMm || '9.5';
+    return `<svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="رسم قطاع دكت التكييف والتحميلة">
+      <rect x="0" y="0" width="500" height="200" rx="10" fill="var(--surface-2)"/>
+      <rect x="30" y="16" width="440" height="14" fill="var(--border)"/>
+      <text x="250" y="27" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-muted)">سقف خرساني (Concrete Slab)</text>
+      <line x1="75" y1="30" x2="75" y2="148" stroke="var(--accent)" stroke-width="2.5"/>
+      <line x1="205" y1="30" x2="205" y2="148" stroke="var(--accent)" stroke-width="2.5"/>
+      <rect x="85" y="72" width="110" height="66" rx="4" fill="var(--primary-soft)" stroke="var(--primary)" stroke-width="2.5"/>
+      <line x1="65" y1="144" x2="215" y2="144" stroke="var(--text)" stroke-width="4"/>
+      <text x="140" y="102" text-anchor="middle" font-size="12" font-weight="800" fill="var(--primary)">${w} × ${h} mm</text>
+      <text x="140" y="119" text-anchor="middle" font-size="10.5" fill="var(--text-muted)">تيش Ø ${rod} mm</text>
+      <text x="140" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">قطاع عرضي (زاوية تحميل)</text>
+      <rect x="255" y="78" width="205" height="54" rx="3" fill="var(--primary-soft)" stroke="var(--primary)" stroke-width="2"/>
+      <line x1="285" y1="30" x2="285" y2="138" stroke="var(--accent)" stroke-width="2.5"/>
+      <line x1="425" y1="30" x2="425" y2="138" stroke="var(--accent)" stroke-width="2.5"/>
+      <line x1="285" y1="54" x2="425" y2="54" stroke="var(--danger)" stroke-width="1.8"/>
+      <polygon points="285,54 293,50 293,58" fill="var(--danger)"/>
+      <polygon points="425,54 417,50 417,58" fill="var(--danger)"/>
+      <text x="355" y="48" text-anchor="middle" font-size="12" font-weight="800" fill="var(--danger)">المسافة ≤ ${sp} m</text>
+      <text x="355" y="109" text-anchor="middle" font-size="11" font-weight="700" fill="var(--primary)">مسار الدكت الأفقي</text>
+      <text x="355" y="168" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">مسافة التحاميل (SMACNA)</text>
+    </svg>`;
+  }
+
+  function getRoundDuctSvg(diaMm, spacingM) {
+    const d = diaMm || 450, sp = spacingM || '1.8';
+    return `<svg viewBox="0 0 500 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="رسم قطاع دكت دائري وتحميلة">
+      <rect x="0" y="0" width="500" height="200" rx="10" fill="var(--surface-2)"/>
+      <rect x="30" y="16" width="440" height="14" fill="var(--border)"/>
+      <text x="250" y="27" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--text-muted)">سقف خرساني (Concrete Slab)</text>
+      <line x1="140" y1="30" x2="140" y2="66" stroke="var(--accent)" stroke-width="3"/>
+      <circle cx="140" cy="106" r="40" fill="var(--primary-soft)" stroke="var(--primary)" stroke-width="2.5"/>
+      <circle cx="140" cy="106" r="43" fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6,3"/>
+      <text x="140" y="110" text-anchor="middle" font-size="12.5" font-weight="800" fill="var(--primary)">Ø ${d} mm</text>
+      <text x="140" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">قطاع دائري (Clevis / Strap)</text>
+      <rect x="255" y="78" width="205" height="54" rx="26" fill="var(--primary-soft)" stroke="var(--primary)" stroke-width="2"/>
+      <line x1="290" y1="30" x2="290" y2="136" stroke="var(--accent)" stroke-width="2.5"/>
+      <line x1="425" y1="30" x2="425" y2="136" stroke="var(--accent)" stroke-width="2.5"/>
+      <line x1="290" y1="54" x2="425" y2="54" stroke="var(--danger)" stroke-width="1.8"/>
+      <polygon points="290,54 298,50 298,58" fill="var(--danger)"/>
+      <polygon points="425,54 417,50 417,58" fill="var(--danger)"/>
+      <text x="358" y="48" text-anchor="middle" font-size="12" font-weight="800" fill="var(--danger)">المسافة ≤ ${sp} m</text>
+      <text x="358" y="109" text-anchor="middle" font-size="11" font-weight="700" fill="var(--primary)">مسار الدكت الدائري</text>
+      <text x="358" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="var(--text)">مسافة التحاميل (SMACNA)</text>
+    </svg>`;
+  }
+
+  /* ==================== NAVIGATION & TOP BAR ==================== */
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const panel = document.getElementById('tab-' + tabId);
+    const nav = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+    if (panel) panel.classList.add('active');
+    if (nav) nav.classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    if (tabId === 'home') renderHome();
+    if (tabId === 'library') renderLibrary();
+    if (tabId === 'qa') renderQA();
+    if (tabId === 'projects') renderProjects();
+  }
+  document.querySelectorAll('.nav-item').forEach(btn => btn.addEventListener('click', () => switchTab(btn.dataset.tab)));
+
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', state.theme);
+    document.getElementById('btnTheme').textContent = state.theme === 'dark' ? '☀️' : '🌙';
+  }
+  document.getElementById('btnTheme').addEventListener('click', () => {
+    state.theme = state.theme === 'dark' ? 'light' : 'dark';
+    applyTheme(); saveState();
+    showToast(state.theme === 'dark' ? 'تم تفعيل الوضع الليلي 🌙' : 'تم تفعيل وضع النهار للموقع ☀️');
+  });
+
+  function applyPrivacy() {
+    const btn = document.getElementById('btnPrivacy');
+    btn.classList.toggle('privacy-on', state.privacyMode);
+    btn.innerHTML = state.privacyMode ? SVG_EYE_OFF : SVG_EYE;
+  }
+  document.getElementById('btnPrivacy').addEventListener('click', () => {
+    state.privacyMode = !state.privacyMode;
+    applyPrivacy(); saveState(); renderLibrary();
+    if (currentModalMeta && currentModalMeta.reopen) currentModalMeta.reopen(true);
+    showToast(state.privacyMode ? 'وضع الخصوصية مُفعّل: ملاحظاتك الشخصية مخفية' : 'إظهار ملاحظاتك الشخصية في الموسوعة');
+  });
+
+  /* ==================== HOME TAB & GLOBAL SEARCH ==================== */
+  let tipIndex = 0;
+  function getAllTips() {
+    const baseTips = [
+      { code: 'DIN 1988-2', text: 'في اختبار ضغط البولي PPR: الهبوط المسموح في الاختبار الرئيسي (120 دقيقة) هو 0.2 bar فقط.', target: { kind: 'kb', id: 'kb-ppr-test' } },
+      { code: 'SMACNA', text: 'يجب تركيب تحميلة للدكت الصاج على مسافة لا تزيد عن 0.61 متر (2 قدم) من كل كوع.', target: { kind: 'kb', id: 'kb-duct-smacna' } },
+      { code: 'NFPA 13', text: 'الاختبار الهيدروستاتيكي لشبكة الرشاشات يكون عند 200 psi (13.8 bar) لمدة ساعتين بدون تسريب.', target: { kind: 'kb', id: 'kb-fire-hydro' } }
+    ];
+    const expTips = state.experienceLogs.filter(e => e.lesson).map(e => ({
+      code: '💡 من واقع خبرتك · ' + e.tag, text: e.lesson, target: { kind: 'exp', id: e.id }
+    }));
+    return expTips.concat(baseTips);
+  }
+
+  function isLastVisitedValid() {
+    const lv = state.lastVisited;
+    if (!lv) return false;
+    if (lv.type === 'kb') return state.knowledgeCards.some(x => x.id === lv.id);
+    if (lv.type === 'exp') return state.experienceLogs.some(x => x.id === lv.id);
+    if (lv.type === 'chk') return state.checklists.some(x => x.id === lv.id);
+    if (lv.type === 'test') return state.tests.some(x => x.id === lv.id);
+    return false;
+  }
+
+  function renderHome() {
+    const cont = document.getElementById('continueWrap');
+    if (state.lastVisited && !isLastVisitedValid()) { state.lastVisited = null; saveState(); }
+    if (state.lastVisited) {
+      cont.innerHTML = `<div class="card" id="btnContinueCard" style="cursor:pointer;border-right:4px solid var(--primary);">
+        <div style="font-size:11.5px;color:var(--text-muted);font-weight:700;">أكمل من حيث توقفت ↩</div>
+        <div style="font-size:14.5px;font-weight:800;margin-top:2px;">${esc(state.lastVisited.label)}</div>
+      </div>`;
+      document.getElementById('btnContinueCard').addEventListener('click', () => {
+        const lv = state.lastVisited;
+        if (lv.type === 'kb') openKbDetail(lv.id);
+        else if (lv.type === 'exp') openExpDetail(lv.id);
+        else if (lv.type === 'chk') openQaChecklist(lv.id);
+        else if (lv.type === 'test') openQaTest(lv.id);
+      });
+    } else cont.innerHTML = '';
+
+    const tips = getAllTips();
+    const t = tips[tipIndex % tips.length];
+    document.getElementById('tipContent').innerHTML = `<span class="badge badge-accent" style="margin-bottom:6px;">${esc(t.code)}</span><p style="font-size:13.5px;">${esc(t.text)}</p>`;
+    document.getElementById('btnOpenTipSource').onclick = () => { if (t.target.kind === 'kb') openKbDetail(t.target.id); else openExpDetail(t.target.id); };
+
+    const drafts = state.experienceLogs.filter(e => e.isDraft).length;
+    document.getElementById('homeStats').innerHTML = `
+      <div class="calc-mini"><span>بطاقات الموسوعة</span><strong>${state.knowledgeCards.length} بطاقة</strong></div>
+      <div class="calc-mini"><span>أرشيف خبراتي</span><strong>${state.experienceLogs.length} موقف ${drafts ? `(${drafts} مسودة)` : ''}</strong></div>
+      <div class="calc-mini"><span>قوائم واختبارات</span><strong>${state.checklists.length + state.tests.length} أداة</strong></div>
+      <div class="calc-mini"><span>حجم البيانات المحلي</span><strong class="ltr">${getApproxSizeKB()} KB</strong></div>`;
+  }
+
+  document.getElementById('btnNextTip').addEventListener('click', () => { tipIndex++; renderHome(); });
+  document.getElementById('qaQuickDraft').addEventListener('click', () => openExpFormModal(null, true));
+  document.getElementById('qaPlumbing').addEventListener('click', () => openKbDetail('kb-plumbing-heights'));
+  document.getElementById('qaPprTest').addEventListener('click', () => openQaTest('test-ppr'));
+  document.getElementById('qaDuctCalc').addEventListener('click', () => { switchTab('calc'); selectCalc('duct'); });
+
+  const searchInput = document.getElementById('globalSearch');
+  const clearSearchBtn = document.getElementById('btnClearSearch');
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    clearSearchBtn.classList.toggle('show', q.length > 0);
+    const resWrap = document.getElementById('searchResultsWrap');
+    const defWrap = document.getElementById('homeDefaultWrap');
+    if (!q) { resWrap.style.display = 'none'; defWrap.style.display = 'block'; return; }
+    defWrap.style.display = 'none'; resWrap.style.display = 'block';
+
+    const hits = [];
+    state.knowledgeCards.forEach(k => {
+      let score = 0;
+      if (k.title.toLowerCase().includes(q)) score += 10;
+      if ((k.keywords || '').toLowerCase().includes(q)) score += 8;
+      if ((k.discipline + ' ' + k.context).toLowerCase().includes(q)) score += 5;
+      if (k.quickPoints.some(p => (p.label + ' ' + p.value).toLowerCase().includes(q))) score += 4;
+      if ((k.details || '').toLowerCase().includes(q)) score += 2;
+      if (score > 0) hits.push({ score, kind: 'kb', item: k });
+    });
+    state.experienceLogs.forEach(e => {
+      let score = 0;
+      if (e.title.toLowerCase().includes(q)) score += 10;
+      if ((e.lesson || '').toLowerCase().includes(q)) score += 9;
+      if ((e.tag + ' ' + e.discipline).toLowerCase().includes(q)) score += 5;
+      if ((e.journal || '').toLowerCase().includes(q)) score += 1;
+      if (score > 0) hits.push({ score, kind: 'exp', item: e });
+    });
+    state.checklists.forEach(c => {
+      let score = 0;
+      if ((c.title + ' ' + (c.enTag || '')).toLowerCase().includes(q)) score += 9;
+      if (c.folder.toLowerCase().includes(q)) score += 4;
+      if (c.items.some(i => i.text.toLowerCase().includes(q))) score += 5;
+      if (score > 0) hits.push({ score, kind: 'chk', item: c });
+    });
+    state.tests.forEach(t => {
+      let score = 0;
+      if ((t.title + ' ' + (t.enTag || '')).toLowerCase().includes(q)) score += 9;
+      if ((t.folder + ' ' + t.summary).toLowerCase().includes(q)) score += 5;
+      if (score > 0) hits.push({ score, kind: 'test', item: t });
+    });
+    [
+      { id: 'units', title: 'محول الوحدات الهندسية (MEP)', keys: 'محول وحدات cfm l/s tr kw bar psi' },
+      { id: 'duct', title: 'حاسبة مقاس الدكت وتحاميل SMACNA', keys: 'مقاس دكت حاسبة duct sizer smacna huebscher' },
+      { id: 'load', title: 'حاسبة تقدير الحمل الحراري السريع', keys: 'حمل حراري تبريد تكييف cooling load tr' }
+    ].forEach(calc => {
+      if ((calc.title + ' ' + calc.keys).toLowerCase().includes(q)) hits.push({ score: 8, kind: 'calc', item: calc });
+    });
+
+    hits.sort((a, b) => b.score - a.score);
+    if (!hits.length) {
+      resWrap.innerHTML = `<div class="card empty-state">لا توجد نتائج مطابقة لـ "<strong>${esc(q)}</strong>"<div class="btn-row" style="justify-content:center;"><button class="btn btn-primary btn-sm" id="btnAddFromSearch">+ أضفها في الموسوعة</button></div></div>`;
+      document.getElementById('btnAddFromSearch').addEventListener('click', () => openKbFormModal(null, q));
+      return;
+    }
+
+    resWrap.innerHTML = `<div class="section-head"><span>نتائج البحث الشامل (${hits.length})</span></div>` +
+      hits.map(h => {
+        if (h.kind === 'kb') return `<div class="item-card" data-sact="kb|${h.item.id}"><div class="item-meta"><span class="badge badge-primary">📚 موسوعة</span><span class="badge badge-muted">${esc(h.item.discipline)}</span></div><div class="item-title">${esc(h.item.title)}</div></div>`;
+        if (h.kind === 'exp') return `<div class="item-card" data-sact="exp|${h.item.id}"><div class="item-meta"><span class="badge badge-accent">🧠 من خبراتي</span><span class="badge badge-muted">${esc(h.item.tag)}</span></div><div class="item-title">${esc(h.item.title)}</div><div class="item-snippet">${esc(h.item.lesson || 'مسودة...')}</div></div>`;
+        if (h.kind === 'chk') return `<div class="item-card" data-sact="chk|${h.item.id}"><div class="item-meta"><span class="badge badge-success">✅ قائمة فحص</span><span class="badge badge-muted">${esc(h.item.folder)}</span></div><div class="item-title">${esc(h.item.title)}</div></div>`;
+        if (h.kind === 'test') return `<div class="item-card" data-sact="test|${h.item.id}"><div class="item-meta"><span class="badge badge-info">⏱️ اختبار تسليم</span><span class="badge badge-muted">${esc(h.item.folder)}</span></div><div class="item-title">${esc(h.item.title)}</div></div>`;
+        return `<div class="item-card" data-sact="calc|${h.item.id}"><div class="item-meta"><span class="badge badge-primary">🧮 حاسبة</span></div><div class="item-title">${esc(h.item.title)}</div></div>`;
+      }).join('');
+
+    resWrap.querySelectorAll('[data-sact]').forEach(el => el.addEventListener('click', () => {
+      const [kind, id] = el.dataset.sact.split('|');
+      if (kind === 'kb') openKbDetail(id);
+      else if (kind === 'exp') openExpDetail(id);
+      else if (kind === 'chk') openQaChecklist(id);
+      else if (kind === 'test') openQaTest(id);
+      else if (kind === 'calc') { switchTab('calc'); selectCalc(id); }
+    }));
+  });
+  clearSearchBtn.addEventListener('click', () => { searchInput.value = ''; searchInput.dispatchEvent(new Event('input')); });
+
+  /* ==================== LIBRARY & EXPERIENCE ==================== */
+  let libSub = 'encyclopedia';
+  let activeKbFolder = null;
+  let kbContextFilter = 'الكل';
+  let kbLocalQuery = '';
+  let expFilter = 'الكل';
+
+  document.querySelectorAll('[data-libsub]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      libSub = btn.dataset.libsub;
+      document.querySelectorAll('[data-libsub]').forEach(b => b.classList.toggle('active', b.dataset.libsub === libSub));
+      document.getElementById('lib-encyclopedia').style.display = libSub === 'encyclopedia' ? 'block' : 'none';
+      document.getElementById('lib-experience').style.display = libSub === 'experience' ? 'block' : 'none';
+      renderLibrary();
+    });
+  });
+
+  function updateDraftBadge() {
+    const el = document.getElementById('btnExpSubTab');
+    if (!el) return;
+    const dCount = state.experienceLogs.filter(e => e.isDraft).length;
+    el.textContent = dCount ? `🧠 أرشيف خبراتي (${dCount} مسودة)` : '🧠 أرشيف خبراتي';
+  }
+
+  function renderLibrary() {
+    updateDraftBadge();
+    if (libSub === 'encyclopedia') renderKbView();
+    else renderExpList();
+  }
+
+  function renderKbView() {
+    const wrap = document.getElementById('lib-encyclopedia');
+    if (!activeKbFolder) {
+      wrap.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <span style="font-size:13px;font-weight:800;color:var(--text-muted);">اختر فولدر التخصص</span>
+          <button class="btn btn-primary btn-sm" id="btnAddKbRoot">+ إضافة بطاقة</button>
+        </div>
+        <div class="folder-grid">
+          ${KB_FOLDERS.map(f => {
+            const count = state.knowledgeCards.filter(k => k.discipline === f.id).length;
+            return `<button class="folder-card" data-kbfolder="${f.id}">
+              <div class="folder-top"><div class="folder-ico" style="background:${f.bg};color:${f.color};">${f.icon}</div><span class="badge badge-muted">${count} بطاقة</span></div>
+              <div><div class="folder-name">${esc(f.name)}</div><div class="folder-sub en-inline">${esc(f.en)}</div></div>
+            </button>`;
+          }).join('')}
+        </div>`;
+      document.getElementById('btnAddKbRoot').addEventListener('click', () => openKbFormModal(null));
+      wrap.querySelectorAll('[data-kbfolder]').forEach(b => b.addEventListener('click', () => {
+        activeKbFolder = b.dataset.kbfolder; kbContextFilter = 'الكل'; kbLocalQuery = ''; renderKbView();
+      }));
+      return;
+    }
+
+    const fObj = KB_FOLDERS.find(x => x.id === activeKbFolder);
+    const contexts = ['الكل', 'تصميم ومكتب فني', 'تنفيذ وموقع', 'أكواد ومعايير'];
+    wrap.innerHTML = `
+      <div class="breadcrumb" style="justify-content:space-between;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <button class="crumb-btn" id="btnKbBackRoot">← الفولدرات</button>
+          <span>${fObj ? fObj.icon + ' ' + esc(fObj.name) : esc(activeKbFolder)}</span>
+        </div>
+        <button class="btn btn-primary btn-sm" id="btnAddKbInFolder">+ بطاقة هنا</button>
+      </div>
+      <div class="search-box" style="margin-bottom:8px;">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="kbLocalSearch" value="${esc(kbLocalQuery)}" placeholder="ابحث داخل فولدر ${esc(fObj ? fObj.name : activeKbFolder)}...">
+      </div>
+      <div class="pills-row" id="kbCtxPills">
+        ${contexts.map(c => `<button class="pill ${kbContextFilter === c ? 'active' : ''}" data-kbctx="${c}">${c}</button>`).join('')}
+      </div>
+      <div id="kbFolderList"></div>`;
+
+    function renderKbFolderItemsOnly() {
+      let list = state.knowledgeCards.filter(k => k.discipline === activeKbFolder);
+      if (kbContextFilter !== 'الكل') list = list.filter(k => k.context === kbContextFilter);
+      if (kbLocalQuery.trim()) {
+        const q = kbLocalQuery.trim().toLowerCase();
+        list = list.filter(k => (k.title + ' ' + (k.keywords || '') + ' ' + (k.details || '')).toLowerCase().includes(q));
+      }
+      list.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+      const box = document.getElementById('kbFolderList');
+      if (!box) return;
+      if (!list.length) { box.innerHTML = `<div class="card empty-state">لا توجد بطاقات مطابقة هنا. اضغط "+ بطاقة هنا".</div>`; return; }
+      box.innerHTML = list.map(k => {
+        const linkedCount = state.experienceLogs.filter(e => e.linkedKbId === k.id).length;
+        return `<div class="item-card ${k.pinned ? 'pinned' : ''}" data-openkb="${k.id}">
+          <div class="item-meta">
+            ${k.pinned ? '<span class="badge badge-accent">📌 مثبّت</span>' : ''}
+            <span class="badge badge-primary">${esc(k.context || 'تنفيذ وموقع')}</span>
+            ${k.svgType ? '<span class="badge badge-info">📐 SVG</span>' : ''}
+            ${(linkedCount && !state.privacyMode) ? `<span class="badge badge-accent">💡 ${linkedCount} من خبرتك</span>` : ''}
+          </div>
+          <div class="item-title">${esc(k.title)}</div>
+          <div class="item-snippet">${esc(k.quickPoints[0] ? k.quickPoints[0].label + ': ' + k.quickPoints[0].value : (k.details || '').slice(0, 90))}</div>
+        </div>`;
+      }).join('');
+      box.querySelectorAll('[data-openkb]').forEach(el => el.addEventListener('click', () => openKbDetail(el.dataset.openkb)));
+    }
+
+    renderKbFolderItemsOnly();
+    document.getElementById('btnKbBackRoot').addEventListener('click', () => { activeKbFolder = null; renderKbView(); });
+    document.getElementById('btnAddKbInFolder').addEventListener('click', () => openKbFormModal(null, '', activeKbFolder));
+    const lsInp = document.getElementById('kbLocalSearch');
+    lsInp.addEventListener('input', () => { kbLocalQuery = lsInp.value; renderKbFolderItemsOnly(); });
+    wrap.querySelectorAll('[data-kbctx]').forEach(b => b.addEventListener('click', () => {
+      kbContextFilter = b.dataset.kbctx;
+      wrap.querySelectorAll('[data-kbctx]').forEach(x => x.classList.toggle('active', x.dataset.kbctx === kbContextFilter));
+      renderKbFolderItemsOnly();
+    }));
+  }
+
+  function openKbDetail(id, activeLayer, isRestore, pushFromCurrent) {
+    const k = state.knowledgeCards.find(x => x.id === id);
+    if (!k) return;
+    state.lastVisited = { type: 'kb', id: k.id, label: '📚 ' + k.title };
+    saveState();
+
+    const layer = activeLayer || 'site';
+    const linkedExps = state.experienceLogs.filter(e => e.linkedKbId === k.id);
+    const svgRaw = k.svgType === 'plumbing_wall' ? getPlumbingWallSvg()
+      : k.svgType === 'duct_support' ? getDuctSupportSvg(800, 350, '2.4', '9.5') : '';
+    const svgHtml = svgRaw ? `<div class="svg-wrap" id="kbSvgZoom">${svgRaw}<div class="zoom-hint">🔍 اضغط على الرسم للتكبير</div></div>` : '';
+
+    const siteHtml = `${svgHtml}
+      <div class="layer-box">
+        <div style="font-size:12px;font-weight:800;color:var(--primary);margin-bottom:8px;">⚡ الأرقام والقياسات السريعة</div>
+        <ul class="kv-list">${k.quickPoints.map(p => `<li><span>${esc(p.label)}</span><span class="kv-val">${esc(p.value)}</span></li>`).join('') || '<li><span>لا توجد نقاط سريعة بعد</span></li>'}</ul>
+      </div>
+      ${k.warnings && k.warnings.length ? `<div class="warn-box"><strong>⚠️ أخطاء شائعة وأسباب رفض:</strong>${k.warnings.map(w => `<div>• ${esc(w)}</div>`).join('')}</div>` : ''}`;
+
+    const studyHtml = `
+      <div class="layer-box" style="white-space:pre-wrap;font-size:13.5px;">${esc(k.details || 'لا توجد تفاصيل إضافية بعد.')}</div>
+      ${k.photos && k.photos.length ? `<div class="photo-grid">${k.photos.map((src, i) => `<div class="photo-thumb"><img src="${src}" data-zoomimg="${i}" alt="صورة توضيحية"></div>`).join('')}</div>` : ''}`;
+
+    const expLinkHtml = (linkedExps.length && !state.privacyMode) ? `
+      <div class="exp-link-box">
+        <div class="exp-link-head">💡 من واقع خبرتك (${linkedExps.length} موقف مرتبط)</div>
+        ${linkedExps.map(e => `<div style="background:var(--surface);padding:8px 10px;border-radius:9px;margin-top:6px;cursor:pointer;" data-jumpexp="${e.id}">
+          <div style="font-size:12.5px;font-weight:800;">${esc(e.title)} <span class="badge badge-muted">${esc(e.tag)}</span></div>
+          <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px;">${esc(e.lesson || 'اضغط لعرض التفاصيل')}</div>
+        </div>`).join('')}
+      </div>` : '';
+
+    const linkedQaChk = state.checklists.find(c => c.id === k.linkedQaId);
+    const linkedQaTest = state.tests.find(t => t.id === k.linkedQaId);
+    const crossLinkBtn = linkedQaChk ? `<button class="btn btn-primary btn-sm" id="btnJumpQa">✅ افتح قائمة الاستلام</button>`
+      : linkedQaTest ? `<button class="btn btn-primary btn-sm" id="btnJumpQa">⏱️ افتح الاختبار والمؤقت</button>` : '';
+
+    openModal(k.title, `
+      <div class="item-meta">
+        <span class="badge badge-primary">${esc(k.discipline)}</span>
+        <span class="badge badge-muted">${esc(k.context || 'تنفيذ وموقع')}</span>
+        ${k.pinned ? '<span class="badge badge-accent">📌 مثبّت</span>' : ''}
+      </div>
+      <div class="seg-control">
+        <button class="seg-btn ${layer === 'site' ? 'active' : ''}" id="btnLayerSite">⚡ وضع الموقع (5 ثواني)</button>
+        <button class="seg-btn ${layer === 'study' ? 'active' : ''}" id="btnLayerStudy">📖 التفاصيل والشرح</button>
+      </div>
+      ${layer === 'site' ? siteHtml : studyHtml}
+      ${expLinkHtml}
+      <div class="btn-row">
+        ${crossLinkBtn}
+        <button class="btn btn-outline btn-sm" id="btnPinKb">${k.pinned ? 'إلغاء التثبيت' : '📌 تثبيت فوق'}</button>
+        <button class="btn btn-soft btn-sm" id="btnEditKb">✏️ تعديل</button>
+        <button class="btn btn-accent btn-sm" id="btnAddLinkedExp">+ اربط موقف</button>
+        <button class="btn btn-danger btn-sm" id="btnDelKb">🗑️ حذف</button>
+      </div>
+    `, { isRestore: !!isRestore, pushFromCurrent: !!pushFromCurrent, reopen: (rest) => openKbDetail(id, layer, rest) });
+
+    document.getElementById('btnLayerSite').addEventListener('click', () => openKbDetail(id, 'site', true));
+    document.getElementById('btnLayerStudy').addEventListener('click', () => openKbDetail(id, 'study', true));
+    if (document.getElementById('kbSvgZoom')) document.getElementById('kbSvgZoom').addEventListener('click', () => openLightboxHtml(svgRaw));
+    document.querySelectorAll('[data-zoomimg]').forEach(img => img.addEventListener('click', () => openLightboxHtml(`<img src="${img.src}" alt="تكبير الصورة">`)));
+    if (document.getElementById('btnJumpQa')) {
+      document.getElementById('btnJumpQa').addEventListener('click', () => {
+        closeAllModals();
+        if (linkedQaChk) openQaChecklist(linkedQaChk.id);
+        else if (linkedQaTest) openQaTest(linkedQaTest.id);
+      });
+    }
+    document.getElementById('btnPinKb').addEventListener('click', () => {
+      k.pinned = !k.pinned; saveState(); openKbDetail(id, layer, true); renderLibrary();
+      showToast(k.pinned ? 'تم التثبيت في أعلى الفولدر 📌' : 'تم إلغاء التثبيت');
+    });
+    document.getElementById('btnEditKb').addEventListener('click', () => openKbFormModal(k));
+    document.getElementById('btnAddLinkedExp').addEventListener('click', () => openExpFormModal(null, false, k.id));
+    document.getElementById('btnDelKb').addEventListener('click', () => {
+      confirmAction(`هل أنت متأكد من حذف بطاقة "${k.title}"؟`, () => {
+        state.knowledgeCards = state.knowledgeCards.filter(x => x.id !== k.id);
+        saveState(); closeAllModals(); renderLibrary(); showToast('تم حذف البطاقة');
+      });
+    });
+    document.querySelectorAll('[data-jumpexp]').forEach(el => el.addEventListener('click', () => openExpDetail(el.dataset.jumpexp, false, true)));
+  }
+
+  function openKbFormModal(existing, prefillTitle, defaultDisc) {
+    const isEdit = !!existing;
+    let tempPhotos = existing ? [...(existing.photos || [])] : [];
+    let kvRows = existing && existing.quickPoints.length ? existing.quickPoints.map(p => ({ ...p })) : [{ label: '', value: '' }];
+    const warnText = existing ? (existing.warnings || []).join('\n') : '';
+
+    openModal(isEdit ? 'تعديل بطاقة موسوعة' : 'إضافة بطاقة موسوعة جديدة', `
+      <div class="form-group"><label>عنوان الموضوع *</label><input type="text" id="fKbTitle" class="form-control" value="${esc(existing ? existing.title : (prefillTitle || ''))}" placeholder="مثال: ميول مواسير الصرف"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>فولدر التخصص</label><select id="fKbDisc" class="form-control">${KB_FOLDERS.map(f => `<option value="${f.id}" ${(existing && existing.discipline === f.id) || defaultDisc === f.id ? 'selected' : ''}>${f.icon} ${f.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label>السياق</label><select id="fKbCtx" class="form-control">${['تنفيذ وموقع','تصميم ومكتب فني','أكواد ومعايير'].map(c => `<option ${existing && existing.context === c ? 'selected' : ''}>${c}</option>`).join('')}</select></div>
+      </div>
+      <div class="form-group"><label>كلمات بحث (عامي + إنجليزي)</label><input type="text" id="fKbKeys" class="form-control" value="${esc(existing ? existing.keywords : '')}" placeholder="مثال: صرف ميول slope pvc"></div>
+      <div class="form-group"><label>القياسات والأرقام السريعة</label><div id="kvEditorWrap"></div><button class="btn btn-outline btn-sm" id="btnAddKvRow" style="margin-top:4px;">+ إضافة سطر قياس</button></div>
+      <div class="form-group"><label>أخطاء شائعة / أسباب رفض (سطر لكل نقطة)</label><textarea id="fKbWarn" class="form-control" style="min-height:60px;">${esc(warnText)}</textarea></div>
+      <div class="form-group"><label>التفاصيل والشرح ونص الكود</label><textarea id="fKbDetails" class="form-control">${esc(existing ? existing.details : '')}</textarea></div>
+      <div class="form-group"><label>صور تفاصيل / اسكتشات (تُضغط تلقائياً ~150KB)</label><input type="file" id="fKbPhoto" accept="image/*" class="form-control"><div class="photo-grid" id="fKbPhotoPreview"></div></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btnSaveKbForm" style="flex:1;">💾 حفظ البطاقة</button></div>
+    `, { pushFromCurrent: !!currentModalMeta });
+
+    function renderKvRows() {
+      const w = document.getElementById('kvEditorWrap');
+      w.innerHTML = kvRows.map((r, i) => `<div class="kv-editor-row"><input type="text" data-kvl="${i}" value="${esc(r.label)}" placeholder="البيان"><input type="text" data-kvv="${i}" value="${esc(r.value)}" placeholder="القيمة"><button class="icon-btn" style="width:32px;height:32px;flex-shrink:0;" data-kvdel="${i}">✕</button></div>`).join('');
+      w.querySelectorAll('[data-kvl]').forEach(inp => inp.addEventListener('input', () => kvRows[inp.dataset.kvl].label = inp.value));
+      w.querySelectorAll('[data-kvv]').forEach(inp => inp.addEventListener('input', () => kvRows[inp.dataset.kvv].value = inp.value));
+      w.querySelectorAll('[data-kvdel]').forEach(b => b.addEventListener('click', () => { kvRows.splice(Number(b.dataset.kvdel), 1); renderKvRows(); }));
+    }
+    renderKvRows();
+    document.getElementById('btnAddKvRow').addEventListener('click', () => { kvRows.push({ label: '', value: '' }); renderKvRows(); });
+
+    function renderPreviews() {
+      const wrap = document.getElementById('fKbPhotoPreview');
+      wrap.innerHTML = tempPhotos.map((src, i) => `<div class="photo-thumb"><img src="${src}" alt="مرفق"><button class="photo-del" data-pdel="${i}">✕</button></div>`).join('');
+      wrap.querySelectorAll('[data-pdel]').forEach(b => b.addEventListener('click', () => { tempPhotos.splice(Number(b.dataset.pdel), 1); renderPreviews(); }));
+    }
+    renderPreviews();
+
+    document.getElementById('fKbPhoto').addEventListener('change', async (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      try { tempPhotos.push(await compressImage(file)); renderPreviews(); showToast('تم ضغط الصورة وإضافتها ✅'); }
+      catch (err) { showToast('تعذر قراءة الصورة'); }
+    });
+
+    document.getElementById('btnSaveKbForm').addEventListener('click', () => {
+      const title = document.getElementById('fKbTitle').value.trim();
+      if (!title) return showToast('اكتب عنوان الموضوع أولاً');
+      const quickPoints = kvRows.filter(r => r.label.trim() || r.value.trim()).map(r => ({ label: r.label.trim(), value: r.value.trim() || '✓' }));
+      const warnings = document.getElementById('fKbWarn').value.split('\n').map(l => l.trim()).filter(Boolean);
+      const cardObj = {
+        id: existing ? existing.id : ('kb-' + Date.now()), title,
+        discipline: document.getElementById('fKbDisc').value,
+        context: document.getElementById('fKbCtx').value,
+        pinned: existing ? !!existing.pinned : false,
+        linkedQaId: existing ? existing.linkedQaId : null,
+        keywords: document.getElementById('fKbKeys').value.trim(),
+        quickPoints, warnings,
+        details: document.getElementById('fKbDetails').value.trim(),
+        svgType: existing ? existing.svgType : null, photos: tempPhotos
+      };
+      if (isEdit) state.knowledgeCards[state.knowledgeCards.findIndex(x => x.id === existing.id)] = cardObj;
+      else state.knowledgeCards.unshift(cardObj);
+      saveState(); closeAllModals(); renderLibrary(); showToast('تم حفظ البطاقة في الموسوعة ✅');
+    });
+  }
+
+  /* ---- Experience Archive ---- */
+  function renderExpList() {
+    const filters = ['الكل', 'مسودات تحتاج ترتيب', 'خبرة تنفيذية', 'كود', 'اشتراط مشروع خاص', 'مُرقّى للـ Checklist'];
+    const wrapF = document.getElementById('expFilters');
+    wrapF.innerHTML = filters.map(f => `<button class="pill ${expFilter === f ? 'active' : ''}" data-ef="${f}">${f}</button>`).join('');
+    wrapF.querySelectorAll('button').forEach(b => b.addEventListener('click', () => { expFilter = b.dataset.ef; renderExpList(); }));
+
+    const list = state.experienceLogs.filter(e => {
+      if (expFilter === 'الكل') return true;
+      if (expFilter === 'مسودات تحتاج ترتيب') return e.isDraft;
+      if (expFilter === 'مُرقّى للـ Checklist') return e.promotedIds && e.promotedIds.length > 0;
+      return e.tag === expFilter;
+    });
+
+    const wrap = document.getElementById('expList');
+    if (!list.length) { wrap.innerHTML = `<div class="card empty-state">لا توجد مواقف مسجلة في هذا الفلتر بعد.</div>`; return; }
+    wrap.innerHTML = list.map(e => {
+      const kb = state.knowledgeCards.find(k => k.id === e.linkedKbId);
+      const hasPromoted = e.promotedIds && e.promotedIds.length > 0;
+      return `<div class="item-card" data-exp="${e.id}">
+        <div class="item-meta">
+          ${e.isDraft ? '<span class="badge badge-danger">⏳ مسودة تحتاج ترتيب</span>' : `<span class="badge badge-accent">${esc(e.tag)}</span>`}
+          <span class="badge badge-primary">${esc(e.discipline)}</span>
+          <span class="badge badge-muted ltr">${esc(e.date)}</span>
+          ${hasPromoted ? '<span class="badge badge-success">✅ مُرقّى للـ Checklist</span>' : ''}
+        </div>
+        <div class="item-title">${esc(e.title)}</div>
+        <div class="item-snippet">${esc(e.lesson || (e.journal || '').slice(0, 100))}</div>
+        ${kb ? `<div style="font-size:11.5px;color:var(--primary);margin-top:5px;font-weight:700;">🔗 مربوط بـ: ${esc(kb.title)}</div>` : ''}
+      </div>`;
+    }).join('');
+    wrap.querySelectorAll('[data-exp]').forEach(el => el.addEventListener('click', () => openExpDetail(el.dataset.exp)));
+  }
+
+  document.getElementById('btnExpDraft').addEventListener('click', () => openExpFormModal(null, true));
+  document.getElementById('btnExpFull').addEventListener('click', () => openExpFormModal(null, false));
+
+  function openExpDetail(id, isRestore, pushFromCurrent) {
+    const e = state.experienceLogs.find(x => x.id === id);
+    if (!e) return;
+    if (!e.promotedIds) e.promotedIds = [];
+    state.lastVisited = { type: 'exp', id: e.id, label: '🧠 ' + e.title };
+    saveState();
+
+    const kb = state.knowledgeCards.find(k => k.id === e.linkedKbId);
+    openModal(e.title, `
+      <div class="item-meta">
+        ${e.isDraft ? '<span class="badge badge-danger">⏳ مسودة تحتاج ترتيب</span>' : `<span class="badge badge-accent">${esc(e.tag)}</span>`}
+        <span class="badge badge-primary">${esc(e.discipline)}</span>
+        <span class="badge badge-muted ltr">${esc(e.date)}</span>
+        ${e.projectContext ? `<span class="badge badge-info">📍 ${esc(e.projectContext)}</span>` : ''}
+        ${e.promotedIds.length ? '<span class="badge badge-success">✅ مُرقّى للـ Checklist</span>' : ''}
+      </div>
+      ${e.isDraft ? `<div style="margin:8px 0;"><button class="btn btn-primary btn-sm" id="btnCompleteDraft">✨ استكمال وترتيب المسودة الآن</button></div>` : ''}
+      <div class="layer-box" style="border-right:3px solid var(--accent);">
+        <div style="font-size:11.5px;font-weight:800;color:var(--accent);margin-bottom:4px;">💡 الدرس المستفاد (في سطر)</div>
+        <div style="font-size:14px;font-weight:700;">${esc(e.lesson || 'لم يُكتب درس مختصر بعد — يمكنك استخلاصه بزر النسخ الذكي للـ AI.')}</div>
+      </div>
+      ${kb ? `<div style="margin-top:10px;"><button class="btn btn-soft btn-sm" id="btnOpenLinkedKb">🔗 فتح بطاقة الموسوعة: ${esc(kb.title)}</button></div>` : ''}
+      <div style="margin-top:12px;">
+        <button class="btn btn-outline btn-sm" id="btnToggleJournal">📖 عرض القصة الكاملة / Journal ▾</button>
+        <div class="journal-collapse" id="journalBody" style="display:none;">${esc(e.journal || 'لا توجد تفاصيل إضافية.')}</div>
+      </div>
+      ${e.photos && e.photos.length ? `<div class="photo-grid">${e.photos.map((src, i) => `<div class="photo-thumb"><img src="${src}" data-ezoom="${i}" alt="صورة الموقف"></div>`).join('')}</div>` : ''}
+      <div class="btn-row" style="margin-top:14px;">
+        <button class="btn btn-accent btn-sm" id="btnSmartAiCopy">✨ نسخ للـ AI</button>
+        <button class="btn btn-primary btn-sm" id="btnPromoteExp">⬆️ ترقية لبند استلام</button>
+        <button class="btn btn-outline btn-sm" id="btnEditExp">✏️ تعديل</button>
+        <button class="btn btn-danger btn-sm" id="btnDelExp">🗑️ حذف</button>
+      </div>
+    `, { isRestore: !!isRestore, pushFromCurrent: !!pushFromCurrent, reopen: (rest) => openExpDetail(id, rest) });
+
+    if (document.getElementById('btnCompleteDraft')) document.getElementById('btnCompleteDraft').addEventListener('click', () => openExpFormModal(e, false));
+    if (kb) document.getElementById('btnOpenLinkedKb').addEventListener('click', () => openKbDetail(kb.id, 'site', false, true));
+    document.querySelectorAll('[data-ezoom]').forEach(img => img.addEventListener('click', () => openLightboxHtml(`<img src="${img.src}" alt="تكبير الصورة">`)));
+    document.getElementById('btnToggleJournal').addEventListener('click', () => {
+      const jb = document.getElementById('journalBody');
+      const open = jb.style.display === 'block';
+      jb.style.display = open ? 'none' : 'block';
+      document.getElementById('btnToggleJournal').textContent = open ? '📖 عرض القصة الكاملة / Journal ▾' : 'إخفاء الـ Journal ▴';
+    });
+    document.getElementById('btnSmartAiCopy').addEventListener('click', () => {
+      const promptText = `أنت مساعد هندسي MEP. اقرأ الموقف الميداني التالي واستخلص منه بدقة:\n1) "الدرس المستفاد" في سطر واحد مختصر وقابل للتطبيق.\n2) التصنيف الأنسب: [كود] أم [خبرة تنفيذية] أم [اشتراط مشروع خاص].\n3) صياغة بند جاهز لإضافته في قائمة استلام المقاول (Checklist).\n\nعنوان الموقف: ${e.title}\nالتخصص: ${e.discipline}\nالتفاصيل (Journal):\n${e.journal || e.lesson}`;
+      copyText(promptText, 'تم نسخ الموقف + أمر الاستخلاص للـ AI ✨');
+    });
+    document.getElementById('btnPromoteExp').addEventListener('click', () => openPromotePickerModal(e));
+    document.getElementById('btnEditExp').addEventListener('click', () => openExpFormModal(e, false));
+    document.getElementById('btnDelExp').addEventListener('click', () => {
+      confirmAction(`هل أنت متأكد من حذف موقف "${e.title}" من أرشيف خبراتك؟`, () => {
+        state.experienceLogs = state.experienceLogs.filter(x => x.id !== e.id);
+        saveState(); closeAllModals(); renderLibrary(); showToast('تم حذف الموقف من الأرشيف');
+      });
+    });
+  }
+
+  function openPromotePickerModal(exp) {
+    openModal('⬆️ ترقية لبند استلام (بدون مسح الأصل)', `
+      <div class="layer-box" style="font-size:13px;margin-bottom:10px;">${esc(exp.lesson || exp.title)}</div>
+      <div class="form-group"><label>اختر قائمة الاستلام المستهدفة</label>
+        <select id="promoTargetChk" class="form-control">${state.checklists.map(c => `<option value="${c.id}">${esc(c.folder)} — ${esc(c.title)}</option>`).join('')}</select>
+      </div>
+      <button class="btn btn-primary" id="btnDoPromote" style="width:100%;">إضافة البند للقائمة</button>
+    `, { pushFromCurrent: true });
+
+    document.getElementById('btnDoPromote').addEventListener('click', () => {
+      const cid = document.getElementById('promoTargetChk').value;
+      const chk = state.checklists.find(c => c.id === cid);
+      if (exp.promotedIds.includes(cid)) { showToast('هذا الموقف مُضاف بالفعل في هذه القائمة ⚠️'); return; }
+      chk.items.push({ id: 'promo-' + Date.now(), sourceExpId: exp.id, text: `💡 [من خبرتك] ${exp.lesson || exp.title}`, status: null, note: '' });
+      exp.promotedIds.push(cid);
+      saveState(); popModalOrClose();
+      showToast(`تمت الترقية إلى "${chk.title}" مع بقاء الأصل في أرشيفك ✅`);
+    });
+  }
+
+  function openExpFormModal(existing, isQuickDraft, defaultKbId) {
+    const isEdit = !!existing;
+    let tempPhotos = existing ? [...(existing.photos || [])] : [];
+    const today = new Date().toISOString().slice(0, 10);
+
+    openModal(isQuickDraft ? '⚡ مسودة خبرة سريعة (10 ثواني)' : (isEdit ? 'تعديل موقف من خبرتي' : '📝 تسجيل موقف + Journal'), `
+      <div class="form-group"><label>عنوان سريع للموقف *</label><input type="text" id="fExpTitle" class="form-control" value="${esc(existing ? existing.title : '')}" placeholder="مثال: تعارض ماسورة صرف مع كمرة ساقطة"></div>
+      <div class="grid-2">
+        <div class="form-group"><label>التخصص</label><select id="fExpDisc" class="form-control">${KB_FOLDERS.map(f => `<option value="${f.id}" ${existing && existing.discipline === f.id ? 'selected' : ''}>${f.icon} ${f.name}</option>`).join('')}</select></div>
+        ${!isQuickDraft ? `<div class="form-group"><label>نوع الخبرة</label><select id="fExpTag" class="form-control">${['خبرة تنفيذية','كود','اشتراط مشروع خاص'].map(t => `<option ${existing && existing.tag === t ? 'selected' : ''}>${t}</option>`).join('')}</select></div>` : ''}
+      </div>
+      ${!isQuickDraft ? `
+        <div class="grid-2">
+          <div class="form-group"><label>المشروع / السياق (اختياري)</label><input type="text" id="fExpProj" class="form-control" value="${esc(existing ? existing.projectContext : '')}" placeholder="مثال: مشروع عتال / الدور الثاني"></div>
+          <div class="form-group"><label>ربط ببطاقة في الموسوعة</label><select id="fExpKb" class="form-control"><option value="">— بدون ربط —</option>${state.knowledgeCards.map(k => `<option value="${k.id}" ${(existing && existing.linkedKbId === k.id) || defaultKbId === k.id ? 'selected' : ''}>${esc(k.title)}</option>`).join('')}</select></div>
+        </div>
+        <div class="form-group"><label>الدرس المستفاد في سطر</label><input type="text" id="fExpLesson" class="form-control" value="${esc(existing ? existing.lesson : '')}" placeholder="قاعدة قصيرة تفتكرها للمستقبل..."></div>
+      ` : ''}
+      <div class="form-group"><label>${isQuickDraft ? 'ملحوظة سريعة (ترتبها بالليل براحتك)' : 'القصة الكاملة / Journal (مفتوحة بدون حد كلمات)'}</label><textarea id="fExpJournal" class="form-control" style="min-height:${isQuickDraft ? '75px' : '130px'};" placeholder="احكي الموقف والتفاصيل والسياق براحتك...">${esc(existing ? existing.journal : '')}</textarea></div>
+      <div class="form-group"><label>صورة من الموقع (تُضغط تلقائياً)</label><input type="file" id="fExpPhoto" accept="image/*" class="form-control"><div class="photo-grid" id="fExpPhotoPreview"></div></div>
+      <div class="btn-row"><button class="btn btn-primary" id="btnSaveExp" style="flex:1;">${isQuickDraft ? '⚡ حفظ كمسودة سريعة' : '💾 حفظ في أرشيف خبراتي'}</button></div>
+    `, { pushFromCurrent: !!currentModalMeta });
+
+    function renderPreviews() {
+      const wrap = document.getElementById('fExpPhotoPreview');
+      wrap.innerHTML = tempPhotos.map((src, i) => `<div class="photo-thumb"><img src="${src}" alt="مرفق"><button class="photo-del" data-epdel="${i}">✕</button></div>`).join('');
+      wrap.querySelectorAll('[data-epdel]').forEach(b => b.addEventListener('click', () => { tempPhotos.splice(Number(b.dataset.epdel), 1); renderPreviews(); }));
+    }
+    renderPreviews();
+
+    document.getElementById('fExpPhoto').addEventListener('change', async (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      try { tempPhotos.push(await compressImage(file)); renderPreviews(); showToast('تم ضغط الصورة ✅'); }
+      catch (err) { showToast('تعذر قراءة الصورة'); }
+    });
+
+    document.getElementById('btnSaveExp').addEventListener('click', () => {
+      const title = document.getElementById('fExpTitle').value.trim();
+      if (!title) return showToast('اكتب عنواناً للموقف أولاً');
+      const obj = {
+        id: existing ? existing.id : ('exp-' + Date.now()), title,
+        discipline: document.getElementById('fExpDisc').value,
+        tag: isQuickDraft ? 'خبرة تنفيذية' : document.getElementById('fExpTag').value,
+        projectContext: isQuickDraft ? '' : document.getElementById('fExpProj').value.trim(),
+        date: existing ? existing.date : today, isDraft: isQuickDraft ? true : false,
+        lesson: isQuickDraft ? '' : document.getElementById('fExpLesson').value.trim(),
+        journal: document.getElementById('fExpJournal').value.trim(),
+        linkedKbId: isQuickDraft ? '' : document.getElementById('fExpKb').value,
+        promotedIds: existing ? (existing.promotedIds || []) : [], photos: tempPhotos
+      };
+      if (isEdit) state.experienceLogs[state.experienceLogs.findIndex(x => x.id === existing.id)] = obj;
+      else state.experienceLogs.unshift(obj);
+      saveState(); closeAllModals(); renderHome(); renderLibrary();
+      showToast(isQuickDraft ? 'تم حفظ المسودة السريعة ⚡' : 'تم الحفظ في أرشيف خبراتي ✅');
+    });
+  }
+
+  /* ==================== CHECKLISTS & TESTS ==================== */
+  let qaFolder = null;
+  let qaFolderSub = 'checklists';
+  let openChkId = null;
+  let openTestId = null;
+  let testDraftInputs = { loc: '', pprWork: '6', pprEnd: '' };
+  let timerIntervalRef = null;
+  let qaLocalQuery = '';
+
+  function getTS() {
+    if (!state.timerState) state.timerState = { testId: null, presetMin: 30, remainingMs: 30 * 60 * 1000, endTs: null };
+    return state.timerState;
+  }
+  function stopTimerLoop() { if (timerIntervalRef) { clearInterval(timerIntervalRef); timerIntervalRef = null; } }
+  function getTimerRemainingMs() {
+    const ts = getTS();
+    return ts.endTs ? Math.max(0, ts.endTs - Date.now()) : ts.remainingMs;
+  }
+  function formatMs(ms) {
+    const totalSec = Math.ceil(ms / 1000);
+    return `${String(Math.floor(totalSec / 60)).padStart(2,'0')}:${String(totalSec % 60).padStart(2,'0')}`;
+  }
+
+  function syncGlobalTimerBar() {
+    const bar = document.getElementById('globalTimerBar');
+    const ts = getTS();
+    if (!ts.endTs || !ts.testId) { bar.classList.remove('show'); return; }
+    const rem = getTimerRemainingMs();
+    const tObj = state.tests.find(x => x.id === ts.testId);
+    const tName = tObj ? tObj.title : 'اختبار موقع';
+    document.getElementById('globalTimerText').textContent = `⏱️ ${tName} · اضغط للفتح`;
+    document.getElementById('globalTimerClock').textContent = formatMs(rem);
+    bar.classList.add('show');
+    const disp = document.getElementById('tDisplay');
+    if (disp && openTestId === ts.testId) disp.textContent = formatMs(rem);
+    if (rem <= 0) {
+      ts.endTs = null; ts.remainingMs = 0; stopTimerLoop(); saveState();
+      bar.classList.remove('show');
+      const st = document.getElementById('tStatus'); if (st) st.textContent = 'انتهى الوقت ✓';
+      playAlarmBeep();
+      showToast(`⏱️ انتهى زمن "${tName}"! راجع قراءة العداد الآن`);
+    }
+  }
+
+  function ensureGlobalTimerLoop() {
+    stopTimerLoop();
+    if (getTS().endTs) { syncGlobalTimerBar(); timerIntervalRef = setInterval(syncGlobalTimerBar, 500); }
+    else syncGlobalTimerBar();
+  }
+  document.getElementById('globalTimerBar').addEventListener('click', () => { if (getTS().testId) openQaTest(getTS().testId); });
+
+  function openQaChecklist(chkId) {
+    const c = state.checklists.find(x => x.id === chkId); if (!c) return;
+    qaFolder = c.folder; qaFolderSub = 'checklists'; openChkId = c.id; openTestId = null;
+    state.lastVisited = { type: 'chk', id: c.id, label: '✅ ' + c.title }; saveState(); switchTab('qa');
+  }
+
+  function openQaTest(testId) {
+    const t = state.tests.find(x => x.id === testId); if (!t) return;
+    qaFolder = t.folder; qaFolderSub = 'tests'; openTestId = t.id; openChkId = null;
+    if (getTS().testId !== t.id) {
+      stopTimerLoop();
+      const defMin = t.timerPresets && t.timerPresets[0] ? t.timerPresets[0].min : 30;
+      state.timerState = { testId: t.id, presetMin: defMin, remainingMs: defMin * 60 * 1000, endTs: null };
+    }
+    state.lastVisited = { type: 'test', id: t.id, label: '⏱️ ' + t.title }; saveState(); switchTab('qa');
+  }
+
+  function renderQA() {
+    const root = document.getElementById('qaRootView');
+
+    if (openChkId) {
+      const chk = state.checklists.find(c => c.id === openChkId);
+      if (!chk) { openChkId = null; renderQA(); return; }
+      const done = chk.items.filter(i => i.status).length;
+      const fails = chk.items.filter(i => i.status === 'fail');
+      const pct = chk.items.length ? Math.round((done / chk.items.length) * 100) : 0;
+      const passLbl = chk.isShopMode ? '✓ متوفر' : '✓ مطابق';
+      const failLbl = chk.isShopMode ? '! تعارض/RFI' : '✕ ملاحظة';
+      const shopDecision = chk.isShopMode ? `<div style="margin-top:8px;"><span class="badge ${fails.length ? 'badge-danger' : (done === chk.items.length ? 'badge-success' : 'badge-info')}" style="white-space:normal;line-height:1.5;padding:6px 10px;">
+        ${fails.length ? `⚠️ يوجد ${fails.length} بند به تعارض/نقص — قيّم الحل بالـ Coordination أو رفع RFI.` : (done === chk.items.length ? '✅ جاهز لإصدار الـ Shop Drawing بدون معوقات.' : '⏳ استكمل مراجعة الـ 11 خطوة قبل بدء الرسم.')}
+      </span></div>` : '';
+
+      root.innerHTML = `
+        <div class="breadcrumb"><button class="crumb-btn" id="btnQaBackFolder">← ${esc(chk.folder)}</button><span>${esc(chk.title)}</span></div>
+        <div class="card">
+          <div class="card-title"><span>${esc(chk.title)} ${chk.enTag ? `<span class="badge badge-muted en-inline">${esc(chk.enTag)}</span>` : ''}</span><span class="badge badge-primary">${done} / ${chk.items.length} (${pct}%)</span></div>
+          <div class="prog-track"><div class="prog-fill" style="width:${pct}%"></div></div>
+          ${shopDecision}
+          <div class="btn-row">
+            <button class="btn btn-primary btn-sm" id="btnCopyWaChk">📋 نسخ للواتساب</button>
+            <button class="btn btn-soft btn-sm" id="btnSaveChkProj">💾 حفظ في مشروع</button>
+            ${chk.linkedKbId ? `<button class="btn btn-accent btn-sm" id="btnChkOpenKb">📖 شرح الكود</button>` : ''}
+            <button class="btn btn-outline btn-sm" id="btnResetChk">🔄 تصفير</button>
+            <button class="btn btn-outline btn-sm" id="btnEditChkMeta">✏️</button>
+            <button class="btn btn-danger btn-sm" id="btnDelChkFull">🗑️</button>
+          </div>
+        </div>
+        ${chk.items.map((item, idx) => `
+          <div class="chk-item">
+            <div class="chk-row">
+              <div class="chk-text">${esc(item.text)}</div>
+              <div class="chk-btns">
+                <button class="chk-state ${item.status === 'pass' ? 'pass' : ''}" data-setst="${item.id}|pass">${passLbl}</button>
+                <button class="chk-state ${item.status === 'fail' ? 'fail' : ''}" data-setst="${item.id}|fail">${failLbl}</button>
+                <button class="chk-state" data-delitem="${idx}" title="حذف البند">🗑️</button>
+              </div>
+            </div>
+            ${item.status === 'fail' ? `<input type="text" class="snag-input" data-snag="${item.id}" value="${esc(item.note)}" placeholder="${chk.isShopMode ? 'اكتب تفاصيل التعارض أو صياغة الـ RFI...' : 'اكتب تفاصيل الملاحظة للمقاول...'}">` : ''}
+          </div>`).join('')}
+        <div class="card" style="display:flex;gap:6px;margin-top:10px;">
+          <input type="text" id="newChkItemInput" class="form-control" placeholder="+ إضافة بند جديد لهذه القائمة...">
+          <button class="btn btn-primary btn-sm" id="btnAddChkItem">إضافة</button>
+        </div>`;
+
+      document.getElementById('btnQaBackFolder').addEventListener('click', () => { openChkId = null; renderQA(); });
+      if (document.getElementById('btnChkOpenKb')) document.getElementById('btnChkOpenKb').addEventListener('click', () => openKbDetail(chk.linkedKbId));
+      root.querySelectorAll('[data-setst]').forEach(b => b.addEventListener('click', () => {
+        const [itemId, st] = b.dataset.setst.split('|');
+        const it = chk.items.find(x => x.id === itemId);
+        it.status = it.status === st ? null : st; saveState(); renderQA();
+      }));
+      root.querySelectorAll('[data-snag]').forEach(inp => inp.addEventListener('input', () => {
+        chk.items.find(x => x.id === inp.dataset.snag).note = inp.value; saveState();
+      }));
+      root.querySelectorAll('[data-delitem]').forEach(b => b.addEventListener('click', () => {
+        const idx = Number(b.dataset.delitem);
+        const targetItem = chk.items[idx];
+        confirmAction(`حذف البند "${targetItem.text}"؟`, () => {
+          if (targetItem.sourceExpId) {
+            const exp = state.experienceLogs.find(e => e.id === targetItem.sourceExpId);
+            if (exp && Array.isArray(exp.promotedIds)) exp.promotedIds = exp.promotedIds.filter(cid => cid !== chk.id);
+          }
+          chk.items.splice(idx, 1); saveState(); closeAllModals(); renderQA(); showToast('تم حذف البند');
+        });
+      }));
+      document.getElementById('btnEditChkMeta').addEventListener('click', () => {
+        openModal('تعديل اسم القائمة', `<div class="form-group"><label>عنوان القائمة</label><input type="text" id="fEditChkT" class="form-control" value="${esc(chk.title)}"></div><button class="btn btn-primary" id="btnSaveChkMeta" style="width:100%;">حفظ التعديل</button>`);
+        document.getElementById('btnSaveChkMeta').addEventListener('click', () => {
+          const nt = document.getElementById('fEditChkT').value.trim(); if (!nt) return;
+          chk.title = nt; saveState(); closeAllModals(); renderQA(); showToast('تم تعديل الاسم ✅');
+        });
+      });
+      document.getElementById('btnDelChkFull').addEventListener('click', () => {
+        confirmAction(`هل أنت متأكد من حذف قائمة "${chk.title}" بالكامل؟`, () => {
+          state.checklists = state.checklists.filter(c => c.id !== chk.id);
+          openChkId = null; saveState(); closeAllModals(); renderQA(); showToast('تم حذف القائمة');
+        });
+      });
+      const addChkItemFn = () => {
+        const val = document.getElementById('newChkItemInput').value.trim(); if (!val) return;
+        chk.items.push({ id: 'ci-' + Date.now(), text: val, status: null, note: '' });
+        saveState(); renderQA(); showToast('تمت إضافة البند ✅');
+      };
+      document.getElementById('btnAddChkItem').addEventListener('click', addChkItemFn);
+      document.getElementById('newChkItemInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') addChkItemFn(); });
+      document.getElementById('btnCopyWaChk').addEventListener('click', () => {
+        const passes = chk.items.filter(i => i.status === 'pass').length;
+        let msg = `*${chk.title}*\nالتاريخ: ${new Date().toISOString().slice(0,10)}\nالمكتمل: ${passes} / ${chk.items.length}\n`;
+        if (fails.length) msg += `\n*${chk.isShopMode ? 'بنود تتطلب Coordination / RFI' : 'ملاحظات مطلوبة للتعديل (Snags)'}:*\n` + fails.map((f, i) => `${i+1}. ${f.text}${f.note ? `\n   ← ${f.note}` : ''}`).join('\n');
+        else msg += `\n✅ لا توجد ملاحظات مسجلة.`;
+        copyText(msg, 'تم نسخ التقرير جاهزاً للواتساب 📋');
+      });
+      document.getElementById('btnSaveChkProj').addEventListener('click', () => {
+        openPickProjectModal('حفظ جلسة المراجعة في مشروع', 'test', `${chk.title} — مطابق: ${chk.items.filter(i=>i.status==='pass').length}/${chk.items.length} | ملاحظات: ${fails.length}`);
+      });
+      document.getElementById('btnResetChk').addEventListener('click', () => {
+        confirmAction('تصفير جميع علامات الصح والملاحظات في هذه القائمة؟', () => {
+          chk.items.forEach(i => { i.status = null; i.note = ''; });
+          saveState(); closeAllModals(); renderQA(); showToast('تم تصفير القائمة 🔄');
+        });
+      });
+      return;
+    }
+
+    if (openTestId) {
+      const t = state.tests.find(x => x.id === openTestId);
+      if (!t) { openTestId = null; renderQA(); return; }
+      const ts = getTS();
+      const timerHtml = t.hasTimer ? `
+        <div class="card">
+          <div class="card-title"><span>⏱️ مؤقت الاختبار <span class="en-inline">(Timestamp)</span></span><span class="badge badge-primary" id="tStatus">${ts.endTs ? 'جاري الاختبار...' : 'جاهز'}</span></div>
+          <div class="timer-display ltr" id="tDisplay">${formatMs(getTimerRemainingMs())}</div>
+          <div class="pills-row" style="justify-content:center;">${(t.timerPresets || [{ label: '30 د', min: 30 }]).map(p => `<button class="pill ${ts.presetMin === p.min ? 'active' : ''}" data-tpreset="${p.min}">${esc(p.label)}</button>`).join('')}</div>
+          <div class="btn-row" style="justify-content:center;">
+            <button class="btn btn-primary" id="btnTStart">▶ بدء</button>
+            <button class="btn btn-outline" id="btnTPause">⏸ إيقاف مؤقت</button>
+            <button class="btn btn-danger" id="btnTReset">↺ تصفير</button>
+            <button class="btn btn-accent btn-sm" id="btnTIcs">🔔 تذكير بالتقويم (.ics)</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);text-align:center;margin-top:6px;">يظهر فوق في كل التابات وينبهك بالصوت والاهتزاز، أو اضغط (.ics) لمنبه الموبايل وهو مقفول.</div>
+        </div>` : '';
+
+      let bodyHtml = '';
+      if (t.mode === 'ppr') {
+        bodyHtml = `
+          <div class="card">
+            <div class="card-title"><span>حاسبة وتقييم الكبس <span class="en-inline">DIN 1988-2</span></span></div>
+            <div class="grid-2">
+              <div class="form-group"><label>ضغط التشغيل المسموح <span class="en-inline">(bar)</span></label><input type="number" id="pprWorkBar" class="form-control ltr" value="${esc(testDraftInputs.pprWork)}" step="0.5"></div>
+              <div class="form-group"><label>الضغط المقاس بعد الاختبار <span class="en-inline">(bar)</span></label><input type="number" id="pprEndBar" class="form-control ltr" value="${esc(testDraftInputs.pprEnd)}" placeholder="مثال: 8.9" step="0.1"></div>
+            </div>
+            <div id="pprEvalBox" class="layer-box"></div>
+            <div class="btn-row">
+              <button class="btn btn-soft btn-sm" id="btnSaveTestProj">💾 حفظ في مشروع</button>
+              <button class="btn btn-outline btn-sm" id="btnCopyTestWa">📋 نسخ للواتساب</button>
+              ${t.linkedKbId ? `<button class="btn btn-accent btn-sm" id="btnTestOpenKb">📖 شرح الكود</button>` : ''}
+            </div>
+          </div>`;
+      } else if (t.mode === 'fire_hydro') {
+        bodyHtml = `<div class="card"><div class="card-title"><span>معايير الاختبار <span class="en-inline">NFPA 13</span></span></div><ul class="kv-list"><li><span>ضغط الاختبار المطلوب</span><span class="kv-val ltr">200 psi (13.8 bar)</span></li><li><span>المدة المطلوبة</span><span class="kv-val">ساعتان (120 دقيقة)</span></li><li><span>معيار القبول</span><span class="kv-val">صفر هبوط / صفر تسريب</span></li></ul><div class="btn-row"><button class="btn btn-soft btn-sm" id="btnSaveTestProj">💾 حفظ في مشروع</button><button class="btn btn-outline btn-sm" id="btnCopyTestWa">📋 نسخ للواتساب</button>${t.linkedKbId ? `<button class="btn btn-accent btn-sm" id="btnTestOpenKb">📖 شرح الكود</button>` : ''}</div></div>`;
+      } else if (t.mode === 'duct_smoke') {
+        bodyHtml = `<div class="card"><div class="card-title"><span>معايير اختبار الدكت <span class="en-inline">Smoke / Light</span></span></div><ul class="kv-list"><li><span>السيلانت على الفلنجات والوصلات</span><span class="kv-val">مكتمل قبل العزل</span></li><li><span>اختبار الضوء (Light Test)</span><span class="kv-val">صفر تسريب ضوء</span></li><li><span>اختبار الدخان (Smoke Test)</span><span class="kv-val">صفر تسريب دخان</span></li></ul><div class="btn-row"><button class="btn btn-soft btn-sm" id="btnSaveTestProj">💾 حفظ في مشروع</button><button class="btn btn-outline btn-sm" id="btnCopyTestWa">📋 نسخ للواتساب</button>${t.linkedKbId ? `<button class="btn btn-accent btn-sm" id="btnTestOpenKb">📖 شرح الكود</button>` : ''}</div></div>`;
+      } else {
+        bodyHtml = `<div class="card"><div class="card-title"><span>معايير وخطوات الاختبار</span></div><div class="layer-box" style="white-space:pre-wrap;font-size:13.5px;">${esc(t.criteria || t.summary)}</div><div class="btn-row"><button class="btn btn-soft btn-sm" id="btnSaveTestProj">💾 حفظ في مشروع</button><button class="btn btn-outline btn-sm" id="btnCopyTestWa">📋 نسخ للواتساب</button></div></div>`;
+      }
+
+      root.innerHTML = `
+        <div class="breadcrumb" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;"><button class="crumb-btn" id="btnQaBackFolderT">← ${esc(t.folder)}</button><span>${esc(t.title)}</span></div>
+          <div style="display:flex;gap:4px;"><button class="btn btn-outline btn-sm" id="btnEditTestMeta">✏️</button><button class="btn btn-danger btn-sm" id="btnDelTestFull">🗑️</button></div>
+        </div>
+        <div class="card" style="padding:10px 12px;">
+          <div class="form-group" style="margin-bottom:0;"><label>المشروع / الدور / المنطقة (اختياري — يظهر في تقرير الواتساب)</label><input type="text" id="testLocInput" class="form-control" value="${esc(testDraftInputs.loc)}" placeholder="مثال: مشروع عتال 47 — حمام الدور الثاني"></div>
+        </div>
+        ${timerHtml}${bodyHtml}`;
+
+      document.getElementById('btnQaBackFolderT').addEventListener('click', () => { openTestId = null; renderQA(); });
+      document.getElementById('testLocInput').addEventListener('input', (e) => { testDraftInputs.loc = e.target.value; });
+      if (document.getElementById('btnTestOpenKb')) document.getElementById('btnTestOpenKb').addEventListener('click', () => openKbDetail(t.linkedKbId));
+
+      document.getElementById('btnEditTestMeta').addEventListener('click', () => {
+        openModal('تعديل اسم الاختبار', `<div class="form-group"><label>اسم الاختبار</label><input type="text" id="fEditTestT" class="form-control" value="${esc(t.title)}"></div><button class="btn btn-primary" id="btnSaveTestMeta" style="width:100%;">حفظ التعديل</button>`);
+        document.getElementById('btnSaveTestMeta').addEventListener('click', () => {
+          const nt = document.getElementById('fEditTestT').value.trim(); if (!nt) return;
+          t.title = nt; saveState(); closeAllModals(); renderQA(); showToast('تم التعديل ✅');
+        });
+      });
+      document.getElementById('btnDelTestFull').addEventListener('click', () => {
+        confirmAction(`هل أنت متأكد من حذف اختبار "${t.title}"؟`, () => {
+          state.tests = state.tests.filter(x => x.id !== t.id);
+          if (getTS().testId === t.id) { stopTimerLoop(); state.timerState.endTs = null; state.timerState.testId = null; syncGlobalTimerBar(); }
+          openTestId = null; saveState(); closeAllModals(); renderQA(); showToast('تم حذف الاختبار');
+        });
+      });
+
+      if (t.hasTimer) {
+        ensureGlobalTimerLoop();
+        root.querySelectorAll('[data-tpreset]').forEach(b => b.addEventListener('click', () => {
+          stopTimerLoop(); ts.presetMin = Number(b.dataset.tpreset); ts.remainingMs = ts.presetMin * 60 * 1000; ts.endTs = null; saveState(); syncGlobalTimerBar(); renderQA();
+        }));
+        document.getElementById('btnTStart').addEventListener('click', () => {
+          if (ts.endTs) return;
+          if (ts.remainingMs <= 0) ts.remainingMs = ts.presetMin * 60 * 1000;
+          ts.endTs = Date.now() + ts.remainingMs; saveState();
+          document.getElementById('tStatus').textContent = 'جاري الاختبار...'; ensureGlobalTimerLoop();
+        });
+        document.getElementById('btnTPause').addEventListener('click', () => {
+          if (!ts.endTs) return;
+          ts.remainingMs = getTimerRemainingMs(); ts.endTs = null; stopTimerLoop(); saveState(); syncGlobalTimerBar();
+          document.getElementById('tStatus').textContent = 'متوقف مؤقتاً';
+        });
+        document.getElementById('btnTReset').addEventListener('click', () => {
+          stopTimerLoop(); ts.endTs = null; ts.remainingMs = ts.presetMin * 60 * 1000; saveState(); syncGlobalTimerBar();
+          document.getElementById('tStatus').textContent = 'جاهز'; document.getElementById('tDisplay').textContent = formatMs(ts.remainingMs);
+        });
+        document.getElementById('btnTIcs').addEventListener('click', () => {
+          const mins = Math.max(1, Math.ceil(getTimerRemainingMs() / 60000));
+          const loc = (document.getElementById('testLocInput')?.value || '').trim();
+          downloadIcsReminder(t.title, mins, loc ? `الموقع: ${loc}` : t.summary);
+        });
+      }
+
+      if (t.mode === 'ppr') {
+        const evalPpr = () => {
+          testDraftInputs.pprWork = document.getElementById('pprWorkBar').value;
+          testDraftInputs.pprEnd = document.getElementById('pprEndBar').value;
+          const w = parseFloat(testDraftInputs.pprWork) || 0;
+          const req = +(w * 1.5).toFixed(2);
+          const endV = parseFloat(testDraftInputs.pprEnd);
+          let resHtml = '';
+          if (w > 0 && !isNaN(endV)) {
+            const drop = +(req - endV).toFixed(2);
+            const isRise = drop < 0;
+            const ok = drop <= 0.2 && drop >= 0;
+            const prelimOk = drop <= 0.6 && drop >= 0;
+            const bg = isRise ? 'var(--accent-soft)' : (ok ? 'var(--success-soft)' : 'var(--danger-soft)');
+            const fg = isRise ? 'var(--accent)' : (ok ? 'var(--success)' : 'var(--danger)');
+            const msg = isRise
+              ? `ارتفاع ضغط (+${Math.abs(drop)} bar) — غالباً تمدد حراري من الشمس/الحرارة؛ تأكد من العداد`
+              : (ok ? '✅ ناجح للاختبار الرئيسي (≤ 0.2 bar)' : (prelimOk ? '⚠️ مقبول للتمهيدي (≤ 0.6 bar) فقط' : '❌ راسب — افحص اللحامات'));
+            resHtml = `<div style="margin-top:8px;padding:8px 10px;border-radius:8px;background:${bg};color:${fg};font-weight:700;font-size:13px;">${isRise ? '⚠️ ' : `الهبوط: <span class="ltr">${drop} bar</span> — `}${msg}</div>`;
+          }
+          document.getElementById('pprEvalBox').innerHTML = w <= 0 ? 'أدخل ضغط التشغيل' : `
+            <div style="display:flex;justify-content:space-between;font-size:13.5px;font-weight:800;"><span>ضغط الاختبار المطلوب (1.5×):</span><span class="ltr" style="color:var(--primary);">${req} bar</span></div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">التمهيدي: 30 د (تعويض عند 10 و20 د) ثم 30 د ≤ 0.6 bar | الرئيسي: 120 د ≤ 0.2 bar</div>${resHtml}`;
+        };
+        document.getElementById('pprWorkBar').addEventListener('input', evalPpr);
+        document.getElementById('pprEndBar').addEventListener('input', evalPpr);
+        evalPpr();
+      }
+
+      function buildTestReportText() {
+        const loc = (document.getElementById('testLocInput')?.value || '').trim();
+        const header = `*تقرير اختبار موقع — ${t.title}*\nالتاريخ: ${new Date().toISOString().slice(0,10)}` + (loc ? `\nالمشروع / المكان: ${loc}` : '');
+        if (t.mode === 'ppr') {
+          const w = parseFloat(document.getElementById('pprWorkBar').value) || 0;
+          const req = +(w * 1.5).toFixed(2);
+          const endRaw = document.getElementById('pprEndBar').value.trim();
+          const endV = parseFloat(endRaw);
+          let lines = `\nضغط التشغيل المسموح: ${w} bar\nضغط الاختبار المطلوب (1.5×): ${req} bar`;
+          if (endRaw !== '' && !isNaN(endV)) {
+            const drop = +(req - endV).toFixed(2);
+            const verdict = drop < 0 ? `⚠️ ارتفاع ضغط (+${Math.abs(drop)} bar) — يرجح تمدد حراري، يراجع العداد` : (drop <= 0.2 ? '✅ ناجح — مطابق للاختبار الرئيسي (≤ 0.2 bar)' : (drop <= 0.6 ? '⚠️ مقبول للاختبار التمهيدي فقط (≤ 0.6 bar)' : '❌ راسب — يوجد هبوط زائد، يلزم فحص اللحامات'));
+            lines += `\nالقراءة الفعلية بعد الاختبار: ${endV} bar\nقيمة الهبوط المقاسة: ${drop} bar\nالنتيجة: ${verdict}`;
+          }
+          return header + lines;
+        }
+        return header + `\n${t.summary}`;
+      }
+
+      document.getElementById('btnSaveTestProj').addEventListener('click', () => {
+        const loc = (document.getElementById('testLocInput')?.value || '').trim();
+        let txt = `${t.title}` + (loc ? ` (${loc})` : '');
+        if (t.mode === 'ppr') {
+          const w = parseFloat(document.getElementById('pprWorkBar').value) || 0;
+          const req = +(w * 1.5).toFixed(2);
+          const endRaw = document.getElementById('pprEndBar').value.trim();
+          const endV = parseFloat(endRaw);
+          if (endRaw !== '' && !isNaN(endV)) {
+            const drop = +(req - endV).toFixed(2);
+            const ok = drop < 0 ? 'تمدد حراري ⚠️' : (drop <= 0.2 ? 'ناجح ✅' : (drop <= 0.6 ? 'تمهيدي ⚠️' : 'راسب ❌'));
+            txt += ` — تشغيل ${w} / مطلوب ${req} / قراءة ${endV} bar (هبوط ${drop} bar — ${ok})`;
+          } else txt += ` — تشغيل ${w} / مطلوب ${req} bar`;
+        } else txt += ` — ${t.summary}`;
+        openPickProjectModal('حفظ نتيجة الاختبار في مشروع', 'test', txt);
+      });
+      document.getElementById('btnCopyTestWa').addEventListener('click', () => copyText(buildTestReportText(), 'تم نسخ تقرير الاختبار بالتفاصيل للواتساب 📋'));
+      return;
+    }
+
+    if (qaFolder) {
+      const fObj = QA_FOLDERS.find(x => x.id === qaFolder);
+      const allChks = state.checklists.filter(c => c.folder === qaFolder);
+      const allTsts = state.tests.filter(t => t.folder === qaFolder);
+
+      root.innerHTML = `
+        <div class="breadcrumb" style="justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:6px;"><button class="crumb-btn" id="btnQaRootBack">← الفولدرات</button><span>${fObj ? fObj.icon + ' ' + esc(fObj.name) : esc(qaFolder)}</span></div>
+          <button class="btn btn-primary btn-sm" id="btnNewQaItem">${qaFolderSub === 'checklists' ? '+ قائمة جديدة' : '+ اختبار جديد'}</button>
+        </div>
+        <div class="search-box" style="margin-bottom:8px;"><span class="search-icon">🔍</span><input type="text" id="qaLocalSearch" value="${esc(qaLocalQuery)}" placeholder="ابحث داخل فولدر ${esc(fObj ? fObj.name : qaFolder)}..."></div>
+        <div class="seg-control">
+          <button class="seg-btn ${qaFolderSub === 'checklists' ? 'active' : ''}" data-qfsub="checklists">✅ قوائم الاستلام (${allChks.length})</button>
+          <button class="seg-btn ${qaFolderSub === 'tests' ? 'active' : ''}" data-qfsub="tests">⏱️ اختبارات التسليم (${allTsts.length})</button>
+        </div>
+        <div id="qaCardsWrap"></div>`;
+
+      function renderQaCardsOnly() {
+        const q = qaLocalQuery.trim().toLowerCase();
+        const box = document.getElementById('qaCardsWrap'); if (!box) return;
+        if (qaFolderSub === 'checklists') {
+          const chks = q ? allChks.filter(c => (c.title + ' ' + (c.enTag || '')).toLowerCase().includes(q)) : allChks;
+          box.innerHTML = !chks.length ? '<div class="card empty-state">لا توجد قوائم مطابقة هنا. اضغط "+ قائمة جديدة".</div>'
+            : chks.map(c => `<div class="item-card" data-openchk="${c.id}"><div class="item-meta"><span class="badge badge-success">✅ ${c.items.length} بند</span>${c.enTag ? `<span class="badge badge-muted en-inline">${esc(c.enTag)}</span>` : ''}</div><div class="item-title">${esc(c.title)}</div><div class="item-snippet">اضغط لفتح القائمة وتوثيق الاستلام</div></div>`).join('');
+          box.querySelectorAll('[data-openchk]').forEach(el => el.addEventListener('click', () => openQaChecklist(el.dataset.openchk)));
+        } else {
+          const tsts = q ? allTsts.filter(t => (t.title + ' ' + (t.enTag || '') + ' ' + t.summary).toLowerCase().includes(q)) : allTsts;
+          box.innerHTML = !tsts.length ? '<div class="card empty-state">لا توجد اختبارات مطابقة هنا. اضغط "+ اختبار جديد".</div>'
+            : tsts.map(t => `<div class="item-card" data-opentest="${t.id}"><div class="item-meta">${t.hasTimer ? '<span class="badge badge-info">⏱️ مؤقت مدمج</span>' : ''}${t.enTag ? `<span class="badge badge-muted en-inline">${esc(t.enTag)}</span>` : ''}</div><div class="item-title">${esc(t.title)}</div><div class="item-snippet">${esc(t.summary)}</div></div>`).join('');
+          box.querySelectorAll('[data-opentest]').forEach(el => el.addEventListener('click', () => openQaTest(el.dataset.opentest)));
+        }
+      }
+
+      renderQaCardsOnly();
+      document.getElementById('btnQaRootBack').addEventListener('click', () => { qaFolder = null; qaLocalQuery = ''; renderQA(); });
+      document.getElementById('btnNewQaItem').addEventListener('click', () => qaFolderSub === 'checklists' ? openNewChecklistModal(qaFolder) : openNewTestModal(qaFolder));
+      const qaS = document.getElementById('qaLocalSearch');
+      qaS.addEventListener('input', () => { qaLocalQuery = qaS.value; renderQaCardsOnly(); });
+      root.querySelectorAll('[data-qfsub]').forEach(b => b.addEventListener('click', () => {
+        qaFolderSub = b.dataset.qfsub;
+        document.getElementById('btnNewQaItem').textContent = qaFolderSub === 'checklists' ? '+ قائمة جديدة' : '+ اختبار جديد';
+        root.querySelectorAll('[data-qfsub]').forEach(x => x.classList.toggle('active', x.dataset.qfsub === qaFolderSub));
+        renderQaCardsOnly();
+      }));
+      return;
+    }
+
+    root.innerHTML = `
+      <div class="section-head" style="margin-top:0;"><span>قوائم الاستلام والمراجعة واختبارات التسليم</span></div>
+      <div class="folder-grid">
+        ${QA_FOLDERS.map(f => {
+          const cCount = state.checklists.filter(c => c.folder === f.id).length;
+          const tCount = state.tests.filter(t => t.folder === f.id).length;
+          return `<button class="folder-card" data-qaf="${f.id}">
+            <div class="folder-top"><div class="folder-ico" style="background:${f.bg};color:${f.color};">${f.icon}</div><span class="badge badge-muted">${cCount} قائمة · ${tCount} اختبار</span></div>
+            <div><div class="folder-name">${esc(f.name)}</div><div class="folder-sub en-inline">${esc(f.en)}</div></div>
+          </button>`;
+        }).join('')}
+      </div>`;
+    root.querySelectorAll('[data-qaf]').forEach(b => b.addEventListener('click', () => { qaFolder = b.dataset.qaf; qaFolderSub = 'checklists'; renderQA(); }));
+  }
+
+  function openNewChecklistModal(folderName) {
+    openModal(`إنشاء قائمة فحص جديدة (${folderName})`, `
+      <div class="form-group"><label>عنوان القائمة *</label><input type="text" id="fNewChkTitle" class="form-control" placeholder="مثال: استلام وحدات FCU"></div>
+      <div class="form-group"><label>البنود (سطر لكل بند)</label><textarea id="fNewChkItems" class="form-control" placeholder="التأكد من مطابقة الموديل والقدرة\nمراجعة العزل وصرف الكوندنسيت"></textarea></div>
+      <button class="btn btn-primary" id="btnCreateChk" style="width:100%;">إنشاء القائمة</button>
+    `);
+    document.getElementById('btnCreateChk').addEventListener('click', () => {
+      const title = document.getElementById('fNewChkTitle').value.trim(); if (!title) return showToast('اكتب عنوان القائمة');
+      const items = document.getElementById('fNewChkItems').value.split('\n').map(l => l.trim()).filter(Boolean).map((txt, i) => ({ id: 'ci-' + Date.now() + '-' + i, text: txt, status: null, note: '' }));
+      state.checklists.push({ id: 'chk-' + Date.now(), title, enTag: '', folder: folderName, linkedKbId: null, items });
+      saveState(); closeAllModals(); renderQA(); showToast('تم إنشاء القائمة ✅');
+    });
+  }
+
+  function openNewTestModal(folderName) {
+    openModal(`إنشاء اختبار تسليم جديد (${folderName})`, `
+      <div class="form-group"><label>اسم الاختبار *</label><input type="text" id="fNewTTitle" class="form-control" placeholder="مثال: اختبار غسيل مواسير Chilled Water"></div>
+      <div class="form-group"><label>ملخص قصير</label><input type="text" id="fNewTSum" class="form-control" placeholder="مثال: غسيل كيميائي وفحص نقاء المياه قبل التشغيل"></div>
+      <div class="form-group"><label>معايير القبول وخطوات الاختبار</label><textarea id="fNewTCrit" class="form-control" placeholder="1. فحص الفلاتر\n2. قياس الـ TDS..."></textarea></div>
+      <div class="grid-2">
+        <div class="form-group"><label>هل يحتاج مؤقت مدمج؟</label><select id="fNewTHasT" class="form-control"><option value="1">نعم — أضف مؤقت</option><option value="0">لا</option></select></div>
+        <div class="form-group"><label>مدة المؤقت (دقيقة)</label><input type="number" id="fNewTMin" class="form-control ltr" value="30" min="1"></div>
+      </div>
+      <button class="btn btn-primary" id="btnCreateTest" style="width:100%;">إنشاء الاختبار</button>
+    `);
+    document.getElementById('btnCreateTest').addEventListener('click', () => {
+      const title = document.getElementById('fNewTTitle').value.trim(); if (!title) return showToast('اكتب اسم الاختبار');
+      const hasTimer = document.getElementById('fNewTHasT').value === '1';
+      const mins = Math.max(1, parseInt(document.getElementById('fNewTMin').value, 10) || 30);
+      state.tests.push({
+        id: 'test-' + Date.now(), title, enTag: 'Custom Test', folder: folderName,
+        hasTimer, timerPresets: hasTimer ? [{ label: `${mins} دقيقة`, min: mins }, { label: '60 دقيقة', min: 60 }] : [],
+        linkedKbId: null, mode: 'custom',
+        summary: document.getElementById('fNewTSum').value.trim() || 'اختبار ميداني مخصص',
+        criteria: document.getElementById('fNewTCrit').value.trim()
+      });
+      saveState(); closeAllModals(); renderQA(); showToast('تم إنشاء الاختبار ✅');
+    });
+  }
+
+  /* ==================== CALCULATORS ==================== */
+  const CALC_LIST = [
+    { id: 'units', name: '🔄 محول الوحدات', cat: 'general' },
+    { id: 'duct', name: '📐 مقاس الدكت SMACNA', cat: 'hvac' },
+    { id: 'load', name: '❄️ الحمل الحراري', cat: 'hvac' }
+  ];
+  let activeCalc = 'units';
+  let calcFilter = 'all';
+
+  function renderCalcNav() {
+    const filtered = CALC_LIST.filter(c => calcFilter === 'all' ? true : (calcFilter === 'fav' ? state.favCalcs.includes(c.id) : c.cat === calcFilter));
+    const wrap = document.getElementById('calcTabs');
+    if (!filtered.length) { wrap.innerHTML = `<span style="font-size:12.5px;color:var(--text-muted);">لا توجد حاسبات في هذا الفلتر</span>`; return; }
+    if (!filtered.some(c => c.id === activeCalc)) activeCalc = filtered[0].id;
+    wrap.innerHTML = filtered.map(c => `<button class="pill ${activeCalc === c.id ? 'active' : ''}" data-selcalc="${c.id}">${c.name}</button>`).join('');
+    wrap.querySelectorAll('button').forEach(b => b.addEventListener('click', () => selectCalc(b.dataset.selcalc)));
+    selectCalc(activeCalc);
+  }
+
+  function selectCalc(id) {
+    activeCalc = id;
+    document.querySelectorAll('.calc-pane').forEach(p => p.style.display = 'none');
+    const pane = document.getElementById('calc-' + id);
+    if (pane) pane.style.display = 'block';
+    document.querySelectorAll('[data-selcalc]').forEach(b => b.classList.toggle('active', b.dataset.selcalc === id));
+    document.querySelectorAll('[data-favcalc]').forEach(b => {
+      const isFav = state.favCalcs.includes(b.dataset.favcalc);
+      b.textContent = isFav ? '★' : '☆'; b.classList.toggle('active', isFav);
+    });
+  }
+
+  document.querySelectorAll('[data-cfilter]').forEach(b => b.addEventListener('click', () => {
+    calcFilter = b.dataset.cfilter;
+    document.querySelectorAll('[data-cfilter]').forEach(x => x.classList.toggle('active', x === b));
+    renderCalcNav();
+  }));
+  document.querySelectorAll('[data-favcalc]').forEach(b => b.addEventListener('click', () => {
+    const id = b.dataset.favcalc;
+    state.favCalcs = state.favCalcs.includes(id) ? state.favCalcs.filter(x => x !== id) : state.favCalcs.concat(id);
+    saveState(); renderCalcNav();
+  }));
+
+  const UNIT_DEFS = {
+    airflow: { CFM: 1, 'L/s': 0.471947, 'm³/h': 1.69901 },
+    cooling: { TR: 1, kW: 3.51685, 'BTU/h': 12000 },
+    pressure: { bar: 1, psi: 14.5038, kPa: 100 },
+    length: { mm: 1, cm: 0.1, inch: 0.0393701, ft: 0.00328084 }
+  };
+  let lastUnitSummary = '';
+  function populateUnits() {
+    const cat = document.getElementById('unitCat').value;
+    document.getElementById('unitFrom').innerHTML = Object.keys(UNIT_DEFS[cat]).map(u => `<option value="${u}">${u}</option>`).join('');
+    calcUnits();
+  }
+  function calcUnits() {
+    const cat = document.getElementById('unitCat').value;
+    const val = parseFloat(document.getElementById('unitVal').value);
+    const from = document.getElementById('unitFrom').value;
+    const defs = UNIT_DEFS[cat];
+    if (isNaN(val)) { document.getElementById('unitOutput').innerHTML = 'أدخل قيمة صحيحة'; lastUnitSummary = ''; return; }
+    const inBase = val / defs[from];
+    const rows = Object.keys(defs).filter(u => u !== from).map(u => ({ unit: u, val: +(inBase * defs[u]).toFixed(2) }));
+    lastUnitSummary = `${val} ${from} = ` + rows.map(r => `${r.val} ${r.unit}`).join(' | ');
+    document.getElementById('unitOutput').innerHTML = `
+      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">النتيجة الفورية</div>
+      <div class="calc-main-val ltr">${rows[0].val} ${rows[0].unit}</div>
+      <div class="calc-sub-grid">${rows.map(r => `<div class="calc-mini"><span>${r.unit}</span><strong class="ltr">${r.val}</strong></div>`).join('')}</div>`;
+  }
+  document.getElementById('unitCat').addEventListener('change', populateUnits);
+  document.getElementById('unitVal').addEventListener('input', calcUnits);
+  document.getElementById('unitFrom').addEventListener('change', calcUnits);
+  document.getElementById('btnCopyUnit').addEventListener('click', () => lastUnitSummary && copyText(lastUnitSummary, 'تم نسخ التحويل 📋'));
+  document.getElementById('btnSaveUnit').addEventListener('click', () => lastUnitSummary && openPickProjectModal('حفظ تحويل الوحدات', 'calc', lastUnitSummary));
+
+  let ductShape = 'rect';
+  let lastDuctSummary = '';
+  let lastDuctSvg = '';
+  document.querySelectorAll('[data-ductshape]').forEach(b => b.addEventListener('click', () => {
+    ductShape = b.dataset.ductshape;
+    document.querySelectorAll('[data-ductshape]').forEach(x => x.classList.toggle('active', x.dataset.ductshape === ductShape));
+    document.getElementById('ductHGroup').style.display = ductShape === 'rect' ? 'block' : 'none';
+    calcDuct();
+  }));
+
+  function calcDuct() {
+    const flow = parseFloat(document.getElementById('ductFlow').value);
+    const unit = document.getElementById('ductFlowUnit').value;
+    const vel = parseFloat(document.getElementById('ductVel').value);
+    const hMm = parseFloat(document.getElementById('ductH').value);
+    const outWrap = document.getElementById('ductOutputWrap');
+    const svgWrap = document.getElementById('ductSvgWrap');
+    if (isNaN(flow) || flow <= 0 || isNaN(vel) || vel <= 0 || (ductShape === 'rect' && (isNaN(hMm) || hMm <= 0))) {
+      outWrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل قيم التدفق والسرعة لعرض المقاس القياسي.</div>`;
+      svgWrap.style.display = 'none'; lastDuctSummary = ''; return;
+    }
+
+    const m3s = unit === 'cfm' ? flow * 0.000471947 : flow / 1000;
+    const areaM2 = m3s / vel;
+
+    if (ductShape === 'round') {
+      const rawDia = Math.sqrt((4 * areaM2) / Math.PI) * 1000;
+      const stdDia = Math.max(100, Math.ceil(rawDia / 50) * 50);
+      const spacingM = stdDia > 965 ? '1.2' : (stdDia >= 125 ? '1.8' : '2.4');
+      const gauge = stdDia <= 350 ? '26G (0.55 mm)' : stdDia <= 650 ? '24G (0.70 mm)' : stdDia <= 900 ? '22G (0.85 mm)' : '20G (1.00 mm)';
+      lastDuctSummary = `دكت دائري ${flow} ${unit.toUpperCase()} (${vel} m/s): قياسي Ø${stdDia} mm (${gauge}) | تحميلة كل ${spacingM}m`;
+      outWrap.innerHTML = `
+        <div class="calc-result">
+          <div style="font-size:12px;color:var(--primary);font-weight:800;">المقاس القياسي الدائري — اطلب هذا</div>
+          <div class="calc-main-val ltr">Ø ${stdDia} mm</div>
+          <div class="calc-sub-grid">
+            <div class="calc-mini"><span>القطر المحسوب بدقة</span><strong class="ltr">Ø ${Math.round(rawDia)} mm</strong></div>
+            <div class="calc-mini"><span>تخانة الصاج (SMACNA)</span><strong class="ltr">${gauge}</strong></div>
+            <div class="calc-mini"><span>مسافة التحاميل</span><strong class="ltr">≤ ${spacingM} m</strong></div>
+            <div class="calc-mini"><span>المساحة المقطعية</span><strong class="ltr">${Math.round(areaM2 * 10000)} cm²</strong></div>
+          </div>
+        </div>`;
+      lastDuctSvg = getRoundDuctSvg(stdDia, spacingM);
+      svgWrap.style.display = 'block';
+      svgWrap.innerHTML = lastDuctSvg + `<div class="zoom-hint">🔍 اضغط على الرسم للتكبير</div>`;
+      return;
+    }
+
+    const rawW = (areaM2 / (hMm / 1000)) * 1000;
+    const stdW = Math.max(150, Math.ceil(rawW / 50) * 50);
+    const eqHueb = 1.30 * Math.pow(stdW * hMm, 0.625) / Math.pow(stdW + hMm, 0.25);
+    const stdDia = Math.ceil(eqHueb / 50) * 50;
+    const aspectRatio = +(Math.max(stdW, hMm) / Math.min(stdW, hMm)).toFixed(2);
+    const maxSide = Math.max(stdW, hMm);
+    const gauge = maxSide <= 300 ? '26G (0.55 mm)' : maxSide <= 750 ? '24G (0.70 mm)' : maxSide <= 1350 ? '22G (0.85 mm)' : maxSide <= 2100 ? '20G (1.00 mm)' : '18G (1.30 mm)';
+    const halfPerim = stdW + hMm;
+    const spacingM = halfPerim > 3050 ? '1.2' : (halfPerim > 2440 ? '1.5' : '2.4');
+    const rodMm = halfPerim > 3050 ? '12.7' : (halfPerim > 1830 ? '9.5' : '6.4');
+
+    lastDuctSummary = `دكت ${flow} ${unit.toUpperCase()} (${vel} m/s): مستطيل ${stdW}×${hMm} mm (${gauge}) | مكافئ Huebscher Ø${stdDia} mm | تحميلة كل ${spacingM}m (تيش Ø${rodMm}mm)`;
+    outWrap.innerHTML = `
+      <div class="calc-result">
+        <div style="font-size:12px;color:var(--primary);font-weight:800;">المقاس القياسي — اطلب هذا</div>
+        <div class="calc-main-val ltr">${stdW} × ${hMm} mm</div>
+        ${aspectRatio > 4 ? `<div class="warn-box" style="margin-top:8px;"><strong>⚠️ تنبيه Aspect Ratio = ${aspectRatio}:1</strong>يُفضل ألا تتجاوز نسبة العرض للارتفاع 4:1 لتقليل فقد الضغط والضوضاء.</div>` : ''}
+        <div class="calc-sub-grid">
+          <div class="calc-mini"><span>المكافئ الدائري (Huebscher)</span><strong class="ltr">Ø ${stdDia} mm</strong></div>
+          <div class="calc-mini"><span>تخانة الصاج (SMACNA)</span><strong class="ltr">${gauge}</strong></div>
+          <div class="calc-mini"><span>مسافة التحاميل</span><strong class="ltr">≤ ${spacingM} m (Ø${rodMm})</strong></div>
+          <div class="calc-mini"><span>نسبة الأبعاد (Aspect Ratio)</span><strong class="ltr">${aspectRatio} : 1</strong></div>
+        </div>
+      </div>`;
+    lastDuctSvg = getDuctSupportSvg(stdW, hMm, spacingM, rodMm);
+    svgWrap.style.display = 'block';
+    svgWrap.innerHTML = lastDuctSvg + `<div class="zoom-hint">🔍 اضغط على الرسم للتكبير</div>`;
+  }
+  ['ductFlow', 'ductFlowUnit', 'ductVel', 'ductH'].forEach(id => document.getElementById(id).addEventListener('input', calcDuct));
+  document.getElementById('ductFlowUnit').addEventListener('change', calcDuct);
+  document.getElementById('ductSvgWrap').addEventListener('click', () => lastDuctSvg && openLightboxHtml(lastDuctSvg));
+  document.getElementById('btnCopyDuct').addEventListener('click', () => lastDuctSummary && copyText(lastDuctSummary, 'تم نسخ مقاس الدكت 📋'));
+  document.getElementById('btnSaveDuct').addEventListener('click', () => lastDuctSummary && openPickProjectModal('حفظ مقاس الدكت في مشروع', 'calc', lastDuctSummary));
+
+  let lastLoadSummary = '';
+  function calcLoad() {
+    const area = parseFloat(document.getElementById('loadArea').value);
+    const factor = parseFloat(document.getElementById('loadType').value) || 16;
+    const wrap = document.getElementById('loadOutputWrap');
+    if (isNaN(area) || area <= 0) {
+      wrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل المساحة بالمتر المربع لحساب الحمل التقديري.</div>`;
+      lastLoadSummary = ''; return;
+    }
+    const tr = +(area / factor).toFixed(2);
+    const kw = +(tr * 3.517).toFixed(2);
+    const btu = Math.round(tr * 12000);
+    const hp = +(tr * 1.25).toFixed(1);
+    lastLoadSummary = `حمل حراري (${area} م²): ${tr} TR (${kw} kW / ${btu.toLocaleString()} BTU/h)`;
+    wrap.innerHTML = `
+      <div class="calc-result">
+        <div style="font-size:12px;color:var(--primary);font-weight:800;">الحمل التقديري</div>
+        <div class="calc-main-val ltr">${tr} TR</div>
+        <div class="calc-sub-grid">
+          <div class="calc-mini"><span>بالكيلووات</span><strong class="ltr">${kw} kW</strong></div>
+          <div class="calc-mini"><span>BTU/h</span><strong class="ltr">${btu.toLocaleString()}</strong></div>
+          <div class="calc-mini"><span>تقدير بالحصان (سبليت)</span><strong class="ltr">~ ${hp} HP</strong></div>
+          <div class="calc-mini"><span>المعامل</span><strong class="ltr">${factor} m²/TR</strong></div>
+        </div>
+      </div>`;
+  }
+  document.getElementById('loadArea').addEventListener('input', calcLoad);
+  document.getElementById('loadType').addEventListener('change', calcLoad);
+  document.getElementById('btnCopyLoad').addEventListener('click', () => lastLoadSummary && copyText(lastLoadSummary, 'تم نسخ الحمل الحراري 📋'));
+  document.getElementById('btnSaveLoad').addEventListener('click', () => lastLoadSummary && openPickProjectModal('حفظ الحمل الحراري في مشروع', 'calc', lastLoadSummary));
+
+  /* ==================== MY PROJECTS ==================== */
+  let openProjectId = null;
+
+  function renderProjects() {
+    const listWrap = document.getElementById('projectsList');
+    const detWrap = document.getElementById('projectDetail');
+    if (openProjectId) {
+      const p = state.projects.find(x => x.id === openProjectId);
+      if (!p) { openProjectId = null; renderProjects(); return; }
+      listWrap.style.display = 'none'; detWrap.style.display = 'block';
+      const renderRow = (arrName, item, idx) => `<li><div style="flex:1;"><div>${esc(item.text)}</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;" class="ltr">${esc(item.date)}</div></div><div style="display:flex;gap:4px;flex-shrink:0;"><button class="chk-state" data-pcopy="${arrName}|${idx}" title="نسخ">📋</button><button class="chk-state" data-pdel="${arrName}|${idx}" title="حذف">🗑️</button></div></li>`;
+
+      detWrap.innerHTML = `
+        <button class="btn btn-outline btn-sm" id="btnBackProj" style="margin-bottom:10px;">← كل المشاريع</button>
+        <div class="card"><div class="card-title"><span>📁 ${esc(p.name)}</span><button class="btn btn-danger btn-sm" id="btnDelProj">حذف المشروع</button></div><div style="font-size:12px;color:var(--text-muted);">تاريخ الإنشاء: <span class="ltr">${esc(p.createdAt)}</span></div></div>
+        <div class="card"><div class="card-title"><span>📐 نتائج الحاسبات المحفوظة (${p.savedCalcs.length})</span></div>${p.savedCalcs.length ? `<ul class="kv-list">${p.savedCalcs.map((c, i) => renderRow('savedCalcs', c, i)).join('')}</ul>` : '<div style="font-size:12.5px;color:var(--text-muted);">احفظ أي نتيجة من الحاسبات لتظهر هنا.</div>'}</div>
+        <div class="card"><div class="card-title"><span>✅ جلسات الفحص والاختبارات (${p.savedTests.length})</span></div>${p.savedTests.length ? `<ul class="kv-list">${p.savedTests.map((t, i) => renderRow('savedTests', t, i)).join('')}</ul>` : '<div style="font-size:12.5px;color:var(--text-muted);">احفظ أي جلسة استلام أو اختبار لتظهر هنا.</div>'}</div>
+        <div class="card"><div class="card-title"><span>📝 قرارات استشاري وملاحظات المشروع (${p.notes.length})</span></div><div style="display:flex;gap:6px;margin-bottom:10px;"><input type="text" id="newProjNote" class="form-control" placeholder="سجّل قرار استشاري أو ملاحظة خاصة بالمشروع..."><button class="btn btn-primary btn-sm" id="btnAddProjNote">إضافة</button></div>${p.notes.length ? `<ul class="kv-list">${p.notes.map((n, i) => renderRow('notes', n, i)).join('')}</ul>` : ''}</div>`;
+
+      document.getElementById('btnBackProj').addEventListener('click', () => { openProjectId = null; renderProjects(); });
+      document.getElementById('btnDelProj').addEventListener('click', () => {
+        confirmAction(`هل أنت متأكد من حذف مشروع "${p.name}" بكل ما بداخله؟`, () => {
+          state.projects = state.projects.filter(x => x.id !== p.id);
+          openProjectId = null; saveState(); closeAllModals(); renderProjects(); showToast('تم حذف المشروع');
+        });
+      });
+      const addProjNoteFn = () => {
+        const val = document.getElementById('newProjNote').value.trim(); if (!val) return;
+        p.notes.unshift({ id: 'pn-' + Date.now(), date: new Date().toISOString().slice(0,10), text: val });
+        saveState(); renderProjects(); showToast('تمت إضافة الملاحظة ✅');
+      };
+      document.getElementById('btnAddProjNote').addEventListener('click', addProjNoteFn);
+      document.getElementById('newProjNote').addEventListener('keydown', (e) => { if (e.key === 'Enter') addProjNoteFn(); });
+      detWrap.querySelectorAll('[data-pcopy]').forEach(b => b.addEventListener('click', () => {
+        const [arr, idx] = b.dataset.pcopy.split('|'); copyText(p[arr][Number(idx)].text, 'تم النسخ 📋');
+      }));
+      detWrap.querySelectorAll('[data-pdel]').forEach(b => b.addEventListener('click', () => {
+        const [arr, idx] = b.dataset.pdel.split('|');
+        confirmAction('حذف هذا العنصر من المشروع؟', () => { p[arr].splice(Number(idx), 1); saveState(); closeAllModals(); renderProjects(); showToast('تم الحذف'); });
+      }));
+      return;
+    }
+
+    detWrap.style.display = 'none'; listWrap.style.display = 'block';
+    if (!state.projects.length) { listWrap.innerHTML = `<div class="card empty-state">لا توجد مشاريع بعد. اضغط "+ مشروع جديد".</div>`; return; }
+    listWrap.innerHTML = state.projects.map(p => `<div class="item-card" data-openproj="${p.id}"><div class="item-title">📁 ${esc(p.name)}</div><div class="item-meta" style="margin-top:6px;margin-bottom:0;"><span class="badge badge-primary">${p.savedCalcs.length} حاسبة</span><span class="badge badge-success">${p.savedTests.length} فحص/اختبار</span><span class="badge badge-muted">${p.notes.length} ملاحظة</span></div></div>`).join('');
+    listWrap.querySelectorAll('[data-openproj]').forEach(el => el.addEventListener('click', () => { openProjectId = el.dataset.openproj; renderProjects(); }));
+  }
+
+  document.getElementById('btnNewProject').addEventListener('click', () => {
+    openModal('إنشاء مشروع جديد', `<div class="form-group"><label>اسم المشروع *</label><input type="text" id="fProjName" class="form-control" placeholder="مثال: مشروع عتال 47 / تسيباس"></div><button class="btn btn-primary" id="btnCreateProj" style="width:100%;">إنشاء الفولدر</button>`);
+    document.getElementById('btnCreateProj').addEventListener('click', () => {
+      const name = document.getElementById('fProjName').value.trim(); if (!name) return showToast('اكتب اسم المشروع');
+      state.projects.unshift({ id: 'proj-' + Date.now(), name, createdAt: new Date().toISOString().slice(0,10), savedCalcs: [], savedTests: [], notes: [] });
+      saveState(); closeAllModals(); renderProjects(); showToast('تم إنشاء المشروع ✅');
+    });
+  });
+
+  function openPickProjectModal(title, targetType, text) {
+    if (!state.projects.length) state.projects.push({ id: 'proj-' + Date.now(), name: 'مشروع افتراضي', createdAt: new Date().toISOString().slice(0,10), savedCalcs: [], savedTests: [], notes: [] });
+    openModal(title, `<div class="layer-box" style="font-size:13px;margin-bottom:12px;">${esc(text)}</div><div class="form-group"><label>اختر المشروع</label><select id="pickProjSel" class="form-control">${state.projects.map(p => `<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></div><button class="btn btn-primary" id="btnConfirmSaveProj" style="width:100%;">💾 حفظ الآن</button>`);
+    document.getElementById('btnConfirmSaveProj').addEventListener('click', () => {
+      const proj = state.projects.find(p => p.id === document.getElementById('pickProjSel').value);
+      const entry = { id: 'sv-' + Date.now(), date: new Date().toISOString().slice(0,10), text };
+      if (targetType === 'calc') proj.savedCalcs.unshift(entry);
+      else proj.savedTests.unshift(entry);
+      saveState(); closeAllModals(); showToast(`تم الحفظ في "${proj.name}" ✅`);
+    });
+  }
+
+  /* ==================== SETTINGS & BACKUP ==================== */
+  document.getElementById('btnSettings').addEventListener('click', () => {
+    const sizeKB = getApproxSizeKB();
+    const lastB = state.lastBackupAt ? new Date(state.lastBackupAt).toLocaleDateString('ar-EG') : 'لم يتم أخذ نسخة احتياطية بعد';
+    openModal('⚙️ الإعدادات والنسخ الاحتياطي', `
+      <div class="layer-box">
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px;"><span>المساحة المستخدمة حالياً:</span><strong class="ltr">${sizeKB} KB</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;"><span>آخر نسخة احتياطية (Backup):</span><strong>${esc(lastB)}</strong></div>
+      </div>
+      <div class="btn-row" style="margin-top:14px;"><button class="btn btn-primary" id="btnExportJson" style="flex:1;">⬇️ تصدير نسخة احتياطية (JSON)</button></div>
+      <div class="form-group" style="margin-top:12px;"><label>⬆️ استيراد نسخة احتياطية سابقة (JSON)</label><input type="file" id="inputImportJson" accept=".json" class="form-control"></div>
+      <div style="border-top:1px solid var(--border);margin-top:14px;padding-top:12px;"><button class="btn btn-danger btn-sm" id="btnResetFactory">إعادة ضبط البيانات الافتراضية</button></div>
+    `);
+
+    document.getElementById('btnExportJson').addEventListener('click', () => {
+      state.lastBackupAt = Date.now(); saveState();
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `MEP_Field_Backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+      URL.revokeObjectURL(url); closeAllModals(); showToast('تم تنزيل ملف النسخة الاحتياطية ✅');
+    });
+
+    document.getElementById('inputImportJson').addEventListener('change', (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const parsed = JSON.parse(ev.target.result);
+          if (!parsed.knowledgeCards || !parsed.projects) throw new Error('Invalid');
+          confirmAction('استيراد هذه النسخة الاحتياطية سيستبدل بياناتك الحالية بالكامل. هل تريد المتابعة؟', () => {
+            state = migrateState(parsed);
+            saveState(); applyTheme(); applyPrivacy(); ensureGlobalTimerLoop();
+            renderHome(); renderLibrary(); renderQA(); renderProjects();
+            closeAllModals(); showToast('تم استعادة بياناتك بنجاح ✅');
+          });
+        } catch (err) { showToast('ملف النسخة الاحتياطية غير صالح ❌'); }
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('btnResetFactory').addEventListener('click', () => {
+      confirmAction('هل أنت متأكد من مسح كل التعديلات والعودة للبيانات الافتراضية؟ يُنصح بأخذ Backup أولاً.', () => {
+        state = JSON.parse(JSON.stringify(SEED_STATE));
+        activeKbFolder = null; qaFolder = null; openChkId = null; openTestId = null; openProjectId = null;
+        saveState(); applyTheme(); applyPrivacy(); ensureGlobalTimerLoop();
+        renderHome(); renderLibrary(); renderQA(); renderProjects();
+        closeAllModals(); showToast('تمت استعادة البيانات الافتراضية');
+      });
+    });
+  });
+
+  /* ==================== BOOTSTRAP & PWA SERVICE WORKER ==================== */
+  loadState().then(() => {
+    applyTheme(); applyPrivacy(); updateBackupIndicator();
+    ensureGlobalTimerLoop();
+    renderHome(); renderLibrary(); renderQA();
+    populateUnits(); calcDuct(); calcLoad(); renderCalcNav();
+    renderProjects();
+  });
+
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+})();
+</script>
+</body>
+</html>
