@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MEP Field Companion — دليل مهندس الميكانيكا أوفلاين (V1.3)</title>
+<title>MEP Field Companion — دليل مهندس الميكانيكا أوفلاين (V1.5.1)</title>
 <meta name="theme-color" content="#0f766e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -414,6 +414,39 @@
   .calc-mini span { display: block; color: var(--text-muted); font-size: 11px; }
   .calc-mini strong { font-size: 13.5px; color: var(--text); }
 
+  /* Upgraded Unit Converter Styles */
+  .swap-wrap { display: flex; justify-content: center; margin: 6px 0 10px; }
+  .to-result-box {
+    display: flex; align-items: center; justify-content: space-between; gap: 8px;
+    padding: 11px 14px; border-radius: 10px;
+    background: var(--primary-soft); border: 1.5px solid var(--primary);
+    margin-bottom: 8px;
+  }
+  .to-result-num { font-size: 22px; font-weight: 900; color: var(--primary); }
+  .conv-formula { text-align: center; font-size: 12px; color: var(--text-muted); font-weight: 700; margin-top: 6px; }
+  .all-conv-list { list-style: none; display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
+  .all-conv-list li {
+    display: flex; justify-content: space-between; align-items: center; gap: 8px;
+    padding: 8px 11px; border-radius: 9px; font-size: 13px;
+    background: var(--surface-2); border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .all-conv-list li.hl { background: var(--primary-soft); border-color: var(--primary); color: var(--primary); font-weight: 800; }
+
+  /* Fixture Counter Grid */
+  .fix-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 10px; }
+  @media (max-width: 420px) { .fix-grid { grid-template-columns: 1fr; } }
+  .fix-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    background: var(--surface-2); border: 1px solid var(--border);
+    border-radius: 9px; padding: 6px 8px; font-size: 12px;
+  }
+  .fix-ctrl { display: flex; align-items: center; gap: 6px; }
+  .fix-btn {
+    width: 26px; height: 26px; border-radius: 7px; border: 1px solid var(--border);
+    background: var(--surface); color: var(--text); font-weight: 800; cursor: pointer;
+  }
+
   /* Forms */
   .form-group { margin-bottom: 10px; }
   .form-group label { display: block; font-size: 12.5px; font-weight: 700; margin-bottom: 4px; color: var(--text-muted); }
@@ -505,7 +538,7 @@
     <div class="brand-logo">MEP</div>
     <div>
       <div class="brand-title">MEP Field Companion</div>
-      <div class="brand-sub">أوفلاين 100% · V1.3 PWA</div>
+      <div class="brand-sub">أوفلاين 100% · V1.5.1 PWA</div>
     </div>
   </div>
   <div class="top-actions">
@@ -603,75 +636,89 @@
   <!-- ================= TAB 4: CALCULATORS ================= -->
   <section class="tab-panel" id="tab-calc">
     <div class="pills-row" id="calcFilterPills">
-      <button class="pill active" data-cfilter="all">الكل</button>
+      <button class="pill active" data-cfilter="all">الكل (6)</button>
       <button class="pill" data-cfilter="fav">★ المفضلة</button>
-      <button class="pill" data-cfilter="hvac">تكييف</button>
-      <button class="pill" data-cfilter="general">عام</button>
+      <button class="pill" data-cfilter="hvac">تكييف (3)</button>
+      <button class="pill" data-cfilter="plumbing">صحي (2)</button>
+      <button class="pill" data-cfilter="general">عام (1)</button>
     </div>
 
     <div class="pills-row" id="calcTabs"></div>
 
-    <!-- Calc 1: Unit Converter -->
-    <div class="card calc-pane" id="calc-units">
-      <div class="card-title">
-        <span>🔄 محول الوحدات الهندسية <span class="en-inline">(MEP)</span></span>
-        <button class="icon-btn" data-favcalc="units" title="إضافة للمفضلة">☆</button>
-      </div>
-      <div class="form-group">
-        <label>الفئة</label>
-        <select id="unitCat" class="form-control">
-          <option value="airflow">تدفق الهواء (Airflow)</option>
-          <option value="cooling">التبريد (Cooling)</option>
-          <option value="pressure">الضغط (Pressure)</option>
-          <option value="length">الأبعاد (Length)</option>
-        </select>
-      </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label>القيمة</label>
-          <input type="number" id="unitVal" class="form-control ltr" value="1000" step="any">
+    <!-- Calc 1: Upgraded Unit Converter (11 MEP Categories + Swap + All Conversions) -->
+    <div class="calc-pane" id="calc-units">
+      <div class="card">
+        <div class="card-title">
+          <span>🔄 محول الوحدات الهندسية <span class="en-inline">(MEP)</span></span>
+          <button class="icon-btn" data-favcalc="units" title="إضافة للمفضلة">☆</button>
         </div>
+        <div class="pills-row" id="unitCatPills" style="margin-bottom:10px;"></div>
         <div class="form-group">
-          <label>من وحدة</label>
+          <label>من (From)</label>
+          <input type="number" id="unitVal" class="form-control ltr" value="1" step="any" style="margin-bottom:6px;font-size:16px;font-weight:700;">
           <select id="unitFrom" class="form-control ltr"></select>
         </div>
+        <div class="swap-wrap">
+          <button class="btn btn-primary btn-sm" id="btnSwapUnits">⇅ تبديل الوحدات (Swap)</button>
+        </div>
+        <div class="form-group" style="margin-bottom:6px;">
+          <label>إلى (To)</label>
+          <div class="to-result-box">
+            <span class="to-result-num ltr" id="unitToVal">—</span>
+            <button class="icon-btn" id="btnCopyUnitInline" title="نسخ النتيجة" style="width:34px;height:34px;">📋</button>
+          </div>
+          <select id="unitTo" class="form-control ltr"></select>
+        </div>
+        <div class="conv-formula ltr" id="unitFormula"></div>
+        <div class="btn-row">
+          <button class="btn btn-soft btn-sm" id="btnCopyUnit">📋 نسخ المعادلة</button>
+          <button class="btn btn-outline btn-sm" id="btnSaveUnit">💾 حفظ في مشروع</button>
+        </div>
       </div>
-      <div class="calc-result" id="unitOutput"></div>
-      <div class="btn-row">
-        <button class="btn btn-soft btn-sm" id="btnCopyUnit">📋 نسخ</button>
-        <button class="btn btn-outline btn-sm" id="btnSaveUnit">💾 حفظ في مشروع</button>
+
+      <div class="card">
+        <div class="card-title" style="font-size:14px;"><span id="allConvTitle">جميع التحويلات</span></div>
+        <ul class="all-conv-list" id="allConvList"></ul>
       </div>
     </div>
 
-    <!-- Calc 2: Duct Sizer -->
+    <!-- Calc 2: Upgraded Duct Sizer (Equal Friction + Constant Velocity + IP/SI + SMACNA) -->
     <div class="card calc-pane" id="calc-duct" style="display:none;">
       <div class="card-title">
-        <span>📐 مقاس الدكت وتحاميل <span class="en-inline">SMACNA</span></span>
+        <span>📐 مقاس الدكت <span class="en-inline">(ASHRAE / SMACNA)</span></span>
         <button class="icon-btn" data-favcalc="duct" title="إضافة للمفضلة">☆</button>
       </div>
-      <div class="seg-control" style="margin-bottom:10px;">
-        <button class="seg-btn active" data-ductshape="rect">مستطيل (Rectangular)</button>
-        <button class="seg-btn" data-ductshape="round">دائري (Round / Spiral)</button>
+      <div class="seg-control" style="margin-bottom:8px;">
+        <button class="seg-btn active" data-ductmethod="friction">Equal Friction (فقد ضغط)</button>
+        <button class="seg-btn" data-ductmethod="velocity">Constant Velocity (سرعة)</button>
+      </div>
+      <div class="grid-2" style="margin-bottom:8px;">
+        <div class="seg-control" style="margin-bottom:0;">
+          <button class="seg-btn active" data-ductshape="rect">مستطيل</button>
+          <button class="seg-btn" data-ductshape="round">دائري</button>
+        </div>
+        <div class="seg-control" style="margin-bottom:0;">
+          <button class="seg-btn active" data-ductsys="ip">إنجليزي (IP)</button>
+          <button class="seg-btn" data-ductsys="si">متري (SI)</button>
+        </div>
       </div>
       <div class="grid-2">
         <div class="form-group">
-          <label>التدفق</label>
-          <div style="display:flex;gap:6px;">
-            <input type="number" id="ductFlow" class="form-control ltr" value="2500" min="1" step="any">
-            <select id="ductFlowUnit" class="form-control ltr" style="width:95px;flex-shrink:0;">
-              <option value="cfm">CFM</option>
-              <option value="ls">L/s</option>
-            </select>
-          </div>
+          <label id="lblDuctFlow">التدفق (CFM)</label>
+          <input type="number" id="ductFlow" class="form-control ltr" value="2500" min="1" step="any">
         </div>
-        <div class="form-group">
-          <label>السرعة المستهدفة <span class="en-inline">(m/s)</span></label>
-          <input type="number" id="ductVel" class="form-control ltr" value="5" min="1" max="15" step="0.5">
+        <div class="form-group" id="ductFricGroup">
+          <label id="lblDuctFric">فقد الضغط (in.WC / 100ft)</label>
+          <input type="number" id="ductFric" class="form-control ltr" value="0.08" min="0.01" step="0.01">
+        </div>
+        <div class="form-group" id="ductVelGroup" style="display:none;">
+          <label id="lblDuctVel">السرعة المستهدفة (FPM)</label>
+          <input type="number" id="ductVel" class="form-control ltr" value="1000" min="1" step="any">
         </div>
       </div>
       <div class="form-group" id="ductHGroup">
-        <label>ارتفاع الدكت المختار <span class="en-inline">H (mm)</span> — للتحويل لمستطيل</label>
-        <input type="number" id="ductH" class="form-control ltr" value="350" min="100" max="1500" step="50">
+        <label id="lblDuctH">أحد أبعاد الدكت H (بوصة inch)</label>
+        <input type="number" id="ductH" class="form-control ltr" value="14" min="4" step="1">
       </div>
       <div id="ductOutputWrap"></div>
       <div class="svg-wrap" id="ductSvgWrap"></div>
@@ -679,7 +726,186 @@
         <button class="btn btn-soft btn-sm" id="btnCopyDuct">📋 نسخ المقاس</button>
         <button class="btn btn-outline btn-sm" id="btnSaveDuct">💾 حفظ في مشروع</button>
       </div>
-      <div class="disclaimer">القطر المكافئ بمعادلة Huebscher — للتقدير الميداني وراجع جدول SMACNA واللوحات المعتمدة.</div>
+      <div class="disclaimer">معادلة ASHRAE Equal Friction وHuebscher — راجع جدول SMACNA واللوحات المعتمدة قبل التصنيع.</div>
+    </div>
+
+    <!-- Calc 4: Chilled Water Pipe Sizer (ASME B36.10M Sch 40) -->
+    <div class="card calc-pane" id="calc-chw" style="display:none;">
+      <div class="card-title">
+        <span>🧊 مواسير التشيلد ووتر <span class="en-inline">(CHW · Sch 40)</span></span>
+        <button class="icon-btn" data-favcalc="chw" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="seg-control" style="margin-bottom:8px;">
+        <button class="seg-btn active" data-chwmode="tr">بالطن التبريدي (TR)</button>
+        <button class="seg-btn" data-chwmode="gpm">بالتدفق مباشرة (GPM)</button>
+        <button class="seg-btn" data-chwmode="ls">بالتدفق (L/s)</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label id="lblChwIn">الحمل التبريدي (TR)</label>
+          <input type="number" id="chwVal" class="form-control ltr" value="25" min="0.5" step="any">
+        </div>
+        <div class="form-group" id="chwDtGroup">
+          <label>فرق درجات الحرارة ΔT (°F)</label>
+          <input type="number" id="chwDt" class="form-control ltr" value="10" min="4" max="24" step="1">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>معامل الخشونة Hazen-Williams (C)</label>
+          <select id="chwC" class="form-control ltr">
+            <option value="135.038" selected>135 — حديد أسود Sch 40 (قياسي مغلق)</option>
+            <option value="140">140 — حديد أسود جديد Sch 40</option>
+            <option value="120">120 — حديد قديم / شبكات مفتوحة</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>القطر الاسمي (اختياري للمقارنة)</label>
+          <select id="chwSize" class="form-control ltr"></select>
+        </div>
+      </div>
+      <div id="chwOutputWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyChw">📋 نسخ النتيجة</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveChw">💾 حفظ في مشروع</button>
+      </div>
+      <div class="disclaimer">مبني على جدول ASME B36.10M Schedule 40 وحدود ASHRAE (فقد ضغط ≤ 4 ft/100ft).</div>
+    </div>
+
+    <!-- Calc 5: Water Supply Pipe Sizer (IPC E103.3) -->
+    <div class="card calc-pane" id="calc-water" style="display:none;">
+      <div class="card-title">
+        <span>💧 مواسير التغذية بالمياه <span class="en-inline">(IPC E103.3)</span></span>
+        <button class="icon-btn" data-favcalc="water" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="seg-control" style="margin-bottom:8px;">
+        <button class="seg-btn active" data-wmode="direct">إدخال WSFU مباشر</button>
+        <button class="seg-btn" data-wmode="fixtures">عدّاد الأجهزة الصحية</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>نوع المبنى (Occupancy)</label>
+          <select id="wOcc" class="form-control">
+            <option value="private" selected>سكني / فيلا (Private)</option>
+            <option value="public">تجاري / عام (Public)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>نظام الطرد (Flushing)</label>
+          <select id="wFlush" class="form-control">
+            <option value="tank" selected>صندوق طرد (Flush Tank)</option>
+            <option value="valve">صمام طرد (Flush Valve)</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>خامة الماسورة (القطر الداخلي Di)</label>
+          <select id="wMat" class="form-control">
+            <option value="ppr16" selected>PPR — PN16 (C=150)</option>
+            <option value="ppr20">PPR — PN20/25 (C=150)</option>
+            <option value="copper">Copper Type K (C=130)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>أقصى سرعة مسموحة (m/s)</label>
+          <input type="number" id="wMaxV" class="form-control ltr" value="1.5" min="0.5" max="3" step="0.1">
+        </div>
+      </div>
+      <div id="wDirectBox" class="form-group">
+        <label>إجمالي وحدات التغذية (WSFU)</label>
+        <input type="number" id="wDirectFu" class="form-control ltr" value="23.9" min="0.5" max="5000" step="0.1">
+      </div>
+      <div id="wFixturesBox" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <span id="wFixTotals" style="font-size:12px;font-weight:700;color:var(--primary);"></span>
+          <button class="btn btn-outline btn-sm" id="btnResetFix">🔄 تصفير العدّاد</button>
+        </div>
+        <div class="fix-grid" id="wFixGrid"></div>
+      </div>
+      <div id="waterOutputWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyWater">📋 نسخ النتيجة</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveWater">💾 حفظ في مشروع</button>
+      </div>
+      <div class="disclaimer">مبني على IPC Appendix E Table E103.3(2)/(3) وSBC 701 بالـ Linear Interpolation والقطر الداخلي الفعلي.</div>
+    </div>
+
+    <!-- Calc 6: Booster Pump Duty Point -->
+    <div class="card calc-pane" id="calc-booster" style="display:none;">
+      <div class="card-title">
+        <span>⚙️ حاسبة طلمبة الرفع <span class="en-inline">(Booster Pump)</span></span>
+        <button class="icon-btn" data-favcalc="booster" title="إضافة للمفضلة">☆</button>
+      </div>
+      <div class="seg-control" style="margin-bottom:8px;">
+        <button class="seg-btn active" data-bpmode="wsfu">بالـ WSFU</button>
+        <button class="seg-btn" data-bpmode="ls">تدفق (L/s)</button>
+        <button class="seg-btn" data-bpmode="m3h">تدفق (m³/h)</button>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label id="lblBpIn">إجمالي WSFU للمبنى</label>
+          <input type="number" id="bpWsfu" class="form-control ltr" value="23.9" min="0.1" step="0.1">
+        </div>
+        <div class="form-group" id="bpFlushGroup">
+          <label>نظام الطرد</label>
+          <select id="bpFlush" class="form-control">
+            <option value="tank" selected>Flush Tank</option>
+            <option value="valve">Flush Valve</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>الارتفاع الاستاتيكي Static Head (m)</label>
+          <input type="number" id="bpStatic" class="form-control ltr" value="13.8" min="0" step="0.5">
+        </div>
+        <div class="form-group">
+          <label>طول المسار لأبعد نقطة (m)</label>
+          <input type="number" id="bpLen" class="form-control ltr" value="60" min="1" step="5">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>الضغط المتبقي المطلوب Residual (bar)</label>
+          <input type="number" id="bpRes" class="form-control ltr" value="1.5" min="0.5" max="4" step="0.1">
+        </div>
+        <div class="form-group">
+          <label>فواقد معدات + محابس (m)</label>
+          <input type="number" id="bpEquip" class="form-control ltr" value="3" min="0" step="0.5">
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>خامة خط الطرد</label>
+          <select id="bpMat" class="form-control">
+            <option value="ppr16" selected>PPR — PN16 (C=150)</option>
+            <option value="ppr20">PPR — PN20/25 (C=150)</option>
+            <option value="copper">Copper Type K (C=130)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>كفاءة الطلمبة η (%)</label>
+          <input type="number" id="bpEff" class="form-control ltr" value="60" min="20" max="90" step="5">
+        </div>
+      </div>
+      <div style="margin-bottom:8px;">
+        <button class="btn btn-outline btn-sm" id="btnToggleBpAdv">⚙️ معاملات الأمان المتقدمة ▾</button>
+        <div id="bpAdvBox" class="layer-box" style="display:none;margin-top:6px;">
+          <div class="grid-2">
+            <div class="form-group"><label>أمان التدفق (%)</label><input type="number" id="bpSfFlow" class="form-control ltr" value="10" min="0" max="50"></div>
+            <div class="form-group"><label>أمان الضاغط Head (%)</label><input type="number" id="bpSfHead" class="form-control ltr" value="10" min="0" max="50"></div>
+            <div class="form-group"><label>إضافة Fittings (%)</label><input type="number" id="bpFitPct" class="form-control ltr" value="30" min="0" max="100"></div>
+            <div class="form-group"><label>ارتفاع السحب Suction (m)</label><input type="number" id="bpSuction" class="form-control ltr" value="0" min="0" step="0.5"></div>
+          </div>
+        </div>
+      </div>
+      <div id="boosterOutputWrap"></div>
+      <div class="btn-row">
+        <button class="btn btn-soft btn-sm" id="btnCopyBooster">📋 نسخ نقطة التشغيل</button>
+        <button class="btn btn-outline btn-sm" id="btnSaveBooster">💾 حفظ في مشروع</button>
+      </div>
+      <div class="disclaimer">شامل معامل أمان 10% للتدفق والـ Head و30% للـ Fittings وفحص PRV حسب IPC 604.8 (5.5 bar).</div>
     </div>
 
     <!-- Calc 3: Cooling Load -->
@@ -1557,7 +1783,10 @@
     [
       { id: 'units', title: 'محول الوحدات الهندسية (MEP)', keys: 'محول وحدات cfm l/s tr kw bar psi' },
       { id: 'duct', title: 'حاسبة مقاس الدكت وتحاميل SMACNA', keys: 'مقاس دكت حاسبة duct sizer smacna huebscher' },
-      { id: 'load', title: 'حاسبة تقدير الحمل الحراري السريع', keys: 'حمل حراري تبريد تكييف cooling load tr' }
+      { id: 'load', title: 'حاسبة تقدير الحمل الحراري السريع', keys: 'حمل حراري تبريد تكييف cooling load tr حصان' },
+      { id: 'chw', title: 'حاسبة مواسير التشيلد ووتر (CHW · Sch 40)', keys: 'تشيلد ووتر مواسير مياه مثلجة chilled water pipe gpm tr sch 40' },
+      { id: 'water', title: 'حاسبة مواسير التغذية بالمياه (IPC WSFU)', keys: 'تغذية مياه صحي سباكة بولي wsfu ipc ppr pipe sizing' },
+      { id: 'booster', title: 'حاسبة طلمبة الرفع (Booster Pump)', keys: 'طلمبة رفع بوستر مضخة ضغط booster pump tdh prv head' }
     ].forEach(calc => {
       if ((calc.title + ' ' + calc.keys).toLowerCase().includes(q)) hits.push({ score: 8, kind: 'calc', item: calc });
     });
@@ -2468,8 +2697,11 @@
   /* ==================== CALCULATORS ==================== */
   const CALC_LIST = [
     { id: 'units', name: '🔄 محول الوحدات', cat: 'general' },
-    { id: 'duct', name: '📐 مقاس الدكت SMACNA', cat: 'hvac' },
-    { id: 'load', name: '❄️ الحمل الحراري', cat: 'hvac' }
+    { id: 'duct', name: '📐 مقاس الدكت', cat: 'hvac' },
+    { id: 'chw', name: '🧊 مواسير التشيلد', cat: 'hvac' },
+    { id: 'load', name: '❄️ الحمل الحراري', cat: 'hvac' },
+    { id: 'water', name: '💧 مواسير التغذية', cat: 'plumbing' },
+    { id: 'booster', name: '⚙️ طلمبة الرفع', cat: 'plumbing' }
   ];
   let activeCalc = 'units';
   let calcFilter = 'all';
@@ -2507,120 +2739,370 @@
     saveState(); renderCalcNav();
   }));
 
-  const UNIT_DEFS = {
-    airflow: { CFM: 1, 'L/s': 0.471947, 'm³/h': 1.69901 },
-    cooling: { TR: 1, kW: 3.51685, 'BTU/h': 12000 },
-    pressure: { bar: 1, psi: 14.5038, kPa: 100 },
-    length: { mm: 1, cm: 0.1, inch: 0.0393701, ft: 0.00328084 }
-  };
+  const UNIT_CATS = [
+    {
+      id: 'length', label: 'الطول · Length', defFrom: 'm', defTo: 'mm',
+      units: [
+        { id: 'm', name: 'Meter (m)', sym: 'm', toBase: 1 },
+        { id: 'mm', name: 'Millimeter (mm)', sym: 'mm', toBase: 0.001 },
+        { id: 'cm', name: 'Centimeter (cm)', sym: 'cm', toBase: 0.01 },
+        { id: 'in', name: 'Inch (in)', sym: 'in', toBase: 0.0254 },
+        { id: 'ft', name: 'Foot (ft)', sym: 'ft', toBase: 0.3048 }
+      ]
+    },
+    {
+      id: 'area', label: 'المساحة · Area', defFrom: 'm2', defTo: 'ft2',
+      units: [
+        { id: 'm2', name: 'Square Meter (m²)', sym: 'm²', toBase: 1 },
+        { id: 'mm2', name: 'Square Millimeter (mm²)', sym: 'mm²', toBase: 1e-6 },
+        { id: 'in2', name: 'Square Inch (in²)', sym: 'in²', toBase: 0.00064516 },
+        { id: 'ft2', name: 'Square Foot (ft²)', sym: 'ft²', toBase: 0.09290304 }
+      ]
+    },
+    {
+      id: 'volume', label: 'الحجم · Volume', defFrom: 'm3', defTo: 'L',
+      units: [
+        { id: 'm3', name: 'Cubic Meter (m³)', sym: 'm³', toBase: 1 },
+        { id: 'L', name: 'Liter (L)', sym: 'L', toBase: 0.001 },
+        { id: 'ft3', name: 'Cubic Foot (ft³)', sym: 'ft³', toBase: 0.0283168466 },
+        { id: 'gal_us', name: 'Gallon (US) (gal)', sym: 'gal (US)', toBase: 0.0037854118 },
+        { id: 'gal_uk', name: 'Gallon (UK) (gal)', sym: 'gal (UK)', toBase: 0.00454609 }
+      ]
+    },
+    {
+      id: 'flow', label: 'التدفق · Flow Rate', defFrom: 'Ls', defTo: 'CFM',
+      units: [
+        { id: 'm3s', name: 'Cubic Meter per Second (m³/s)', sym: 'm³/s', toBase: 1 },
+        { id: 'm3h', name: 'Cubic Meter per Hour (m³/h)', sym: 'm³/h', toBase: 1 / 3600 },
+        { id: 'Ls', name: 'Liter per Second (L/s)', sym: 'L/s', toBase: 0.001 },
+        { id: 'Lmin', name: 'Liter per Minute (L/min)', sym: 'L/min', toBase: 0.001 / 60 },
+        { id: 'CFM', name: 'Cubic Foot per Minute (CFM)', sym: 'CFM', toBase: 0.00047194745 },
+        { id: 'GPM_US', name: 'Gallon per Minute (US) (GPM)', sym: 'GPM (US)', toBase: 0.0037854118 / 60 },
+        { id: 'GPM_UK', name: 'Gallon per Minute (UK) (GPM)', sym: 'GPM (UK)', toBase: 0.00454609 / 60 }
+      ]
+    },
+    {
+      id: 'velocity', label: 'السرعة · Velocity', defFrom: 'ms', defTo: 'FPM',
+      units: [
+        { id: 'ms', name: 'Meter per Second (m/s)', sym: 'm/s', toBase: 1 },
+        { id: 'FPS', name: 'Foot per Second (FPS)', sym: 'FPS', toBase: 0.3048 },
+        { id: 'FPM', name: 'Foot per Minute (FPM)', sym: 'FPM', toBase: 0.00508 }
+      ]
+    },
+    {
+      id: 'pressure', label: 'الضغط · Pressure', defFrom: 'bar', defTo: 'psi',
+      units: [
+        { id: 'Pa', name: 'Pascal (Pa)', sym: 'Pa', toBase: 1 },
+        { id: 'kPa', name: 'Kilopascal (kPa)', sym: 'kPa', toBase: 1000 },
+        { id: 'bar', name: 'Bar (bar)', sym: 'bar', toBase: 100000 },
+        { id: 'psi', name: 'Pound per Square Inch (psi)', sym: 'psi', toBase: 6894.757 },
+        { id: 'atm', name: 'Atmosphere (atm)', sym: 'atm', toBase: 101325 },
+        { id: 'inWG', name: 'Inch Water Gauge (inWG)', sym: 'inWG', toBase: 249.0889 }
+      ]
+    },
+    {
+      id: 'mass', label: 'الكتلة · Mass', defFrom: 'kg', defTo: 'lb',
+      units: [
+        { id: 'kg', name: 'Kilogram (kg)', sym: 'kg', toBase: 1 },
+        { id: 'g', name: 'Gram (g)', sym: 'g', toBase: 0.001 },
+        { id: 'lb', name: 'Pound (lb)', sym: 'lb', toBase: 0.45359237 }
+      ]
+    },
+    {
+      id: 'temp', label: 'الحرارة · Temperature', defFrom: 'C', defTo: 'F', isTemp: true,
+      units: [
+        { id: 'C', name: 'Celsius (°C)', sym: '°C' },
+        { id: 'F', name: 'Fahrenheit (°F)', sym: '°F' },
+        { id: 'K', name: 'Kelvin (K)', sym: 'K' }
+      ]
+    },
+    {
+      id: 'cooling', label: 'التبريد · Cooling Load', defFrom: 'TR', defTo: 'HP_COOL',
+      units: [
+        { id: 'TR', name: 'Ton of Refrigeration (TR)', sym: 'TR', toBase: 3.5168528 },
+        { id: 'HP_COOL', name: 'Horsepower (Cooling · 8000 BTU/hr)', label: 'Horsepower · تبريد (8000 BTU/hr)', sym: 'HP (تكييف)', toBase: 8000 / 3412.1416 },
+        { id: 'kW', name: 'Kilowatt (kW)', sym: 'kW', toBase: 1 },
+        { id: 'BTU', name: 'BTU per Hour (BTU/hr)', sym: 'BTU/hr', toBase: 1 / 3412.1416 },
+        { id: 'HP_ELEC', name: 'Horsepower (Electric · 0.746 kW)', label: 'Horsepower · كهربي (0.746 kW)', sym: 'HP (كهربي)', toBase: 0.7457 }
+      ]
+    },
+    {
+      id: 'density', label: 'الكثافة · Density', defFrom: 'kgm3', defTo: 'lbft3',
+      units: [
+        { id: 'kgm3', name: 'Kilogram per Cubic Meter (kg/m³)', sym: 'kg/m³', toBase: 1 },
+        { id: 'lbft3', name: 'Pound per Cubic Foot (lb/ft³)', sym: 'lb/ft³', toBase: 16.018463 },
+        { id: 'lbgal', name: 'Pound per US Gallon (lb/gal)', sym: 'lb/gal', toBase: 119.82643 }
+      ]
+    },
+    {
+      id: 'time', label: 'الزمن · Time', defFrom: 'h', defTo: 'min',
+      units: [
+        { id: 's', name: 'Second (s)', sym: 's', toBase: 1 },
+        { id: 'min', name: 'Minute (min)', sym: 'min', toBase: 60 },
+        { id: 'h', name: 'Hour (h)', sym: 'h', toBase: 3600 },
+        { id: 'd', name: 'Day (d)', sym: 'd', toBase: 86400 }
+      ]
+    }
+  ];
+
+  let activeUnitCat = 'flow';
   let lastUnitSummary = '';
+  let lastUnitToStr = '';
+
+  function fmtNum(n) {
+    if (!isFinite(n)) return '—';
+    const abs = Math.abs(n);
+    if (abs === 0) return '0';
+    if (abs >= 10000 || (abs > 0 && abs < 0.001)) return Number(n.toPrecision(5)).toString();
+    return Number(n.toFixed(4)).toString();
+  }
+
+  function convertVal(catObj, val, fromId, toId) {
+    if (catObj.isTemp) {
+      let c = fromId === 'C' ? val : (fromId === 'F' ? (val - 32) * 5 / 9 : val - 273.15);
+      return toId === 'C' ? c : (toId === 'F' ? c * 9 / 5 + 32 : c + 273.15);
+    }
+    const fU = catObj.units.find(u => u.id === fromId);
+    const tU = catObj.units.find(u => u.id === toId);
+    return (val * fU.toBase) / tU.toBase;
+  }
+
   function populateUnits() {
-    const cat = document.getElementById('unitCat').value;
-    document.getElementById('unitFrom').innerHTML = Object.keys(UNIT_DEFS[cat]).map(u => `<option value="${u}">${u}</option>`).join('');
+    const pillsWrap = document.getElementById('unitCatPills');
+    pillsWrap.innerHTML = UNIT_CATS.map(c => `<button class="pill ${activeUnitCat === c.id ? 'active' : ''}" data-ucat="${c.id}">${c.label}</button>`).join('');
+    pillsWrap.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+      activeUnitCat = b.dataset.ucat;
+      populateUnits();
+    }));
+
+    const catObj = UNIT_CATS.find(c => c.id === activeUnitCat) || UNIT_CATS[0];
+    const opts = catObj.units.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+    const selFrom = document.getElementById('unitFrom');
+    const selTo = document.getElementById('unitTo');
+    selFrom.innerHTML = opts;
+    selTo.innerHTML = opts;
+    selFrom.value = catObj.defFrom;
+    selTo.value = catObj.defTo;
     calcUnits();
   }
+
   function calcUnits() {
-    const cat = document.getElementById('unitCat').value;
+    const catObj = UNIT_CATS.find(c => c.id === activeUnitCat) || UNIT_CATS[0];
     const val = parseFloat(document.getElementById('unitVal').value);
-    const from = document.getElementById('unitFrom').value;
-    const defs = UNIT_DEFS[cat];
-    if (isNaN(val)) { document.getElementById('unitOutput').innerHTML = 'أدخل قيمة صحيحة'; lastUnitSummary = ''; return; }
-    const inBase = val / defs[from];
-    const rows = Object.keys(defs).filter(u => u !== from).map(u => ({ unit: u, val: +(inBase * defs[u]).toFixed(2) }));
-    lastUnitSummary = `${val} ${from} = ` + rows.map(r => `${r.val} ${r.unit}`).join(' | ');
-    document.getElementById('unitOutput').innerHTML = `
-      <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">النتيجة الفورية</div>
-      <div class="calc-main-val ltr">${rows[0].val} ${rows[0].unit}</div>
-      <div class="calc-sub-grid">${rows.map(r => `<div class="calc-mini"><span>${r.unit}</span><strong class="ltr">${r.val}</strong></div>`).join('')}</div>`;
+    const fromId = document.getElementById('unitFrom').value;
+    const toId = document.getElementById('unitTo').value;
+    const fU = catObj.units.find(u => u.id === fromId);
+    const tU = catObj.units.find(u => u.id === toId);
+
+    if (isNaN(val)) {
+      document.getElementById('unitToVal').textContent = '—';
+      document.getElementById('unitFormula').textContent = 'أدخل قيمة رقمية للتحويل';
+      document.getElementById('allConvList').innerHTML = '';
+      lastUnitSummary = ''; lastUnitToStr = ''; return;
+    }
+
+    const res = convertVal(catObj, val, fromId, toId);
+    const resStr = fmtNum(res);
+    lastUnitToStr = `${resStr} ${tU.sym}`;
+    lastUnitSummary = `${val} ${fU.sym} = ${resStr} ${tU.sym}`;
+    document.getElementById('unitToVal').textContent = resStr;
+    document.getElementById('unitFormula').textContent = lastUnitSummary;
+    document.getElementById('allConvTitle').textContent = `جميع التحويلات · ${val} ${fU.sym}`;
+
+    const listEl = document.getElementById('allConvList');
+    listEl.innerHTML = catObj.units.map(u => {
+      const v = fmtNum(convertVal(catObj, val, fromId, u.id));
+      return `<li class="${u.id === toId ? 'hl' : ''}" data-pickto="${u.id}"><span>${esc(u.label || u.name.split('(')[0].trim())}</span><span class="ltr" style="font-weight:800;">${v} ${u.sym}</span></li>`;
+    }).join('');
+    listEl.querySelectorAll('[data-pickto]').forEach(li => li.addEventListener('click', () => {
+      document.getElementById('unitTo').value = li.dataset.pickto;
+      calcUnits();
+    }));
   }
-  document.getElementById('unitCat').addEventListener('change', populateUnits);
+
   document.getElementById('unitVal').addEventListener('input', calcUnits);
   document.getElementById('unitFrom').addEventListener('change', calcUnits);
-  document.getElementById('btnCopyUnit').addEventListener('click', () => lastUnitSummary && copyText(lastUnitSummary, 'تم نسخ التحويل 📋'));
+  document.getElementById('unitTo').addEventListener('change', calcUnits);
+  document.getElementById('btnSwapUnits').addEventListener('click', () => {
+    const f = document.getElementById('unitFrom');
+    const t = document.getElementById('unitTo');
+    const tmp = f.value; f.value = t.value; t.value = tmp;
+    calcUnits();
+  });
+  document.getElementById('btnCopyUnitInline').addEventListener('click', () => lastUnitToStr && copyText(lastUnitToStr, 'تم نسخ القيمة 📋'));
+  document.getElementById('btnCopyUnit').addEventListener('click', () => lastUnitSummary && copyText(lastUnitSummary, 'تم نسخ المعادلة 📋'));
   document.getElementById('btnSaveUnit').addEventListener('click', () => lastUnitSummary && openPickProjectModal('حفظ تحويل الوحدات', 'calc', lastUnitSummary));
 
+  /* ---- Calc 2: Upgraded Duct Sizer (ASHRAE Equal Friction + Constant Velocity + IP/SI) ---- */
+  let ductMethod = 'friction';
   let ductShape = 'rect';
+  let ductSys = 'ip';
   let lastDuctSummary = '';
   let lastDuctSvg = '';
+
+  function syncDuctUi() {
+    document.getElementById('ductFricGroup').style.display = ductMethod === 'friction' ? 'block' : 'none';
+    document.getElementById('ductVelGroup').style.display = ductMethod === 'velocity' ? 'block' : 'none';
+    document.getElementById('ductHGroup').style.display = ductShape === 'rect' ? 'block' : 'none';
+    if (ductSys === 'ip') {
+      document.getElementById('lblDuctFlow').textContent = 'التدفق (CFM)';
+      document.getElementById('lblDuctFric').textContent = 'فقد الضغط (in.WC / 100ft)';
+      document.getElementById('lblDuctVel').textContent = 'السرعة المستهدفة (FPM)';
+      document.getElementById('lblDuctH').textContent = 'أحد أبعاد الدكت H (بوصة inch)';
+    } else {
+      document.getElementById('lblDuctFlow').textContent = 'التدفق (L/s)';
+      document.getElementById('lblDuctFric').textContent = 'فقد الضغط (Pa / m)';
+      document.getElementById('lblDuctVel').textContent = 'السرعة المستهدفة (m/s)';
+      document.getElementById('lblDuctH').textContent = 'أحد أبعاد الدكت H (مم mm)';
+    }
+    calcDuct();
+  }
+
+  document.querySelectorAll('[data-ductmethod]').forEach(b => b.addEventListener('click', () => {
+    ductMethod = b.dataset.ductmethod;
+    document.querySelectorAll('[data-ductmethod]').forEach(x => x.classList.toggle('active', x.dataset.ductmethod === ductMethod));
+    syncDuctUi();
+  }));
   document.querySelectorAll('[data-ductshape]').forEach(b => b.addEventListener('click', () => {
     ductShape = b.dataset.ductshape;
     document.querySelectorAll('[data-ductshape]').forEach(x => x.classList.toggle('active', x.dataset.ductshape === ductShape));
-    document.getElementById('ductHGroup').style.display = ductShape === 'rect' ? 'block' : 'none';
-    calcDuct();
+    syncDuctUi();
+  }));
+  document.querySelectorAll('[data-ductsys]').forEach(b => b.addEventListener('click', () => {
+    const newSys = b.dataset.ductsys;
+    if (newSys !== ductSys) {
+      const fVal = parseFloat(document.getElementById('ductFlow').value);
+      const frVal = parseFloat(document.getElementById('ductFric').value);
+      const vVal = parseFloat(document.getElementById('ductVel').value);
+      const hVal = parseFloat(document.getElementById('ductH').value);
+      ductSys = newSys;
+      if (ductSys === 'si') {
+        if (!isNaN(fVal) && fVal > 0) document.getElementById('ductFlow').value = Math.round(fVal * 0.471947);
+        if (!isNaN(frVal) && frVal > 0) document.getElementById('ductFric').value = +(frVal / 0.012239).toFixed(2);
+        if (!isNaN(vVal) && vVal > 0) document.getElementById('ductVel').value = +(vVal / 196.8504).toFixed(2);
+        if (!isNaN(hVal) && hVal > 0) document.getElementById('ductH').value = Math.round((hVal * 25.4) / 25) * 25;
+      } else {
+        if (!isNaN(fVal) && fVal > 0) document.getElementById('ductFlow').value = Math.round(fVal * 2.11888);
+        if (!isNaN(frVal) && frVal > 0) document.getElementById('ductFric').value = +(frVal * 0.012239).toFixed(3);
+        if (!isNaN(vVal) && vVal > 0) document.getElementById('ductVel').value = Math.round(vVal * 196.8504);
+        if (!isNaN(hVal) && hVal > 0) document.getElementById('ductH').value = Math.max(4, Math.round(hVal / 25.4));
+      }
+    }
+    document.querySelectorAll('[data-ductsys]').forEach(x => x.classList.toggle('active', x.dataset.ductsys === ductSys));
+    syncDuctUi();
   }));
 
   function calcDuct() {
-    const flow = parseFloat(document.getElementById('ductFlow').value);
-    const unit = document.getElementById('ductFlowUnit').value;
-    const vel = parseFloat(document.getElementById('ductVel').value);
-    const hMm = parseFloat(document.getElementById('ductH').value);
+    const flowIn = parseFloat(document.getElementById('ductFlow').value);
+    const fricIn = parseFloat(document.getElementById('ductFric').value);
+    const velIn = parseFloat(document.getElementById('ductVel').value);
+    const hIn = parseFloat(document.getElementById('ductH').value);
     const outWrap = document.getElementById('ductOutputWrap');
     const svgWrap = document.getElementById('ductSvgWrap');
-    if (isNaN(flow) || flow <= 0 || isNaN(vel) || vel <= 0 || (ductShape === 'rect' && (isNaN(hMm) || hMm <= 0))) {
-      outWrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل قيم التدفق والسرعة لعرض المقاس القياسي.</div>`;
+
+    if (isNaN(flowIn) || flowIn <= 0 ||
+        (ductMethod === 'friction' && (isNaN(fricIn) || fricIn <= 0)) ||
+        (ductMethod === 'velocity' && (isNaN(velIn) || velIn <= 0)) ||
+        (ductShape === 'rect' && (isNaN(hIn) || hIn <= 0))) {
+      outWrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل القيم المطلوبة لعرض المقاس القياسي وفقد الضغط الفعلي.</div>`;
       svgWrap.style.display = 'none'; lastDuctSummary = ''; return;
     }
 
-    const m3s = unit === 'cfm' ? flow * 0.000471947 : flow / 1000;
-    const areaM2 = m3s / vel;
+    const cfm = ductSys === 'ip' ? flowIn : flowIn * 2.11888;
+    const dpReqInWc = ductSys === 'ip' ? fricIn : fricIn * 0.012239;
+    const velReqFpm = ductSys === 'ip' ? velIn : velIn * 196.8504;
+
+    // Required Equivalent Round Diameter (inches)
+    const dReqIn = ductMethod === 'friction'
+      ? Math.pow((0.109136 * Math.pow(cfm, 1.9)) / dpReqInWc, 1 / 5.02)
+      : Math.sqrt((4 * (cfm / velReqFpm)) / Math.PI) * 12;
 
     if (ductShape === 'round') {
-      const rawDia = Math.sqrt((4 * areaM2) / Math.PI) * 1000;
-      const stdDia = Math.max(100, Math.ceil(rawDia / 50) * 50);
-      const spacingM = stdDia > 965 ? '1.2' : (stdDia >= 125 ? '1.8' : '2.4');
-      const gauge = stdDia <= 350 ? '26G (0.55 mm)' : stdDia <= 650 ? '24G (0.70 mm)' : stdDia <= 900 ? '22G (0.85 mm)' : '20G (1.00 mm)';
-      lastDuctSummary = `دكت دائري ${flow} ${unit.toUpperCase()} (${vel} m/s): قياسي Ø${stdDia} mm (${gauge}) | تحميلة كل ${spacingM}m`;
+      const stdDiaIn = ductSys === 'ip' ? Math.max(4, Math.ceil(dReqIn / 2) * 2) : Math.max(4, Math.ceil((dReqIn * 25.4) / 50) * 50 / 25.4);
+      const stdDiaMm = Math.round(stdDiaIn * 25.4);
+      const actV_fpm = cfm / (Math.PI * Math.pow(stdDiaIn / 24, 2));
+      const actV_ms = actV_fpm / 196.8504;
+      const actDp_inwc = (0.109136 * Math.pow(cfm, 1.9)) / Math.pow(stdDiaIn, 5.02);
+      const actDp_pam = actDp_inwc / 0.012239;
+      const spacingM = stdDiaMm > 965 ? '1.2' : (stdDiaMm >= 125 ? '1.8' : '2.4');
+      const gauge = stdDiaMm <= 350 ? '26G (0.55mm)' : stdDiaMm <= 650 ? '24G (0.70mm)' : stdDiaMm <= 900 ? '22G (0.85mm)' : '20G (1.00mm)';
+      const mainLabel = ductSys === 'ip' ? `Ø ${stdDiaIn}" (${stdDiaMm} mm)` : `Ø ${stdDiaMm} mm (${(stdDiaIn).toFixed(1)}")`;
+
+      lastDuctSummary = `دكت دائري ${Math.round(cfm)} CFM: ${mainLabel} | V=${Math.round(actV_fpm)} FPM (${actV_ms.toFixed(2)} m/s) | ΔP=${actDp_inwc.toFixed(3)} in.WC/100ft (${actDp_pam.toFixed(2)} Pa/m)`;
       outWrap.innerHTML = `
         <div class="calc-result">
           <div style="font-size:12px;color:var(--primary);font-weight:800;">المقاس القياسي الدائري — اطلب هذا</div>
-          <div class="calc-main-val ltr">Ø ${stdDia} mm</div>
+          <div class="calc-main-val ltr">${mainLabel}</div>
           <div class="calc-sub-grid">
-            <div class="calc-mini"><span>القطر المحسوب بدقة</span><strong class="ltr">Ø ${Math.round(rawDia)} mm</strong></div>
+            <div class="calc-mini"><span>السرعة الفعلية (Actual V)</span><strong class="ltr">${Math.round(actV_fpm)} FPM · ${actV_ms.toFixed(2)} m/s</strong></div>
+            <div class="calc-mini"><span>فقد الضغط الفعلي (Actual ΔP)</span><strong class="ltr">${actDp_inwc.toFixed(3)} in.WC · ${actDp_pam.toFixed(2)} Pa/m</strong></div>
             <div class="calc-mini"><span>تخانة الصاج (SMACNA)</span><strong class="ltr">${gauge}</strong></div>
             <div class="calc-mini"><span>مسافة التحاميل</span><strong class="ltr">≤ ${spacingM} m</strong></div>
-            <div class="calc-mini"><span>المساحة المقطعية</span><strong class="ltr">${Math.round(areaM2 * 10000)} cm²</strong></div>
           </div>
         </div>`;
-      lastDuctSvg = getRoundDuctSvg(stdDia, spacingM);
+      lastDuctSvg = getRoundDuctSvg(stdDiaMm, spacingM);
       svgWrap.style.display = 'block';
       svgWrap.innerHTML = lastDuctSvg + `<div class="zoom-hint">🔍 اضغط على الرسم للتكبير</div>`;
       return;
     }
 
-    const rawW = (areaM2 / (hMm / 1000)) * 1000;
-    const stdW = Math.max(150, Math.ceil(rawW / 50) * 50);
-    const eqHueb = 1.30 * Math.pow(stdW * hMm, 0.625) / Math.pow(stdW + hMm, 0.25);
-    const stdDia = Math.ceil(eqHueb / 50) * 50;
-    const aspectRatio = +(Math.max(stdW, hMm) / Math.min(stdW, hMm)).toFixed(2);
-    const maxSide = Math.max(stdW, hMm);
-    const gauge = maxSide <= 300 ? '26G (0.55 mm)' : maxSide <= 750 ? '24G (0.70 mm)' : maxSide <= 1350 ? '22G (0.85 mm)' : maxSide <= 2100 ? '20G (1.00 mm)' : '18G (1.30 mm)';
-    const halfPerim = stdW + hMm;
+    // Rectangular sizing: solve W so Huebscher Deq >= dReqIn (or Area >= Q/V)
+    const hInVal = ductSys === 'ip' ? hIn : hIn / 25.4;
+    let wSolveIn = 4;
+    if (ductMethod === 'friction') {
+      let lo = 2, hi = 400;
+      for (let i = 0; i < 40; i++) {
+        const mid = (lo + hi) / 2;
+        const deq = 1.30 * Math.pow(mid * hInVal, 0.625) / Math.pow(mid + hInVal, 0.25);
+        if (deq < dReqIn) lo = mid; else hi = mid;
+      }
+      wSolveIn = hi;
+    } else {
+      const areaFt2 = cfm / velReqFpm;
+      wSolveIn = (areaFt2 * 144) / hInVal;
+    }
+
+    const stdW_in = ductSys === 'ip' ? Math.max(4, Math.ceil(wSolveIn / 2) * 2) : Math.max(150, Math.ceil((wSolveIn * 25.4) / 50) * 50) / 25.4;
+    const stdW_mm = ductSys === 'ip' ? Math.round(stdW_in * 25.4) : Math.max(150, Math.ceil((wSolveIn * 25.4) / 50) * 50);
+    const stdH_mm = ductSys === 'ip' ? Math.round(hInVal * 25.4) : Math.round(hIn);
+
+    const eqHuebIn = 1.30 * Math.pow(stdW_in * hInVal, 0.625) / Math.pow(stdW_in + hInVal, 0.25);
+    const actDp_inwc = (0.109136 * Math.pow(cfm, 1.9)) / Math.pow(eqHuebIn, 5.02);
+    const actDp_pam = actDp_inwc / 0.012239;
+    const actV_fpm = cfm / ((stdW_in * hInVal) / 144);
+    const actV_ms = actV_fpm / 196.8504;
+    const aspectRatio = +(Math.max(stdW_in, hInVal) / Math.min(stdW_in, hInVal)).toFixed(2);
+    const maxSideMm = Math.max(stdW_mm, stdH_mm);
+    const gauge = maxSideMm <= 300 ? '26G (0.55mm)' : maxSideMm <= 750 ? '24G (0.70mm)' : maxSideMm <= 1350 ? '22G (0.85mm)' : maxSideMm <= 2100 ? '20G (1.00mm)' : '18G (1.30mm)';
+    const halfPerim = stdW_mm + stdH_mm;
     const spacingM = halfPerim > 3050 ? '1.2' : (halfPerim > 2440 ? '1.5' : '2.4');
     const rodMm = halfPerim > 3050 ? '12.7' : (halfPerim > 1830 ? '9.5' : '6.4');
 
-    lastDuctSummary = `دكت ${flow} ${unit.toUpperCase()} (${vel} m/s): مستطيل ${stdW}×${hMm} mm (${gauge}) | مكافئ Huebscher Ø${stdDia} mm | تحميلة كل ${spacingM}m (تيش Ø${rodMm}mm)`;
+    const mainLabel = ductSys === 'ip' ? `${stdW_in}" × ${hIn}" (${stdW_mm}×${stdH_mm} mm)` : `${stdW_mm} × ${stdH_mm} mm (${Math.round(stdW_in)}"×${Math.round(hInVal)}")`;
+    lastDuctSummary = `دكت ${Math.round(cfm)} CFM: ${mainLabel} | Actual V=${Math.round(actV_fpm)} FPM (${actV_ms.toFixed(2)} m/s) | Actual ΔP=${actDp_inwc.toFixed(3)} in.WC/100ft (${actDp_pam.toFixed(2)} Pa/m) | ${gauge}`;
+
     outWrap.innerHTML = `
       <div class="calc-result">
         <div style="font-size:12px;color:var(--primary);font-weight:800;">المقاس القياسي — اطلب هذا</div>
-        <div class="calc-main-val ltr">${stdW} × ${hMm} mm</div>
+        <div class="calc-main-val ltr">${mainLabel}</div>
         ${aspectRatio > 4 ? `<div class="warn-box" style="margin-top:8px;"><strong>⚠️ تنبيه Aspect Ratio = ${aspectRatio}:1</strong>يُفضل ألا تتجاوز نسبة العرض للارتفاع 4:1 لتقليل فقد الضغط والضوضاء.</div>` : ''}
         <div class="calc-sub-grid">
-          <div class="calc-mini"><span>المكافئ الدائري (Huebscher)</span><strong class="ltr">Ø ${stdDia} mm</strong></div>
-          <div class="calc-mini"><span>تخانة الصاج (SMACNA)</span><strong class="ltr">${gauge}</strong></div>
-          <div class="calc-mini"><span>مسافة التحاميل</span><strong class="ltr">≤ ${spacingM} m (Ø${rodMm})</strong></div>
-          <div class="calc-mini"><span>نسبة الأبعاد (Aspect Ratio)</span><strong class="ltr">${aspectRatio} : 1</strong></div>
+          <div class="calc-mini"><span>السرعة الفعلية (Actual V)</span><strong class="ltr">${Math.round(actV_fpm)} FPM · ${actV_ms.toFixed(2)} m/s</strong></div>
+          <div class="calc-mini"><span>فقد الضغط الفعلي (Actual ΔP)</span><strong class="ltr">${actDp_inwc.toFixed(3)} in.WC · ${actDp_pam.toFixed(2)} Pa/m</strong></div>
+          <div class="calc-mini"><span>المكافئ الدائري (Huebscher)</span><strong class="ltr">Ø ${eqHuebIn.toFixed(1)}" (${Math.round(eqHuebIn*25.4)} mm)</strong></div>
+          <div class="calc-mini"><span>تخانة الصاج + التحاميل</span><strong class="ltr">${gauge} · ≤${spacingM}m</strong></div>
         </div>
       </div>`;
-    lastDuctSvg = getDuctSupportSvg(stdW, hMm, spacingM, rodMm);
+    lastDuctSvg = getDuctSupportSvg(stdW_mm, stdH_mm, spacingM, rodMm);
     svgWrap.style.display = 'block';
     svgWrap.innerHTML = lastDuctSvg + `<div class="zoom-hint">🔍 اضغط على الرسم للتكبير</div>`;
   }
-  ['ductFlow', 'ductFlowUnit', 'ductVel', 'ductH'].forEach(id => document.getElementById(id).addEventListener('input', calcDuct));
-  document.getElementById('ductFlowUnit').addEventListener('change', calcDuct);
+  ['ductFlow', 'ductFric', 'ductVel', 'ductH'].forEach(id => document.getElementById(id).addEventListener('input', calcDuct));
   document.getElementById('ductSvgWrap').addEventListener('click', () => lastDuctSvg && openLightboxHtml(lastDuctSvg));
   document.getElementById('btnCopyDuct').addEventListener('click', () => lastDuctSummary && copyText(lastDuctSummary, 'تم نسخ مقاس الدكت 📋'));
   document.getElementById('btnSaveDuct').addEventListener('click', () => lastDuctSummary && openPickProjectModal('حفظ مقاس الدكت في مشروع', 'calc', lastDuctSummary));
 
+  /* ---- Calc 3: Cooling Load (8000 BTU/hr per HP) ---- */
   let lastLoadSummary = '';
   function calcLoad() {
     const area = parseFloat(document.getElementById('loadArea').value);
@@ -2633,20 +3115,344 @@
     const tr = +(area / factor).toFixed(2);
     const kw = +(tr * 3.517).toFixed(2);
     const btu = Math.round(tr * 12000);
-    const hp = +(tr * 1.25).toFixed(1);
-    lastLoadSummary = `حمل حراري (${area} م²): ${tr} TR (${kw} kW / ${btu.toLocaleString()} BTU/h)`;
+    const hp = +(btu / 8000).toFixed(2);
+    lastLoadSummary = `حمل حراري (${area} م²): ${tr} TR (${hp} HP @ 8000 BTU/h · ${kw} kW · ${btu.toLocaleString()} BTU/h)`;
     wrap.innerHTML = `
       <div class="calc-result">
         <div style="font-size:12px;color:var(--primary);font-weight:800;">الحمل التقديري</div>
-        <div class="calc-main-val ltr">${tr} TR</div>
+        <div class="calc-main-val ltr">${tr} TR · ${hp} HP</div>
         <div class="calc-sub-grid">
-          <div class="calc-mini"><span>بالكيلووات</span><strong class="ltr">${kw} kW</strong></div>
+          <div class="calc-mini"><span>بالحصان (8000 BTU/hr)</span><strong class="ltr">${hp} HP</strong></div>
           <div class="calc-mini"><span>BTU/h</span><strong class="ltr">${btu.toLocaleString()}</strong></div>
-          <div class="calc-mini"><span>تقدير بالحصان (سبليت)</span><strong class="ltr">~ ${hp} HP</strong></div>
+          <div class="calc-mini"><span>بالكيلووات</span><strong class="ltr">${kw} kW</strong></div>
           <div class="calc-mini"><span>المعامل</span><strong class="ltr">${factor} m²/TR</strong></div>
         </div>
       </div>`;
   }
+
+  /* ---- Calc 4: Chilled Water Pipe Sizer (ASME B36.10M Sch 40) ---- */
+  const SCH40_PIPES = [
+    { nps: '1/4"', dn: 8, odIn: 0.54, idIn: 0.364, tMm: 2.24 },
+    { nps: '3/8"', dn: 10, odIn: 0.675, idIn: 0.493, tMm: 2.31 },
+    { nps: '1/2"', dn: 15, odIn: 0.84, idIn: 0.622, tMm: 2.77 },
+    { nps: '3/4"', dn: 20, odIn: 1.05, idIn: 0.824, tMm: 2.87 },
+    { nps: '1"', dn: 25, odIn: 1.315, idIn: 1.049, tMm: 3.38 },
+    { nps: '1 1/4"', dn: 32, odIn: 1.66, idIn: 1.38, tMm: 3.56 },
+    { nps: '1 1/2"', dn: 40, odIn: 1.9, idIn: 1.61, tMm: 3.68 },
+    { nps: '2"', dn: 50, odIn: 2.375, idIn: 2.067, tMm: 3.91 },
+    { nps: '2 1/2"', dn: 65, odIn: 2.875, idIn: 2.469, tMm: 5.16 },
+    { nps: '3"', dn: 80, odIn: 3.5, idIn: 3.068, tMm: 5.49 },
+    { nps: '3 1/2"', dn: 90, odIn: 4.0, idIn: 3.548, tMm: 5.74 },
+    { nps: '4"', dn: 100, odIn: 4.5, idIn: 4.026, tMm: 6.02 },
+    { nps: '5"', dn: 125, odIn: 5.563, idIn: 5.047, tMm: 6.55 },
+    { nps: '6"', dn: 150, odIn: 6.625, idIn: 6.065, tMm: 7.11 },
+    { nps: '8"', dn: 200, odIn: 8.625, idIn: 7.981, tMm: 8.18 },
+    { nps: '10"', dn: 250, odIn: 10.75, idIn: 10.02, tMm: 9.27 },
+    { nps: '12"', dn: 300, odIn: 12.75, idIn: 11.938, tMm: 10.31 },
+    { nps: '14"', dn: 350, odIn: 14.0, idIn: 13.124, tMm: 11.13 },
+    { nps: '16"', dn: 400, odIn: 16.0, idIn: 15.0, tMm: 12.7 },
+    { nps: '18"', dn: 450, odIn: 18.0, idIn: 16.876, tMm: 14.27 },
+    { nps: '20"', dn: 500, odIn: 20.0, idIn: 18.812, tMm: 15.11 },
+    { nps: '24"', dn: 600, odIn: 24.0, idIn: 22.624, tMm: 17.48 }
+  ];
+  let chwMode = 'tr';
+  let lastChwSummary = '';
+
+  function initChwDropdown() {
+    const sel = document.getElementById('chwSize');
+    sel.innerHTML = `<option value="auto" selected>تلقائي (أنسب مقاس ASHRAE)</option>` +
+      SCH40_PIPES.map((p, i) => `<option value="${i}">${p.nps} (DN${p.dn}) — ID ${(p.idIn*25.4).toFixed(1)}mm</option>`).join('');
+  }
+
+  document.querySelectorAll('[data-chwmode]').forEach(b => b.addEventListener('click', () => {
+    chwMode = b.dataset.chwmode;
+    document.querySelectorAll('[data-chwmode]').forEach(x => x.classList.toggle('active', x.dataset.chwmode === chwMode));
+    document.getElementById('chwDtGroup').style.display = chwMode === 'tr' ? 'block' : 'none';
+    document.getElementById('lblChwIn').textContent = chwMode === 'tr' ? 'الحمل التبريدي (TR)' : (chwMode === 'gpm' ? 'التدفق (US GPM)' : 'التدفق (L/s)');
+    calcChw();
+  }));
+
+  function calcChw() {
+    const val = parseFloat(document.getElementById('chwVal').value);
+    const dt = parseFloat(document.getElementById('chwDt').value) || 10;
+    const C = parseFloat(document.getElementById('chwC').value) || 135.038;
+    const sizeChoice = document.getElementById('chwSize').value;
+    const wrap = document.getElementById('chwOutputWrap');
+    if (isNaN(val) || val <= 0) {
+      wrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل الحمل التبريدي أو التدفق لحساب مقاس الماسورة.</div>`;
+      lastChwSummary = ''; return;
+    }
+
+    const gpm = chwMode === 'tr' ? val * (24 / dt) : (chwMode === 'gpm' ? val : val * 15.850323);
+    const ls = gpm / 15.850323;
+
+    const evalPipe = (p) => {
+      const vFts = (0.4085 * gpm) / (p.idIn * p.idIn);
+      const hlFt100 = 0.2083 * Math.pow(100 / C, 1.852) * (Math.pow(gpm, 1.852) / Math.pow(p.idIn, 4.8655));
+      return { p, vFts, vMs: vFts * 0.3048, hlFt100, hlPam: hlFt100 * 98.0665 };
+    };
+
+    let picked;
+    if (sizeChoice === 'auto') {
+      picked = SCH40_PIPES.map(evalPipe).find(r => r.hlFt100 <= 4.0 && r.vFts <= (r.p.dn <= 50 ? 4.5 : (r.p.dn <= 100 ? 7.5 : 9.5))) || evalPipe(SCH40_PIPES[SCH40_PIPES.length - 1]);
+    } else {
+      picked = evalPipe(SCH40_PIPES[Number(sizeChoice)]);
+    }
+
+    const hlWarn = picked.hlFt100 > 4.0;
+    const vWarn = picked.vFts > (picked.p.dn <= 50 ? 5.0 : 10.0);
+    lastChwSummary = `ماسورة CHW (${gpm.toFixed(1)} GPM / ${ls.toFixed(2)} L/s): ${picked.p.nps} (DN${picked.p.dn} Sch40) | V=${picked.vFts.toFixed(2)} ft/s (${picked.vMs.toFixed(2)} m/s) | ΔP=${picked.hlFt100.toFixed(2)} ft/100ft (${Math.round(picked.hlPam)} Pa/m)`;
+
+    wrap.innerHTML = `
+      <div class="calc-result">
+        <div style="font-size:12px;color:var(--primary);font-weight:800;">${sizeChoice === 'auto' ? 'المقاس المقترح (ASHRAE · Sch 40)' : 'نتيجة المقاس المختار (Sch 40)'}</div>
+        <div class="calc-main-val ltr">${picked.p.nps} · DN ${picked.p.dn}</div>
+        ${(hlWarn || vWarn) ? `<div class="warn-box" style="margin-top:8px;"><strong>⚠️ تنبيه هيدروليكي</strong>${hlWarn ? 'فقد الضغط أعلى من 4 ft/100ft. ' : ''}${vWarn ? 'السرعة مرتفعة — يُنصح بتكبير القطر درجة.' : ''}</div>` : ''}
+        <div class="calc-sub-grid">
+          <div class="calc-mini"><span>التدفق (Flow)</span><strong class="ltr">${gpm.toFixed(1)} GPM · ${ls.toFixed(2)} L/s</strong></div>
+          <div class="calc-mini"><span>السرعة الفعلية (V)</span><strong class="ltr">${picked.vFts.toFixed(2)} ft/s · ${picked.vMs.toFixed(2)} m/s</strong></div>
+          <div class="calc-mini"><span>فقد الضغط (Head Loss)</span><strong class="ltr">${picked.hlFt100.toFixed(2)} ft/100ft · ${Math.round(picked.hlPam)} Pa/m</strong></div>
+          <div class="calc-mini"><span>أبعاد Sch 40 (ID / t)</span><strong class="ltr">ID ${(picked.p.idIn*25.4).toFixed(1)}mm · t ${picked.p.tMm}mm</strong></div>
+        </div>
+      </div>`;
+  }
+  ['chwVal', 'chwDt', 'chwC', 'chwSize'].forEach(id => document.getElementById(id).addEventListener('input', calcChw));
+  document.getElementById('chwC').addEventListener('change', calcChw);
+  document.getElementById('chwSize').addEventListener('change', calcChw);
+  document.getElementById('btnCopyChw').addEventListener('click', () => lastChwSummary && copyText(lastChwSummary, 'تم نسخ مقاس ماسورة التشيلد 📋'));
+  document.getElementById('btnSaveChw').addEventListener('click', () => lastChwSummary && openPickProjectModal('حفظ مقاس CHW في مشروع', 'calc', lastChwSummary));
+
+  /* ---- Calc 5 & 6 Shared IPC Tables: WSFU -> GPM (IPC Table E103.3(3)) + Pipe Di ---- */
+  const IPC_CURVE = [
+    [0.5,3,3],[1,3,3],[2,5,5],[3,6.5,6.5],[4,8,8],[5,9.4,15],[6,10.7,17.4],[7,11.8,19.8],[8,12.8,22.2],[9,13.7,24.6],
+    [10,14.6,27],[11,15.4,27.8],[12,16,28.6],[13,16.5,29.4],[14,17,30.2],[15,17.5,31],[16,18,31.8],[17,18.4,32.6],[18,18.8,33.4],[19,19.2,34.2],
+    [20,19.6,35],[25,21.5,38],[30,23.3,42],[35,24.9,44],[40,26.3,46],[45,27.7,48],[50,29.1,50],[60,32,54],[70,35,58],[80,38,61.2],
+    [90,41,64.3],[100,43.5,67.5],[120,48,73],[140,52.5,77],[160,57,81],[180,61,85.5],[200,65,90],[225,70,95.5],[250,75,101],[275,80,104.5],
+    [300,85,108],[400,105,127],[500,124,143],[750,170,177],[1000,208,208],[1250,239,239],[1500,269,269],[1750,297,297],[2000,325,325],
+    [2500,380,380],[3000,433,433],[4000,525,525],[5000,593,593]
+  ];
+
+  function wsfuToGpm(wsfu, flushType) {
+    const col = flushType === 'valve' ? 2 : 1;
+    if (wsfu <= IPC_CURVE[0][0]) return IPC_CURVE[0][col];
+    if (wsfu >= IPC_CURVE[IPC_CURVE.length - 1][0]) return IPC_CURVE[IPC_CURVE.length - 1][col];
+    for (let i = 0; i < IPC_CURVE.length - 1; i++) {
+      const [x0, y0t, y0v] = IPC_CURVE[i];
+      const [x1, y1t, y1v] = IPC_CURVE[i + 1];
+      if (wsfu >= x0 && wsfu <= x1) {
+        const y0 = col === 1 ? y0t : y0v;
+        const y1 = col === 1 ? y1t : y1v;
+        return y0 + ((wsfu - x0) / (x1 - x0)) * (y1 - y0);
+      }
+    }
+    return 3;
+  }
+
+  const WATER_PIPES = {
+    ppr16: { C: 150, name: 'PPR PN16', list: [[20,14.4],[25,18],[32,23.2],[40,29],[50,36.2],[63,45.8],[75,54.4],[90,65.4],[110,79.8],[125,90.8],[160,116.2],[200,153.6],[250,195.4]] },
+    ppr20: { C: 150, name: 'PPR PN20/25', list: [[20,13.2],[25,16.6],[32,21.2],[40,26.6],[50,33.2],[63,42],[75,50],[90,60],[110,73.2],[125,83.4],[160,106.8],[200,143.4],[250,183.4]] },
+    copper: { C: 130, name: 'Copper Type K', list: [[15,13.6],[22,20.2],[28,26.2],[35,32.6],[42,39.6],[54,51.6],[67,64.6],[76,73],[108,105],[133,130],[159,155]] }
+  };
+
+  function pickWaterPipe(qLs, matKey, maxV) {
+    const mat = WATER_PIPES[matKey] || WATER_PIPES.ppr16;
+    const qM3s = qLs / 1000;
+    const reqDiMm = Math.sqrt((4 * qM3s) / (Math.PI * maxV)) * 1000;
+    const found = mat.list.find(([dn, di]) => di >= reqDiMm) || mat.list[mat.list.length - 1];
+    const [dn, di] = found;
+    const actV = qM3s / (Math.PI * Math.pow(di / 2000, 2));
+    // Hazen-Williams SI: hf (m/100m) = 100 * 10.67 * Q^1.852 / (C^1.852 * D^4.8704)
+    const hfPer100m = 100 * 10.67 * Math.pow(qM3s, 1.852) / (Math.pow(mat.C, 1.852) * Math.pow(di / 1000, 4.8704));
+    return { dn, di, reqDiMm, actV, hfPer100m, C: mat.C, matName: mat.name };
+  }
+
+  /* ---- Calc 5: Water Supply Pipe Sizer ---- */
+  const FIXTURE_DEFS = [
+    { id: 'wc', label: 'قاعدة WC (شامل شطاف)', priv: 2.2, pub: 5, pC: 2.2, pH: 0, uC: 5, uH: 0 },
+    { id: 'lav', label: 'حوض وش (Lavatory)', priv: 0.7, pub: 2, pC: 0.5, pH: 0.5, uC: 1.5, uH: 1.5 },
+    { id: 'sho', label: 'شاور (Shower)', priv: 1.4, pub: 4, pC: 1, pH: 1, uC: 3, uH: 3 },
+    { id: 'tub', label: 'بانيو (Bathtub)', priv: 1.4, pub: 4, pC: 1, pH: 1, uC: 3, uH: 3 },
+    { id: 'ks', label: 'حوض مطبخ (Kitchen)', priv: 1.4, pub: 4, pC: 1, pH: 1, uC: 3, uH: 3 },
+    { id: 'dw', label: 'غسالة أطباق (DW)', priv: 1.4, pub: 1.4, pC: 0, pH: 1.4, uC: 0, uH: 1.4 },
+    { id: 'hb', label: 'حنفية خرطوم (Hose Bib)', priv: 2.5, pub: 2.5, pC: 2.5, pH: 0, uC: 2.5, uH: 0 },
+    { id: 'ur', label: 'مبولة (Urinal)', priv: 3, pub: 3, pC: 3, pH: 0, uC: 3, uH: 0 },
+    { id: 'ss', label: 'حوض خدمة (Service Sink)', priv: 3, pub: 3, pC: 2.25, pH: 2.25, uC: 2.25, uH: 2.25 },
+    { id: 'df', label: 'مبرد شرب (Drinking F.)', priv: 0.25, pub: 0.25, pC: 0.25, pH: 0, uC: 0.25, uH: 0 },
+    { id: 'gw', label: 'غسالة أكواب (Glass W.)', priv: 1, pub: 1, pC: 1, pH: 0, uC: 1, uH: 0 }
+  ];
+  let waterMode = 'direct';
+  let fixCounts = { wc: 2, lav: 2, sho: 2, tub: 0, ks: 1, dw: 1, hb: 0, ur: 0, ss: 0, df: 0, gw: 0 };
+  let lastWaterSummary = '';
+
+  function renderFixtureCounters() {
+    const occ = document.getElementById('wOcc').value;
+    const grid = document.getElementById('wFixGrid');
+    grid.innerHTML = FIXTURE_DEFS.map(f => {
+      const fu = occ === 'public' ? f.pub : f.priv;
+      return `<div class="fix-row">
+        <div><strong>${f.label}</strong><div style="font-size:10.5px;color:var(--text-muted);" class="ltr">${fu} WSFU</div></div>
+        <div class="fix-ctrl">
+          <button class="fix-btn" data-fchg="${f.id}|-1">−</button>
+          <span class="ltr" style="min-width:18px;text-align:center;font-weight:800;">${fixCounts[f.id] || 0}</span>
+          <button class="fix-btn" data-fchg="${f.id}|1">+</button>
+        </div>
+      </div>`;
+    }).join('');
+    const totC = FIXTURE_DEFS.reduce((a, f) => a + (fixCounts[f.id] || 0) * (occ === 'public' ? f.uC : f.pC), 0);
+    const totH = FIXTURE_DEFS.reduce((a, f) => a + (fixCounts[f.id] || 0) * (occ === 'public' ? f.uH : f.pH), 0);
+    const totT = FIXTURE_DEFS.reduce((a, f) => a + (fixCounts[f.id] || 0) * (occ === 'public' ? f.pub : f.priv), 0);
+    const totEl = document.getElementById('wFixTotals');
+    if (totEl) totEl.textContent = `بارد: ${totC.toFixed(1)} · ساخن: ${totH.toFixed(1)} · إجمالي: ${totT.toFixed(1)} WSFU`;
+
+    grid.querySelectorAll('[data-fchg]').forEach(b => b.addEventListener('click', () => {
+      const [fid, d] = b.dataset.fchg.split('|');
+      fixCounts[fid] = Math.max(0, (fixCounts[fid] || 0) + Number(d));
+      renderFixtureCounters(); calcWater();
+    }));
+  }
+  document.getElementById('btnResetFix').addEventListener('click', () => {
+    Object.keys(fixCounts).forEach(k => fixCounts[k] = 0);
+    renderFixtureCounters(); calcWater(); showToast('تم تصفير عدّاد الأجهزة 🔄');
+  });
+
+  document.querySelectorAll('[data-wmode]').forEach(b => b.addEventListener('click', () => {
+    waterMode = b.dataset.wmode;
+    document.querySelectorAll('[data-wmode]').forEach(x => x.classList.toggle('active', x.dataset.wmode === waterMode));
+    document.getElementById('wDirectBox').style.display = waterMode === 'direct' ? 'block' : 'none';
+    document.getElementById('wFixturesBox').style.display = waterMode === 'fixtures' ? 'block' : 'none';
+    if (waterMode === 'fixtures') renderFixtureCounters();
+    calcWater();
+  }));
+
+  function calcWater() {
+    const occ = document.getElementById('wOcc').value;
+    const flush = document.getElementById('wFlush').value;
+    const mat = document.getElementById('wMat').value;
+    const maxV = parseFloat(document.getElementById('wMaxV').value) || 1.5;
+    const wrap = document.getElementById('waterOutputWrap');
+
+    let wsfu = 0;
+    if (waterMode === 'direct') {
+      wsfu = parseFloat(document.getElementById('wDirectFu').value);
+    } else {
+      wsfu = FIXTURE_DEFS.reduce((acc, f) => acc + (fixCounts[f.id] || 0) * (occ === 'public' ? f.pub : f.priv), 0);
+    }
+    if (isNaN(wsfu) || wsfu <= 0) {
+      wrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل قيمة WSFU أو أضف أجهزة صحية لحساب قطر الماسورة.</div>`;
+      lastWaterSummary = ''; return;
+    }
+
+    const gpm = wsfuToGpm(wsfu, flush);
+    const ls = gpm * 0.0630902;
+    const m3h = ls * 3.6;
+    const pipe = pickWaterPipe(ls, mat, maxV);
+
+    lastWaterSummary = `ماسورة تغذية (${wsfu.toFixed(1)} WSFU · ${pipe.matName}): DN ${pipe.dn} mm (Di=${pipe.di}mm) | Q=${gpm.toFixed(2)} GPM (${ls.toFixed(2)} L/s) | V=${pipe.actV.toFixed(2)} m/s | ΔP=${pipe.hfPer100m.toFixed(2)} m/100m`;
+    wrap.innerHTML = `
+      <div class="calc-result">
+        <div style="font-size:12px;color:var(--primary);font-weight:800;">المقاس المطلوب (${pipe.matName})</div>
+        <div class="calc-main-val ltr">DN ${pipe.dn} mm <span style="font-size:14px;font-weight:700;">(Di ${pipe.di} mm)</span></div>
+        <div class="calc-sub-grid">
+          <div class="calc-mini"><span>التدفق (IPC E103.3)</span><strong class="ltr">${gpm.toFixed(2)} GPM · ${ls.toFixed(2)} L/s</strong></div>
+          <div class="calc-mini"><span>إجمالي WSFU / m³/h</span><strong class="ltr">${wsfu.toFixed(1)} FU · ${m3h.toFixed(2)} m³/h</strong></div>
+          <div class="calc-mini"><span>السرعة الفعلية (≤ ${maxV} m/s)</span><strong class="ltr">${pipe.actV.toFixed(2)} m/s</strong></div>
+          <div class="calc-mini"><span>فقد الاحتكاك (Hazen-W.)</span><strong class="ltr">${pipe.hfPer100m.toFixed(2)} m/100m</strong></div>
+        </div>
+      </div>`;
+  }
+  ['wOcc', 'wFlush', 'wMat', 'wMaxV', 'wDirectFu'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => { if (waterMode === 'fixtures' && id === 'wOcc') renderFixtureCounters(); calcWater(); });
+    document.getElementById(id).addEventListener('change', () => { if (waterMode === 'fixtures' && id === 'wOcc') renderFixtureCounters(); calcWater(); });
+  });
+  document.getElementById('btnCopyWater').addEventListener('click', () => lastWaterSummary && copyText(lastWaterSummary, 'تم نسخ مقاس ماسورة التغذية 📋'));
+  document.getElementById('btnSaveWater').addEventListener('click', () => lastWaterSummary && openPickProjectModal('حفظ مقاس تغذية المياه', 'calc', lastWaterSummary));
+
+  /* ---- Calc 6: Booster Pump Duty Point (WSFU or Direct Flow + Editable Safety Factors) ---- */
+  let bpMode = 'wsfu';
+  let lastBoosterSummary = '';
+
+  document.querySelectorAll('[data-bpmode]').forEach(b => b.addEventListener('click', () => {
+    bpMode = b.dataset.bpmode;
+    document.querySelectorAll('[data-bpmode]').forEach(x => x.classList.toggle('active', x.dataset.bpmode === bpMode));
+    document.getElementById('bpFlushGroup').style.display = bpMode === 'wsfu' ? 'block' : 'none';
+    const lbl = document.getElementById('lblBpIn');
+    const inp = document.getElementById('bpWsfu');
+    if (bpMode === 'wsfu') { lbl.textContent = 'إجمالي WSFU للمبنى'; inp.value = 23.9; }
+    else if (bpMode === 'ls') { lbl.textContent = 'التدفق الأقصى (L/s)'; inp.value = 1.33; }
+    else { lbl.textContent = 'التدفق الأقصى (m³/h)'; inp.value = 4.8; }
+    calcBooster();
+  }));
+
+  document.getElementById('btnToggleBpAdv').addEventListener('click', () => {
+    const box = document.getElementById('bpAdvBox');
+    const open = box.style.display === 'block';
+    box.style.display = open ? 'none' : 'block';
+    document.getElementById('btnToggleBpAdv').textContent = open ? '⚙️ معاملات الأمان المتقدمة ▾' : '⚙️ إخفاء معاملات الأمان ▴';
+  });
+
+  function calcBooster() {
+    const rawIn = parseFloat(document.getElementById('bpWsfu').value);
+    const flush = document.getElementById('bpFlush').value;
+    const staticH = parseFloat(document.getElementById('bpStatic').value) || 0;
+    const len = parseFloat(document.getElementById('bpLen').value) || 0;
+    const resBar = parseFloat(document.getElementById('bpRes').value) || 1.5;
+    const equipM = parseFloat(document.getElementById('bpEquip').value) || 0;
+    const mat = document.getElementById('bpMat').value;
+    const eff = Math.max(0.1, (parseFloat(document.getElementById('bpEff').value) || 60) / 100);
+    const sfFlow = 1 + ((parseFloat(document.getElementById('bpSfFlow').value) || 0) / 100);
+    const sfHead = 1 + ((parseFloat(document.getElementById('bpSfHead').value) || 0) / 100);
+    const fitMult = 1 + ((parseFloat(document.getElementById('bpFitPct').value) || 0) / 100);
+    const suctionM = parseFloat(document.getElementById('bpSuction').value) || 0;
+    const wrap = document.getElementById('boosterOutputWrap');
+
+    if (isNaN(rawIn) || rawIn <= 0) {
+      wrap.innerHTML = `<div class="layer-box" style="text-align:center;color:var(--text-muted);font-size:13px;">أدخل قيمة التدفق أو WSFU لحساب نقطة تشغيل طلمبة الرفع.</div>`;
+      lastBoosterSummary = ''; return;
+    }
+
+    let peakLs = 0;
+    if (bpMode === 'wsfu') peakLs = wsfuToGpm(rawIn, flush) * 0.0630902;
+    else if (bpMode === 'ls') peakLs = rawIn;
+    else peakLs = rawIn / 3.6;
+
+    const designLs = peakLs * sfFlow;
+    const designM3h = designLs * 3.6;
+    const designGpm = designLs / 0.0630902;
+
+    const mainPipe = pickWaterPipe(designLs, mat, 1.5);
+    const unitFric = Math.max(4.0, mainPipe.hfPer100m);
+    const fricLossM = (len * fitMult * unitFric) / 100;
+    const resHeadM = resBar * 10.2;
+    const tdh = Math.max(0, staticH + fricLossM + equipM + resHeadM - suctionM);
+    const designHeadM = tdh * sfHead;
+    const designHeadBar = designHeadM / 10.2;
+    const hydKw = (9.81 * (designLs / 1000) * designHeadM) / eff;
+    const motorKw = hydKw * 1.2;
+    const motorHp = motorKw / 0.7457;
+    const needsPrv = designHeadBar > 5.5;
+
+    lastBoosterSummary = `طلمبة رفع Booster: Q=${designM3h.toFixed(2)} m³/h (${designLs.toFixed(2)} L/s) @ H=${designHeadM.toFixed(1)} m (${designHeadBar.toFixed(2)} bar) | خط طرد DN ${mainPipe.dn}mm | موتور ${motorKw.toFixed(2)} kW (${motorHp.toFixed(2)} HP) | ${needsPrv ? 'مطلوب PRV' : 'لا يحتاج PRV'}`;
+    wrap.innerHTML = `
+      <div class="calc-result">
+        <div style="font-size:12px;color:var(--primary);font-weight:800;">نقطة التشغيل (Duty Point — شامل الأمان)</div>
+        <div class="calc-main-val ltr">${designM3h.toFixed(2)} m³/h @ ${designHeadM.toFixed(1)} m</div>
+        <div style="margin-top:8px;">
+          <span class="badge ${needsPrv ? 'badge-danger' : 'badge-success'}">${needsPrv ? '⚠️ مطلوب صمام تقليل ضغط PRV (تجاوز 5.5 bar — IPC 604.8)' : '✅ الضغط آمن — لا يحتاج PRV (≤ 5.5 bar)'}</span>
+        </div>
+        <div class="calc-sub-grid">
+          <div class="calc-mini"><span>التدفق التصميمي (Q)</span><strong class="ltr">${designLs.toFixed(2)} L/s · ${designGpm.toFixed(1)} GPM</strong></div>
+          <div class="calc-mini"><span>الضاغط التصميمي (H)</span><strong class="ltr">${designHeadM.toFixed(1)} m · ${designHeadBar.toFixed(2)} bar</strong></div>
+          <div class="calc-mini"><span>قطر خط الطرد (${mainPipe.matName})</span><strong class="ltr">DN ${mainPipe.dn} mm (V=${mainPipe.actV.toFixed(2)} m/s)</strong></div>
+          <div class="calc-mini"><span>قدرة الموتور (+20% أمان)</span><strong class="ltr">${motorKw.toFixed(2)} kW (${motorHp.toFixed(2)} HP)</strong></div>
+        </div>
+      </div>`;
+  }
+  ['bpWsfu', 'bpFlush', 'bpStatic', 'bpLen', 'bpRes', 'bpEquip', 'bpMat', 'bpEff', 'bpSfFlow', 'bpSfHead', 'bpFitPct', 'bpSuction'].forEach(id => {
+    document.getElementById(id).addEventListener('input', calcBooster);
+    document.getElementById(id).addEventListener('change', calcBooster);
+  });
+  document.getElementById('btnCopyBooster').addEventListener('click', () => lastBoosterSummary && copyText(lastBoosterSummary, 'تم نسخ نقطة تشغيل الطلمبة 📋'));
+  document.getElementById('btnSaveBooster').addEventListener('click', () => lastBoosterSummary && openPickProjectModal('حفظ طلمبة الرفع في مشروع', 'calc', lastBoosterSummary));
   document.getElementById('loadArea').addEventListener('input', calcLoad);
   document.getElementById('loadType').addEventListener('change', calcLoad);
   document.getElementById('btnCopyLoad').addEventListener('click', () => lastLoadSummary && copyText(lastLoadSummary, 'تم نسخ الحمل الحراري 📋'));
@@ -2778,7 +3584,7 @@
     applyTheme(); applyPrivacy(); updateBackupIndicator();
     ensureGlobalTimerLoop();
     renderHome(); renderLibrary(); renderQA();
-    populateUnits(); calcDuct(); calcLoad(); renderCalcNav();
+    populateUnits(); syncDuctUi(); calcLoad(); initChwDropdown(); calcChw(); calcWater(); calcBooster(); renderCalcNav();
     renderProjects();
   });
 

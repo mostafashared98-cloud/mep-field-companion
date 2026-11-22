@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mep-field-companion-v1.3';
+const CACHE_NAME = 'mep-field-companion-v1.5.1';
 const ASSETS = [
   './',
   './index.html',
