@@ -1,4 +1,4 @@
-const CACHE_NAME = 'mep-field-companion-v1.5.1';
+const CACHE_NAME = 'mep-field-companion-v2.5.1';
 const ASSETS = [
   './',
   './index.html',
@@ -23,12 +23,27 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+  const isNav = event.request.mode === 'navigate' || event.request.url.endsWith('/') || event.request.url.endsWith('/index.html');
+  if (isNav) {
+    event.respondWith(
+      fetch(event.request).then((resp) => {
+        if (resp && resp.ok) {
+          const copy = resp.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
+        return resp;
+      }).catch(() => caches.match(event.request).then((c) => c || caches.match('./index.html')))
+    );
+    return;
+  }
   event.respondWith(
     caches.match(event.request).then((cached) => {
       if (cached) return cached;
       return fetch(event.request).then((resp) => {
-        const copy = resp.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        if (resp && resp.ok && resp.type === 'basic') {
+          const copy = resp.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        }
         return resp;
       }).catch(() => caches.match('./index.html'));
     })
